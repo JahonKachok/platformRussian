@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Edit Portfolio' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:700px">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px">
+    <a href="{% url 'portfolio:view' %}" class="btn btn-secondary btn-sm">← {% trans 'Back' %}</a>
+    <h1>✏️ {% trans 'Edit Portfolio' %}</h1>
+  </div>
+  <div class="card reveal">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-4">
+          <label class="form-label">📝 {% trans 'Professional Bio' %}</label>
+          <textarea name="bio" class="form-control" rows="4" placeholder="{% trans 'Tell about yourself, your English learning journey...' %}">{{ portfolio.bio }}</textarea>
+        </div>
+        <div class="form-group mb-4">
+          <label class="form-label">⚡ {% trans 'Skills Summary' %}</label>
+          <textarea name="skills_summary" class="form-control" rows="3" placeholder="{% trans 'e.g. Grammar: B2, Vocabulary: B1, Speaking: A2...' %}">{{ portfolio.skills_summary }}</textarea>
+        </div>
+        <div class="form-group mb-4">
+          <label class="form-label">🎯 {% trans 'Learning Goals' %}</label>
+          <textarea name="goals" class="form-control" rows="3" placeholder="{% trans 'What are your English learning goals?' %}">{{ portfolio.goals }}</textarea>
+        </div>
+        <div class="form-group mb-4">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" name="is_public" {% if portfolio.is_public %}checked{% endif %} style="width:18px;height:18px">
+            <span>🌍 {% trans 'Make portfolio public (shareable link)' %}</span>
+          </label>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button type="submit" class="btn btn-primary ripple-container">{% trans 'Save Changes' %}</button>
+          <a href="{% url 'portfolio:view' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

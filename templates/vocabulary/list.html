@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Vocabulary List' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div class="flex items-center justify-between mb-6">
+    <h1>📚 {% trans 'Vocabulary' %}</h1>
+    <a href="{% url 'vocabulary:flashcards' %}" class="btn btn-primary">🃏 {% trans 'Flashcards' %}</a>
+  </div>
+
+  <!-- Search & Filter -->
+  <form method="get" class="card mb-6">
+    <div class="card-body" style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:200px">
+        <label class="form-label">🔍 {% trans 'Search word' %}</label>
+        <input type="text" name="q" class="form-control" placeholder="{% trans 'Type a word...' %}" value="{{ request.GET.q|default:'' }}">
+      </div>
+      <div>
+        <label class="form-label">📂 {% trans 'Category' %}</label>
+        <select name="category" class="form-control" onchange="this.form.submit()">
+          <option value="">{% trans 'All' %}</option>
+          {% for cat in categories %}<option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>{{ cat.icon }} {{ cat.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
+    </div>
+  </form>
+
+  <!-- Words Grid -->
+  <div class="grid grid-4">
+    {% for word in words %}
+    <div class="card hover-lift" data-word-id="{{ word.id }}">
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="badge badge-{{ word.difficulty }}">{{ word.get_difficulty_display }}</span>
+          <button class="fav-btn" onclick="toggleFavorite({{ word.id }}, this)"
+            style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:{% if user_words|get_item:word.id %}{% if user_words|get_item:word.id.is_favorite %}#f59e0b{% else %}var(--text-muted){% endif %}{% else %}var(--text-muted){% endif %}">
+            ★
+          </button>
+        </div>
+        <div style="font-size:1.25rem;font-weight:700;color:var(--text-primary);margin-bottom:4px">{{ word.word }}</div>
+        {% if word.pronunciation %}<div style="font-size:0.8rem;color:var(--text-muted);font-style:italic;margin-bottom:8px">{{ word.pronunciation }}</div>{% endif %}
+        <div style="font-size:0.9rem;font-weight:600;color:var(--color-primary);margin-bottom:6px">{{ word.translation_uz }}</div>
+        {% if word.example_sentence %}
+        <div style="font-size:0.75rem;color:var(--text-muted);font-style:italic">{{ word.example_sentence|truncatechars:60 }}</div>
+        {% endif %}
+        {% if word.part_of_speech %}<span class="badge badge-info mt-2">{{ word.part_of_speech }}</span>{% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <div style="grid-column:1/-1;text-align:center;padding:60px">
+      <div style="font-size:4rem;margin-bottom:16px">📭</div>
+      <h3>{% trans 'No words found' %}</h3>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:32px">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← {% trans 'Prev' %}</a>{% endif %}
+    <span style="padding:8px 16px;background:var(--bg-tertiary);border-radius:8px;font-size:0.875rem">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">{% trans 'Next' %} →</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<script>
+const WORD_STATUS_URL = "{% url 'vocabulary:word-status' 0 %}";
+function toggleFavorite(wordId, btn) {
+  fetch(WORD_STATUS_URL.replace('/0/', `/${wordId}/`), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': window.CSRF_TOKEN },
+    body: JSON.stringify({ action: 'favorite' })
+  }).then(r => r.json()).then(data => {
+    btn.style.color = data.is_favorite ? '#f59e0b' : 'var(--text-muted)';
+  });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Certificate' %} — {{ certificate.course.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:800px">
+  <!-- Certificate Visual -->
+  <div style="background:var(--gradient-hero);border-radius:24px;padding:48px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.08) 1px,transparent 1px);background-size:40px 40px;"></div>
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;border:2px solid rgba(99,102,241,0.3);border-radius:24px;margin:8px;pointer-events:none"></div>
+
+    <div style="position:relative;z-index:1">
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px">🎓 Rustili</div>
+      <div style="font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:24px">{% trans 'Certificate of Completion' %}</div>
+
+      <div style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-bottom:8px">{% trans 'This certifies that' %}</div>
+      <div style="font-size:2.5rem;font-weight:900;color:white;margin-bottom:8px;letter-spacing:-0.02em">{{ certificate.user.get_full_name }}</div>
+      <div style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-bottom:8px">{% trans 'has successfully completed' %}</div>
+      <div style="font-size:1.5rem;font-weight:700;color:#a5b4fc;margin-bottom:24px">{{ certificate.course.title }}</div>
+      <div style="font-size:0.875rem;color:rgba(255,255,255,0.5)">{{ certificate.issued_at|date:"F j, Y" }}</div>
+
+      <div style="margin-top:24px;display:flex;justify-content:center;gap:16px;font-size:0.8rem;color:rgba(255,255,255,0.4)">
+        <span>ID: {{ certificate.short_id }}</span>
+        <span>•</span>
+        <span>Level: {{ certificate.course.get_level_display }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
+    <a href="{% url 'certificates:download' certificate.certificate_id %}" class="btn btn-primary">⬇ {% trans 'Download PDF' %}</a>
+    <a href="{% url 'certificates:verify' certificate.certificate_id %}" class="btn btn-secondary" target="_blank">🔍 {% trans 'Verify Certificate' %}</a>
+  </div>
+
+  <!-- Details -->
+  <div class="card">
+    <div class="card-body">
+      <h3 class="mb-4">📋 {% trans 'Certificate Details' %}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Certificate ID' %}</div><div style="font-family:monospace;font-size:0.875rem">{{ certificate.certificate_id }}</div></div>
+        <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Issued on' %}</div><div style="font-size:0.875rem">{{ certificate.issued_at|date:"N j, Y" }}</div></div>
+        <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Course' %}</div><div style="font-size:0.875rem">{{ certificate.course.title }}</div></div>
+        <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Level' %}</div><div style="font-size:0.875rem">{{ certificate.course.get_level_display }}</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

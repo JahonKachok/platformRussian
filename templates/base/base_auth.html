@@ -1,0 +1,237 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE }}" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% trans 'Auth' %}{% endblock %} — Rustili</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+  <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+  {% block extra_css %}{% endblock %}
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='16' y='22' text-anchor='middle' font-size='16' fill='white'>R</text></svg>">
+
+  <script>
+    const savedTheme = localStorage.getItem('rustili-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    window.CSRF_TOKEN = '{{ csrf_token }}';
+  </script>
+
+  <style>
+    .auth-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .auth-left {
+      background: var(--gradient-hero);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+    }
+
+    .auth-left-orbs .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: hero-glow 8s ease-in-out infinite;
+    }
+
+    .auth-left-orbs .orb-1 { width:300px;height:300px;background:rgba(99,102,241,0.3);top:-50px;right:-50px; }
+    .auth-left-orbs .orb-2 { width:250px;height:250px;background:rgba(139,92,246,0.2);bottom:-50px;left:20%;animation-delay:3s; }
+
+    .auth-left-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .auth-logo .icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .auth-logo .name {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.04em;
+    }
+
+    .auth-tagline {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+
+    .auth-tagline span {
+      background: linear-gradient(135deg, #a5b4fc, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 320px;
+      margin: 0 auto 32px;
+    }
+
+    .auth-features { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+
+    .auth-feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .auth-feature-icon { font-size: 1.25rem; }
+    .auth-feature-text { font-size: 0.875rem; color: rgba(255,255,255,0.8); font-weight: 500; text-align: left; }
+
+    .auth-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      background: var(--bg-secondary);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .auth-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+    .auth-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+
+    .auth-nav-link {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-align: center;
+      display: block;
+      margin-top: 24px;
+    }
+
+    .auth-nav-link a { color: var(--color-primary); font-weight: 600; }
+    .auth-nav-link a:hover { text-decoration: underline; }
+
+    @media (max-width: 1024px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .auth-right { padding: 32px 24px; }
+      .auth-card { max-width: 100%; box-shadow: none; border: none; background: transparent; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  {% if messages %}
+  <div class="toast-container">
+    {% for msg in messages %}
+    <div class="toast" style="pointer-events:all">
+      <span class="toast-icon">{% if 'success' in msg.tags %}✅{% elif 'error' in msg.tags %}❌{% else %}ℹ️{% endif %}</span>
+      <span class="toast-message">{{ msg }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="auth-layout">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-left-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+      </div>
+      <div class="auth-left-grid"></div>
+
+      <div class="auth-left-content animate-fade-in">
+        <div class="auth-logo">
+          <div class="icon">🎓</div>
+          <div class="name">Rustili</div>
+        </div>
+
+        <h2 class="auth-tagline">
+          {% block left_title %}{% trans 'Your English Journey' %}<br><span>{% trans 'Starts Here' %}</span>{% endblock %}
+        </h2>
+
+        <p class="auth-sub">
+          {% block left_subtitle %}{% trans 'Interactive lessons, gamification, and AI feedback — all in one platform.' %}{% endblock %}
+        </p>
+
+        <div class="auth-features">
+          <div class="auth-feature">
+            <span class="auth-feature-icon">🏆</span>
+            <span class="auth-feature-text">{% trans 'Earn XP, level up, and compete on the leaderboard' %}</span>
+          </div>
+          <div class="auth-feature">
+            <span class="auth-feature-icon">📚</span>
+            <span class="auth-feature-text">{% trans 'Structured courses from A1 to C2 level' %}</span>
+          </div>
+          <div class="auth-feature">
+            <span class="auth-feature-icon">🏅</span>
+            <span class="auth-feature-text">{% trans 'Get certified after completing any course' %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-card animate-fade-in-up">
+        {% block auth_content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+
+  <script>
+  document.querySelectorAll('.toast').forEach(t => {
+    setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 4000);
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{% load static i18n core_tags %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE }}" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}{% trans 'Learn English with AI-powered interactive lessons' %}{% endblock %}">
+  <meta name="theme-color" content="#6366f1">
+
+  <title>{% block title %}{% trans 'Learn English' %}{% endblock %} — Rustili</title>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+  {% block extra_css %}{% endblock %}
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='16' y='22' text-anchor='middle' font-size='16' fill='white'>R</text></svg>">
+
+  <!-- i18n -->
+  <script>
+    window.LANGUAGE_CODE = '{{ CURRENT_LANGUAGE }}';
+    window.CSRF_TOKEN = '{{ csrf_token }}';
+    const savedTheme = localStorage.getItem('rustili-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body class="page-transition">
+
+  <!-- NAVBAR -->
+  {% include 'components/navbar.html' %}
+
+  <!-- MESSAGES -->
+  {% if messages %}
+  <div class="toast-container" id="messages-container">
+    {% for msg in messages %}
+    <div class="toast toast-{{ msg.tags }}" data-auto-dismiss="4000">
+      <span class="toast-icon">
+        {% if 'success' in msg.tags %}✅{% elif 'error' in msg.tags %}❌{% elif 'warning' in msg.tags %}⚠️{% else %}ℹ️{% endif %}
+      </span>
+      <span class="toast-message">{{ msg }}</span>
+      <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  {% block footer %}
+  {% include 'components/footer.html' %}
+  {% endblock %}
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer-overlay" id="mobile-overlay"></div>
+    <nav class="mobile-drawer-panel">
+      <div class="flex flex-col gap-1">
+        <a href="{% url 'home' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+          <span>🏠</span> {% trans 'Home' %}
+        </a>
+        <a href="{% url 'courses:course-list' %}" class="mobile-nav-link">
+          <span>📚</span> {% trans 'Courses' %}
+        </a>
+        <a href="{% url 'vocabulary:flashcards' %}" class="mobile-nav-link">
+          <span>💬</span> {% trans 'Vocabulary' %}
+        </a>
+        <a href="{% url 'grammar:topics' %}" class="mobile-nav-link">
+          <span>📝</span> {% trans 'Grammar' %}
+        </a>
+        <a href="{% url 'quiz:list' %}" class="mobile-nav-link">
+          <span>❓</span> {% trans 'Quiz' %}
+        </a>
+        {% if request.user.is_authenticated %}
+        <hr class="divider">
+        <a href="{% url 'courses:dashboard' %}" class="mobile-nav-link">
+          <span>⚡</span> {% trans 'Dashboard' %}
+        </a>
+        <a href="{% url 'gamification:leaderboard' %}" class="mobile-nav-link">
+          <span>🏆</span> {% trans 'Leaderboard' %}
+        </a>
+        <a href="{% url 'accounts:profile' %}" class="mobile-nav-link">
+          <span>👤</span> {% trans 'Profile' %}
+        </a>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="mobile-nav-link w-full" style="text-align:left;color:#ef4444;">
+            <span>🚪</span> {% trans 'Logout' %}
+          </button>
+        </form>
+        {% else %}
+        <hr class="divider">
+        <a href="{% url 'accounts:login' %}" class="mobile-nav-link">
+          <span>🔑</span> {% trans 'Login' %}
+        </a>
+        <a href="{% url 'accounts:register' %}" class="mobile-nav-link">
+          <span>✨</span> {% trans 'Register' %}
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+
+  <!-- JS -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/animations.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+
+  <!-- Auto dismiss toasts -->
+  <script>
+  document.querySelectorAll('.toast[data-auto-dismiss]').forEach(toast => {
+    const delay = parseInt(toast.dataset.autoDismiss) || 4000;
+    setTimeout(() => {
+      toast.classList.add('removing');
+      setTimeout(() => toast.remove(), 300);
+    }, delay);
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+/* ============ RESPONSIVE BREAKPOINTS ============ */
+/* Mobile: < 640px | Tablet: 640-1024px | Laptop: 1024-1280px | Desktop: > 1280px */
+
+/* ============ TABLET ============ */
+@media (max-width: 1024px) {
+  .container { padding: 0 20px; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .section { padding: 60px 0; }
+
+  /* Navbar */
+  .navbar-nav { display: none; }
+  .mobile-menu-btn { display: flex; }
+
+  /* Hero */
+  .hero-content { text-align: center; }
+  .hero-cta { justify-content: center; }
+  .hero-visual { margin-top: 40px; }
+
+  /* Dashboard */
+  .dashboard-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 640px) {
+  .container { padding: 0 16px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .section { padding: 40px 0; }
+  .section-title { font-size: 1.75rem; }
+
+  /* Cards */
+  .card-body { padding: 16px; }
+  .stat-card { padding: 16px; }
+
+  /* Buttons */
+  .btn-lg { padding: 14px 24px; }
+  .btn-group { flex-direction: column; }
+
+  /* Forms */
+  .form-grid { grid-template-columns: 1fr; }
+
+  /* Modals */
+  .modal { margin: 0; max-height: 100vh; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+
+  /* Toast */
+  .toast-container { right: 12px; left: 12px; bottom: 12px; }
+  .toast { min-width: auto; width: 100%; }
+
+  /* Tables */
+  .table-responsive { overflow-x: auto; }
+
+  /* Hide on mobile */
+  .hide-mobile { display: none !important; }
+
+  /* Hero */
+  .hero { padding: 60px 0 40px; }
+
+  /* Navbar */
+  .navbar-brand .logo-text { display: none; }
+
+  /* Progress ring */
+  .stat-card .progress-ring { width: 48px; height: 48px; }
+}
+
+/* ============ SHOW/HIDE HELPERS ============ */
+@media (min-width: 641px) {
+  .show-mobile { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .show-desktop { display: none !important; }
+}
+
+/* ============ PRINT ============ */
+@media print {
+  .navbar, .sidebar, .footer, .btn, .toast-container { display: none !important; }
+  body { background: white; color: black; }
+  .card, .glass-card { box-shadow: none; border: 1px solid #ddd; }
+}
+
+/* ============ REDUCE MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-float, .animate-float-slow, .particle { animation: none; }
+}
+
+/* ============ HIGH CONTRAST ============ */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #6366f1;
+    --border-light: #334155;
+  }
+  .badge { border: 1px solid currentColor; }
+}

@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'Verify Certificate' %}{% endblock %}
+{% block content %}
+<div class="container" style="padding:80px 24px;max-width:600px;text-align:center">
+  {% if certificate and is_valid %}
+  <div style="font-size:4rem;margin-bottom:24px">✅</div>
+  <h1 style="color:#10b981;margin-bottom:12px">{% trans 'Certificate Verified!' %}</h1>
+  <p class="text-muted mb-6">{% trans 'This certificate is authentic and valid.' %}</p>
+  <div class="card">
+    <div class="card-body text-center">
+      <div style="font-size:0.875rem;color:var(--text-muted);margin-bottom:16px">{% trans 'Issued to' %}</div>
+      <div style="font-size:1.5rem;font-weight:700;margin-bottom:8px">{{ certificate.user.get_full_name }}</div>
+      <div style="font-size:1rem;color:var(--color-primary);margin-bottom:16px">{{ certificate.course.title }}</div>
+      <div style="font-size:0.875rem;color:var(--text-muted)">{{ certificate.issued_at|date:"N j, Y" }}</div>
+      <div style="margin-top:12px;font-family:monospace;font-size:0.75rem;color:var(--text-muted)">ID: {{ certificate.certificate_id }}</div>
+    </div>
+  </div>
+  {% else %}
+  <div style="font-size:4rem;margin-bottom:24px">❌</div>
+  <h1 style="color:#ef4444;margin-bottom:12px">{% trans 'Invalid Certificate' %}</h1>
+  <p class="text-muted">{% trans 'This certificate could not be verified.' %}</p>
+  {% endif %}
+</div>
+{% endblock %}

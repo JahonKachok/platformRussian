@@ -1,0 +1,118 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Skills Progress' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.skill-card { border-radius:20px; border:2px solid var(--border-light); background:var(--bg-secondary); padding:24px; transition:all 0.3s; }
+.skill-card:hover { border-color:var(--color-primary); transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.skill-ring-wrapper { display:flex; flex-direction:column; align-items:center; margin-bottom:20px; }
+.skill-progress-bar { height:8px; border-radius:4px; background:var(--bg-tertiary); overflow:hidden; margin:8px 0; }
+.skill-progress-fill { height:100%; border-radius:4px; transition:width 1.2s ease; }
+.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; margin:2px; }
+.tag-strength { background:rgba(16,185,129,0.15); color:#059669; }
+.tag-weakness { background:rgba(239,68,68,0.15); color:#dc2626; }
+.overall-ring { position:relative; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <!-- Header -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px">
+    <div class="reveal">
+      <h1>⚡ {% trans 'Skills Progress' %}</h1>
+      <p class="text-muted">{% trans 'Track your progress in each English skill area' %}</p>
+    </div>
+    <!-- Overall Score Ring -->
+    <div class="card reveal delay-100" style="padding:20px;text-align:center;min-width:120px">
+      {% progress_ring overall_score 80 8 '#6366f1' %}
+      <div style="margin-top:8px;font-size:0.85rem;font-weight:700;color:var(--color-primary)">{% trans 'Overall' %}</div>
+      <div style="font-size:1.3rem;font-weight:900">{{ overall_score }}%</div>
+    </div>
+  </div>
+
+  <!-- Skills Grid -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px">
+    {% for skill_data in skills %}
+    {% with sp=skill_data.obj %}
+    <div class="skill-card reveal" style="animation-delay:{{ forloop.counter0|multiply:80 }}ms">
+      <!-- Header row -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:44px;height:44px;border-radius:12px;background:{{ sp.color }}20;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:2px solid {{ sp.color }}40">
+            {{ sp.icon }}
+          </div>
+          <div>
+            <div style="font-size:1rem;font-weight:700">{{ sp.get_skill_display }}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">CEFR: <strong style="color:{{ sp.color }}">{{ sp.cefr_label }}</strong></div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:1.8rem;font-weight:900;color:{{ sp.color }}">{{ sp.current_score }}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted)">/100</div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="skill-progress-bar">
+        <div class="skill-progress-fill" style="width:{{ sp.current_score }}%;background:{{ sp.color }}" data-width="{{ sp.current_score }}"></div>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:flex;gap:12px;margin:12px 0;font-size:0.78rem;color:var(--text-muted)">
+        <span>📅 {% trans 'Week' %}: <strong>{{ sp.weekly_xp }} XP</strong></span>
+        <span>📆 {% trans 'Month' %}: <strong>{{ sp.monthly_xp }} XP</strong></span>
+        <span>🔥 {% trans 'Streak' %}: <strong>{{ sp.streak_days }}d</strong></span>
+      </div>
+
+      <!-- Tags -->
+      <div style="margin-bottom:14px">
+        {% if skill_data.is_strength %}<span class="tag tag-strength">💪 {% trans 'Strength' %}</span>{% endif %}
+        {% if skill_data.is_weakness %}<span class="tag tag-weakness">⚠️ {% trans 'Needs Work' %}</span>{% endif %}
+        {% if sp.total_exercises > 0 %}<span class="tag" style="background:var(--bg-tertiary);color:var(--text-muted)">{{ sp.total_exercises }} {% trans 'exercises' %}</span>{% endif %}
+      </div>
+
+      <!-- Recommendations -->
+      <div style="border-top:1px solid var(--border-light);padding-top:12px">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">💡 {% trans 'Tips' %}</div>
+        {% for tip in skill_data.recommendations %}
+        <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px;display:flex;gap:6px">
+          <span style="color:{{ sp.color }}">•</span> {{ tip }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card mt-8 reveal" style="margin-top:32px">
+    <div class="card-body">
+      <h3 style="margin-bottom:16px">🚀 {% trans 'Practice Now' %}</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="{% url 'vocabulary:flashcards' %}" class="btn btn-primary ripple-container">💬 {% trans 'Vocabulary Flashcards' %}</a>
+        <a href="{% url 'grammar:topics' %}" class="btn btn-secondary ripple-container">📝 {% trans 'Grammar Topics' %}</a>
+        <a href="{% url 'quiz:list' %}" class="btn btn-accent ripple-container">❓ {% trans 'Take a Quiz' %}</a>
+        <a href="{% url 'diagnostic:index' %}" class="btn btn-secondary ripple-container">🔬 {% trans 'Diagnostic Test' %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Animate progress bars on scroll
+const fills = document.querySelectorAll('.skill-progress-fill');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.dataset.width + '%';
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+fills.forEach(f => { f.style.width = '0'; obs.observe(f); });
+</script>
+{% endblock %}

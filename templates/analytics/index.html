@@ -1,0 +1,173 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Learning Analytics' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.stat-card { border-radius:16px; padding:20px; background:var(--bg-secondary); border:1px solid var(--border-light); }
+.chart-bar { border-radius:4px 4px 0 0; transition:height 0.8s cubic-bezier(0.34,1.56,0.64,1); cursor:pointer; position:relative; }
+.chart-bar:hover { opacity:0.85; }
+.chart-bar::after { content:attr(data-val); position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:var(--text-primary); color:var(--bg-primary); padding:2px 6px; border-radius:4px; font-size:0.65rem; white-space:nowrap; opacity:0; transition:opacity 0.2s; margin-bottom:4px; }
+.chart-bar:hover::after { opacity:1; }
+.heatmap-grid { display:flex; gap:3px; flex-wrap:wrap; }
+.heat-cell { width:12px; height:12px; border-radius:2px; }
+.heat-0 { background:var(--bg-tertiary); }
+.heat-1 { background:rgba(99,102,241,0.25); }
+.heat-2 { background:rgba(99,102,241,0.5); }
+.heat-3 { background:rgba(99,102,241,0.75); }
+.heat-4 { background:var(--color-primary); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="margin-bottom:32px" class="reveal">
+    <h1>📊 {% trans 'Learning Analytics' %}</h1>
+    <p class="text-muted">{% trans 'Your detailed study statistics and performance insights' %}</p>
+  </div>
+
+  <!-- Overview Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:32px">
+    {% with stats=weekly %}
+    <div class="stat-card reveal">
+      <div style="font-size:1.8rem;font-weight:900;color:var(--color-primary)">{{ daily.minutes_studied|default:0 }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Minutes Today' %}</div>
+    </div>
+    <div class="stat-card reveal delay-100">
+      <div style="font-size:1.8rem;font-weight:900;color:#8b5cf6">{{ stats.mins|default:0 }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Minutes This Week' %}</div>
+    </div>
+    <div class="stat-card reveal delay-200">
+      <div style="font-size:1.8rem;font-weight:900;color:#10b981">{{ monthly.mins|default:0 }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Minutes This Month' %}</div>
+    </div>
+    <div class="stat-card reveal delay-300">
+      <div style="font-size:1.8rem;font-weight:900;color:#f59e0b">{{ avg_daily }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Avg Daily (min)' %}</div>
+    </div>
+    <div class="stat-card reveal delay-200">
+      <div style="font-size:1.8rem;font-weight:900;color:#6366f1">{{ stats.xp|default:0 }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'XP This Week' %}</div>
+    </div>
+    <div class="stat-card reveal delay-300">
+      <div style="font-size:1.8rem;font-weight:900;color:#ec4899">{{ most_active }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Most Active Day' %}</div>
+    </div>
+    {% endwith %}
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px">
+    <!-- Weekly Bar Chart -->
+    <div class="card reveal">
+      <div class="card-body">
+        <h3 style="margin-bottom:24px;font-size:1rem">📅 {% trans 'Last 7 Days (Minutes)' %}</h3>
+        <div id="weekly-chart" style="display:flex;align-items:flex-end;gap:8px;height:140px;padding:0 8px"></div>
+        <div id="weekly-labels" style="display:flex;gap:8px;padding:8px 8px 0;font-size:0.72rem;color:var(--text-muted)"></div>
+      </div>
+    </div>
+
+    <!-- XP Bar Chart -->
+    <div class="card reveal delay-100">
+      <div class="card-body">
+        <h3 style="margin-bottom:24px;font-size:1rem">⚡ {% trans 'Last 7 Days (XP)' %}</h3>
+        <div id="xp-chart" style="display:flex;align-items:flex-end;gap:8px;height:140px;padding:0 8px"></div>
+        <div id="xp-labels" style="display:flex;gap:8px;padding:8px 8px 0;font-size:0.72rem;color:var(--text-muted)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heatmap -->
+  <div class="card mb-6 reveal delay-200">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px;font-size:1rem">🔥 {% trans 'Activity Heatmap (Last 84 Days)' %}</h3>
+      <div class="heatmap-grid" id="heatmap"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:0.75rem;color:var(--text-muted)">
+        {% trans 'Less' %}
+        <div class="heat-cell heat-0"></div>
+        <div class="heat-cell heat-1"></div>
+        <div class="heat-cell heat-2"></div>
+        <div class="heat-cell heat-3"></div>
+        <div class="heat-cell heat-4"></div>
+        {% trans 'More' %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Sessions Table -->
+  <div class="card reveal delay-300">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px;font-size:1rem">📋 {% trans 'Recent Study Sessions' %}</h3>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.875rem">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border-light)">
+              <th style="text-align:left;padding:8px 12px;color:var(--text-muted);font-weight:600">{% trans 'Date' %}</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600">⏱️ {% trans 'Minutes' %}</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600">⚡ XP</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600">📖 {% trans 'Lessons' %}</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600">❓ {% trans 'Quizzes' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for day in last_30 %}
+            {% if day.mins > 0 %}
+            <tr style="border-bottom:1px solid var(--border-light)">
+              <td style="padding:8px 12px">{{ day.date }}</td>
+              <td style="padding:8px 12px;text-align:center;font-weight:600;color:var(--color-primary)">{{ day.mins }}</td>
+              <td style="padding:8px 12px;text-align:center;color:#f59e0b;font-weight:600">{{ day.xp }}</td>
+              <td style="padding:8px 12px;text-align:center">—</td>
+              <td style="padding:8px 12px;text-align:center">—</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if total_sessions == 0 %}
+        <div style="text-align:center;padding:40px;color:var(--text-muted)">
+          <div style="font-size:3rem;margin-bottom:12px">📊</div>
+          <p>{% trans 'No study sessions recorded yet. Start learning!' %}</p>
+          <a href="{% url 'courses:dashboard' %}" class="btn btn-primary mt-3">{% trans 'Go to Dashboard' %}</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WEEKLY = {{ weekly_chart_json|safe }};
+const HEATMAP = {{ heatmap_json|safe }};
+
+function buildChart(data, containerId, labelId, key, color) {
+  const maxVal = Math.max(...data.map(d => d[key]), 1);
+  const container = document.getElementById(containerId);
+  const labelEl = document.getElementById(labelId);
+  data.forEach(d => {
+    const h = Math.max((d[key] / maxVal) * 130, d[key] > 0 ? 4 : 0);
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.dataset.val = d[key];
+    bar.style.cssText = `flex:1;height:0;background:${color};border-radius:4px 4px 0 0;transition:height 0.8s cubic-bezier(0.34,1.56,0.64,1)`;
+    container.appendChild(bar);
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'flex:1;text-align:center;font-size:0.68rem;color:var(--text-muted)';
+    lbl.textContent = d.label;
+    labelEl.appendChild(lbl);
+    setTimeout(() => { bar.style.height = h + 'px'; }, 300);
+  });
+}
+
+buildChart(WEEKLY, 'weekly-chart', 'weekly-labels', 'mins', 'var(--color-primary)');
+buildChart(WEEKLY, 'xp-chart', 'xp-labels', 'xp', '#f59e0b');
+
+// Heatmap
+const heatEl = document.getElementById('heatmap');
+HEATMAP.forEach(d => {
+  const cell = document.createElement('div');
+  cell.className = `heat-cell heat-${d.intensity}`;
+  cell.title = `${d.date}: ${d.mins} min`;
+  heatEl.appendChild(cell);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+<div style="background:var(--gradient-hero);padding:60px 0 0;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="flex gap-2 mb-4" style="flex-wrap:wrap">
+      <span class="badge badge-primary">{{ course.level }}</span>
+      {% if course.is_free %}<span class="badge badge-success">{% trans 'Free' %}</span>{% endif %}
+      {% if course.has_certificate %}<span class="badge badge-purple">🏅 {% trans 'Certificate' %}</span>{% endif %}
+    </div>
+    <h1 style="color:white;font-size:clamp(1.75rem,4vw,3rem);margin-bottom:12px;max-width:700px">{{ course.title }}</h1>
+    <p style="color:rgba(255,255,255,0.8);max-width:600px;margin-bottom:24px">{{ course.short_description|default:course.description|truncatechars:150 }}</p>
+    <div style="display:flex;gap:24px;color:rgba(255,255,255,0.7);font-size:0.9rem;flex-wrap:wrap;margin-bottom:40px">
+      {% if course.teacher %}<span>👨‍🏫 {{ course.teacher.get_full_name }}</span>{% endif %}
+      <span>📚 {{ lesson_count }} {% trans 'lessons' %}</span>
+      <span>⏱️ {{ course.duration_hours }}h</span>
+      <span>⚡ {{ course.xp_reward }} XP</span>
+    </div>
+  </div>
+  <div style="height:40px;background:var(--bg-secondary);border-radius:40px 40px 0 0;position:relative;z-index:1"></div>
+</div>
+
+<div class="container" style="padding:24px">
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:32px">
+    <!-- Left: Lessons -->
+    <div>
+      <h2 class="mb-4">📚 {% trans 'Course Content' %} <span class="badge badge-primary ml-2">{{ lesson_count }}</span></h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        {% for lesson in lessons %}
+        <div class="card" style="border-radius:12px">
+          <div style="padding:14px 18px;display:flex;align-items:center;gap:14px">
+            <div style="width:40px;height:40px;border-radius:10px;background:{% if lesson.id in completed_lesson_ids %}var(--gradient-green){% else %}rgba(99,102,241,0.1){% endif %};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem">
+              {% if lesson.id in completed_lesson_ids %}✓{% else %}{{ lesson.type_icon }}{% endif %}
+            </div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary)">{{ lesson.title }}</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);display:flex;gap:12px;margin-top:2px">
+                <span>{{ lesson.get_lesson_type_display }}</span>
+                <span>⏱️ {{ lesson.duration_minutes }}m</span>
+                <span>⚡ {{ lesson.xp_reward }} XP</span>
+              </div>
+            </div>
+            {% if request.user.is_authenticated and enrollment %}
+            <a href="{% url 'courses:lesson' lesson.slug %}" class="btn btn-sm {% if lesson.id in completed_lesson_ids %}btn-accent{% else %}btn-primary{% endif %}">
+              {% if lesson.id in completed_lesson_ids %}{% trans 'Review' %}{% else %}{% trans 'Start' %}{% endif %}
+            </a>
+            {% elif lesson.is_free_preview %}
+            <a href="{% url 'courses:lesson' lesson.slug %}" class="btn btn-sm btn-secondary">{% trans 'Preview' %}</a>
+            {% else %}
+            <span class="badge badge-info">🔒</span>
+            {% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <div style="text-align:center;padding:40px;color:var(--text-muted)">📭 {% trans 'No lessons yet' %}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right: Enroll card -->
+    <div>
+      <div class="card" style="position:sticky;top:80px">
+        <div style="height:160px;background:var(--gradient-button);display:flex;align-items:center;justify-content:center;font-size:3.5rem">
+          {{ course.category.icon|default:"📚" }}
+        </div>
+        <div class="card-body">
+          <div style="font-size:2rem;font-weight:800;color:var(--text-primary);margin-bottom:4px">
+            {% if course.is_free %}{% trans 'Free' %}{% else %}{% trans 'Premium' %}{% endif %}
+          </div>
+
+          {% if request.user.is_authenticated %}
+            {% if enrollment %}
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center">
+              <div style="font-weight:700;color:#10b981">✓ {% trans 'Enrolled' %}</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px">{{ enrollment.progress_percent }}% {% trans 'complete' %}</div>
+              <div class="progress-bar-container mt-2">
+                <div class="progress-bar progress-bar-success" style="width:{{ enrollment.progress_percent }}%"></div>
+              </div>
+            </div>
+            {% if lessons %}<a href="{% url 'courses:lesson' lessons.0.slug %}" class="btn btn-primary btn-block">▶ {% trans 'Continue Learning' %}</a>{% endif %}
+            {% else %}
+            <form method="post" action="{% url 'courses:enroll' course.slug %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-block btn-lg">🚀 {% trans 'Enroll Now — Free!' %}</button>
+            </form>
+            {% endif %}
+          {% else %}
+          <a href="{% url 'accounts:register' %}?next={{ request.path }}" class="btn btn-primary btn-block btn-lg">🚀 {% trans 'Register & Enroll Free' %}</a>
+          {% endif %}
+
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem">
+              <span>📚</span><span>{{ lesson_count }} {% trans 'lessons' %}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem">
+              <span>⏱️</span><span>{{ course.duration_hours }}h {% trans 'total' %}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem">
+              <span>⚡</span><span>{{ course.xp_reward }} XP {% trans 'reward' %}</span>
+            </div>
+            {% if course.has_certificate %}
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem">
+              <span>🏅</span><span>{% trans 'Certificate on completion' %}</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

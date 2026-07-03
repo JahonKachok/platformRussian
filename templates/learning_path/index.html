@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'My Learning Path' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:760px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+    <div class="reveal">
+      <h1>🗺️ {% trans 'My Learning Path' %}</h1>
+      <p class="text-muted">{% trans 'Personalised recommendations to accelerate your progress' %}</p>
+    </div>
+    <form method="post" action="{% url 'learning_path:refresh' %}" class="reveal delay-100">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary ripple-container" style="font-size:0.875rem">🔄 {% trans 'Regenerate' %}</button>
+    </form>
+  </div>
+
+  {% if items %}
+  <div style="position:relative">
+    <!-- Vertical line -->
+    <div style="position:absolute;left:24px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--color-primary),var(--color-accent));opacity:0.25;border-radius:2px"></div>
+
+    {% for item in items %}
+    <div class="reveal" style="display:flex;gap:16px;margin-bottom:20px;animation-delay:{{ forloop.counter0|multiply:80 }}ms">
+      <!-- Node -->
+      <div style="flex-shrink:0;width:50px;height:50px;border-radius:50%;background:{% if item.completed %}var(--gradient-button){% else %}var(--bg-secondary){% endif %};border:2px solid {% if item.completed %}transparent{% else %}var(--border-light){% endif %};display:flex;align-items:center;justify-content:center;font-size:1.3rem;position:relative;z-index:1;box-shadow:var(--shadow-sm)">
+        {% if item.completed %}✓{% else %}{{ item.type_icon }}{% endif %}
+      </div>
+      <!-- Card -->
+      <div class="card" style="flex:1;{% if item.completed %}opacity:0.7{% endif %}">
+        <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span style="font-size:0.75rem;background:var(--bg-tertiary);padding:2px 8px;border-radius:20px;color:var(--text-muted)">{{ item.get_type_display }}</span>
+              {% if item.priority == 1 %}<span class="badge badge-warning">{% trans 'High Priority' %}</span>{% endif %}
+            </div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:4px">{{ item.title }}</div>
+            {% if item.description %}<div style="font-size:0.8rem;color:var(--text-muted)">{{ item.description }}</div>{% endif %}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            {% if item.completed %}
+            <span style="color:#10b981;font-size:0.82rem;font-weight:700">✓ {% trans 'Done' %}</span>
+            {% else %}
+            {% if item.url %}
+            <a href="{{ item.url }}" class="btn btn-primary btn-sm ripple-container">{% trans 'Start' %} →</a>
+            {% endif %}
+            <form method="post" action="{% url 'learning_path:complete' item.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-ghost" style="font-size:0.75rem">{% trans 'Mark done' %}</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card reveal" style="text-align:center;padding:60px">
+    <div style="font-size:4rem;margin-bottom:16px">🗺️</div>
+    <h3>{% trans 'No path yet' %}</h3>
+    <p class="text-muted">{% trans 'Generate your personalized learning path based on your current progress.' %}</p>
+    <form method="post" action="{% url 'learning_path:refresh' %}" class="mt-4">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">🔄 {% trans 'Generate My Path' %}</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

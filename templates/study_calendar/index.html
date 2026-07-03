@@ -1,0 +1,203 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Learning Calendar' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal-day-label { text-align:center; font-size:0.72rem; font-weight:700; color:var(--text-muted); padding:8px 0; text-transform:uppercase; }
+.cal-cell { min-height:82px; border-radius:10px; padding:6px; border:1px solid var(--border-light); background:var(--bg-secondary); transition:all 0.2s; }
+.cal-cell.today { border-color:var(--color-primary); background:rgba(99,102,241,0.07); }
+.cal-cell.empty { background:transparent; border-color:transparent; min-height:82px; }
+.cal-day-num { font-size:0.82rem; font-weight:600; margin-bottom:3px; color:var(--text-secondary); }
+.cal-cell.today .cal-day-num { background:var(--color-primary); color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; }
+.cal-event { font-size:0.62rem; padding:2px 5px; border-radius:4px; margin-bottom:2px; color:white; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.event-dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.upcoming-item { display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-light); margin-bottom:8px; }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--bg-primary); border-radius:20px; padding:28px; width:100%; max-width:420px; animation:scaleIn 0.25s ease; box-shadow:var(--shadow-xl); }
+@media(max-width:768px){.cal-cell{min-height:44px}.cal-event{display:none}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1>📅 {% trans 'Learning Calendar' %}</h1>
+      <p class="text-muted">{% trans 'Plan and track your study schedule' %}</p>
+    </div>
+    <button class="btn btn-primary ripple-container" onclick="document.getElementById('ev-modal').classList.add('open')">
+      + {% trans 'Add Event' %}
+    </button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start">
+
+    <!-- Calendar card -->
+    <div class="card reveal">
+      <div class="card-body">
+        <!-- Month nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <a href="?year={{ prev_year }}&month={{ prev_month }}" class="btn btn-secondary btn-sm">‹</a>
+          <h2 style="margin:0;font-size:1.1rem;font-weight:700">{{ month_name }} {{ year }}</h2>
+          <a href="?year={{ next_year }}&month={{ next_month }}" class="btn btn-secondary btn-sm">›</a>
+        </div>
+
+        <!-- Weekday headers -->
+        <div class="cal-grid" style="margin-bottom:6px">
+          {% for d in "Mon,Tue,Wed,Thu,Fri,Sat,Sun"|split:"," %}
+          <div class="cal-day-label">{{ d }}</div>
+          {% endfor %}
+        </div>
+
+        <!-- Weeks -->
+        {% for week in weeks %}
+        <div class="cal-grid" style="margin-bottom:4px">
+          {% for day in week %}
+          {% if day == 0 %}
+          <div class="cal-cell empty"></div>
+          {% else %}
+          <div class="cal-cell {% if day == today.day and year == today.year and month == today.month %}today{% endif %}">
+            <div class="cal-day-num">{{ day }}</div>
+            {% for ev in events_by_day|get_item:day %}
+            <div class="cal-event" style="background:{{ ev.get_color }}">{{ ev.title }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+      <div class="card mb-4 reveal delay-100">
+        <div class="card-body">
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px">{% trans 'Today' %}</div>
+          <div style="font-size:1.2rem;font-weight:800;color:var(--color-primary)">{{ today|date:"j F Y" }}</div>
+        </div>
+      </div>
+
+      <div class="card mb-4 reveal delay-200">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:12px">⏰ {% trans 'Upcoming' %}</h4>
+          {% for ev in upcoming %}
+          <div class="upcoming-item" id="ev-{{ ev.id }}">
+            <div class="event-dot" style="background:{{ ev.get_color }}"></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ ev.title }}</div>
+              <div style="font-size:0.72rem;color:var(--text-muted)">{{ ev.date }}{% if ev.time %} {{ ev.time|time:"H:i" }}{% endif %}</div>
+            </div>
+            <div style="display:flex;gap:4px;flex-shrink:0">
+              <button onclick="toggleEv({{ ev.id }},this)" title="Toggle" style="background:none;border:none;cursor:pointer;font-size:0.9rem">{% if ev.is_completed %}✅{% else %}⬜{% endif %}</button>
+              <button onclick="deleteEv({{ ev.id }})" title="Delete" style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:var(--text-muted)">✕</button>
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-muted" style="text-align:center;font-size:0.85rem;padding:16px 0">{% trans 'No upcoming events' %}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="card reveal delay-300">
+        <div class="card-body">
+          <h4 style="font-size:0.85rem;margin-bottom:10px">{% trans 'Types' %}</h4>
+          {% for code, label in event_types %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:0.8rem">
+            <div class="event-dot" style="background:{% if code == 'lesson' %}#6366f1{% elif code == 'quiz' %}#f59e0b{% elif code == 'assignment' %}#8b5cf6{% elif code == 'reminder' %}#10b981{% elif code == 'holiday' %}#ef4444{% elif code == 'goal' %}#3b82f6{% else %}#6b7280{% endif %}"></div>
+            <span>{{ label }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal-overlay" id="ev-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="margin:0">📅 {% trans 'New Event' %}</h3>
+      <button onclick="document.getElementById('ev-modal').classList.remove('open')" style="background:none;border:none;font-size:1.3rem;cursor:pointer">✕</button>
+    </div>
+    <form id="ev-form">
+      <div class="form-group mb-3">
+        <label class="form-label">{% trans 'Title' %} *</label>
+        <input type="text" id="ev-title" class="form-control" required placeholder="e.g. Grammar Review">
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">{% trans 'Type' %}</label>
+        <select id="ev-type" class="form-control">
+          {% for code, label in event_types %}<option value="{{ code }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div class="form-group">
+          <label class="form-label">{% trans 'Date' %} *</label>
+          <input type="date" id="ev-date" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{% trans 'Time' %}</label>
+          <input type="time" id="ev-time" class="form-control">
+        </div>
+      </div>
+      <div class="form-group mb-4">
+        <label class="form-label">{% trans 'Description' %}</label>
+        <textarea id="ev-desc" class="form-control" rows="2" placeholder="{% trans 'Optional notes...' %}"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block ripple-container">{% trans 'Save Event' %}</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const EV_CREATE = "{% url 'study_calendar:event-create' %}";
+const EV_TOGGLE = "{% url 'study_calendar:event-toggle' 0 %}";
+const EV_DELETE = "{% url 'study_calendar:event-delete' 0 %}";
+
+// Set today as default date
+document.getElementById('ev-date').value = new Date().toISOString().split('T')[0];
+
+document.getElementById('ev-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  fetch(EV_CREATE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': window.CSRF_TOKEN },
+    body: JSON.stringify({
+      title: document.getElementById('ev-title').value,
+      event_type: document.getElementById('ev-type').value,
+      date: document.getElementById('ev-date').value,
+      time: document.getElementById('ev-time').value || null,
+      description: document.getElementById('ev-desc').value,
+    })
+  }).then(r => r.json()).then(() => {
+    window.Rustili?.Toast.show('{% trans "Event added!" %}', 'success');
+    setTimeout(() => location.reload(), 600);
+  });
+});
+
+function toggleEv(id, btn) {
+  fetch(EV_TOGGLE.replace('/0/', `/${id}/`), {
+    method:'POST', headers:{'X-CSRFToken':window.CSRF_TOKEN}
+  }).then(r => r.json()).then(d => {
+    btn.textContent = d.is_completed ? '✅' : '⬜';
+  });
+}
+
+function deleteEv(id) {
+  if (!confirm('Delete event?')) return;
+  fetch(EV_DELETE.replace('/0/', `/${id}/`), {
+    method:'POST', headers:{'X-CSRFToken':window.CSRF_TOKEN}
+  }).then(() => {
+    document.getElementById(`ev-${id}`)?.remove();
+    window.Rustili?.Toast.show('Deleted', 'info');
+  });
+}
+</script>
+{% endblock %}

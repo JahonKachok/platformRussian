@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ course.title }} — {% trans 'Forum' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div class="reveal">
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px"><a href="{% url 'forum:index' %}" style="color:var(--text-muted)">{% trans 'Forum' %}</a> /</div>
+      <h1>💬 {{ course.title }}</h1>
+    </div>
+    <button class="btn btn-primary ripple-container reveal delay-100" onclick="document.getElementById('new-topic-modal').classList.add('open')">
+      + {% trans 'New Topic' %}
+    </button>
+  </div>
+
+  <!-- Search -->
+  <form method="get" class="card mb-4 reveal delay-100">
+    <div class="card-body" style="display:flex;gap:12px">
+      <input type="text" name="q" class="form-control" placeholder="{% trans 'Search topics...' %}" value="{{ search }}">
+      <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
+    </div>
+  </form>
+
+  <!-- Topics -->
+  <div class="card reveal delay-200">
+    <div class="card-body">
+      {% for topic in topics %}
+      <a href="{% url 'forum:topic' topic.pk %}" style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border-light);text-decoration:none" class="topic-row">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--gradient-button);color:white;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;flex-shrink:0">
+          {{ topic.author.get_initials }}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary)">
+            {% if topic.is_pinned %}<span style="color:#f59e0b">📌</span> {% endif %}
+            {% if topic.is_announcement %}<span style="color:#ef4444">📢</span> {% endif %}
+            {{ topic.title }}
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px">{{ topic.author }} · {{ topic.created_at|timesince }} {% trans 'ago' %}</div>
+        </div>
+        <div style="text-align:right;font-size:0.75rem;color:var(--text-muted);flex-shrink:0;white-space:nowrap">
+          <div>💬 {{ topic.reply_count }}</div>
+          <div>👁️ {{ topic.views }}</div>
+        </div>
+      </a>
+      {% empty %}
+      <div style="text-align:center;padding:60px">
+        <div style="font-size:3rem;margin-bottom:12px">💬</div>
+        <p class="text-muted">{% trans 'No topics yet. Start the first discussion!' %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- New Topic Modal -->
+<div class="modal-overlay" id="new-topic-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--bg-primary);border-radius:20px;padding:28px;width:100%;max-width:560px;animation:scaleIn 0.25s ease;box-shadow:var(--shadow-xl);margin:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="margin:0">💬 {% trans 'Create Topic' %}</h3>
+      <button onclick="document.getElementById('new-topic-modal').style.display='none'" style="background:none;border:none;font-size:1.3rem;cursor:pointer">✕</button>
+    </div>
+    <form method="post" action="{% url 'forum:topic-create' course.slug %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label class="form-label">{% trans 'Title' %} *</label>
+        <input type="text" name="title" class="form-control" required placeholder="{% trans 'Your question or topic title...' %}">
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">{% trans 'Content' %} *</label>
+        <textarea name="content" class="form-control" rows="5" required placeholder="{% trans 'Describe your question in detail...' %}"></textarea>
+      </div>
+      <div class="form-group mb-4">
+        <label class="form-label">📎 {% trans 'Attachment (optional)' %}</label>
+        <input type="file" name="attachment" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block ripple-container">{% trans 'Post Topic' %}</button>
+    </form>
+  </div>
+</div>
+<style>
+#new-topic-modal.open{display:flex!important}
+.topic-row:hover{background:var(--bg-secondary);border-radius:10px;padding-left:12px!important;margin-left:-12px}
+</style>
+{% endblock %}

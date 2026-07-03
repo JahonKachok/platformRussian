@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Review Submission' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:860px">
+  <a href="{% url 'feedback:teacher-list' %}" class="btn btn-secondary btn-sm mb-4 reveal">← {% trans 'Back to List' %}</a>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+    <!-- Submission -->
+    <div class="card reveal">
+      <div class="card-body">
+        <h3 style="margin-bottom:4px">📝 {% trans 'Submission' %}</h3>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">{{ submission.user.get_full_name }} · {{ submission.created_at|date:"d M Y" }}</div>
+        <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px">{{ submission.lesson.title }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">{{ submission.lesson.course.title }}</div>
+        {% if submission.text %}
+        <div style="background:var(--bg-secondary);padding:14px;border-radius:12px;line-height:1.75;white-space:pre-wrap;font-size:0.875rem;color:var(--text-secondary)">{{ submission.text }}</div>
+        {% endif %}
+        {% if submission.file %}<div class="mt-3"><a href="{{ submission.file.url }}" class="btn btn-secondary btn-sm" target="_blank">📎 {% trans 'View File' %}</a></div>{% endif %}
+        {% if submission.audio %}<div class="mt-3"><audio controls style="width:100%"><source src="{{ submission.audio.url }}"></audio></div>{% endif %}
+      </div>
+    </div>
+
+    <!-- Feedback form -->
+    <div class="card reveal delay-100">
+      <div class="card-body">
+        <h3 style="margin-bottom:20px">✏️ {% trans 'Give Feedback' %}</h3>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label">💬 {% trans 'Text Feedback' %} *</label>
+            <textarea name="text_feedback" class="form-control" rows="5" required placeholder="{% trans 'Detailed feedback for the student...' %}">{% if feedback %}{{ feedback.text_feedback }}{% endif %}</textarea>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">🎯 {% trans 'Overall Score' %} (0-100)</label>
+            <input type="number" name="score" class="form-control" min="0" max="100" value="{{ feedback.score|default:'' }}" placeholder="e.g. 85">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            {% for name, field, label in rubric_fields %}
+            <div class="form-group">
+              <label class="form-label" style="font-size:0.8rem">{{ label }} (0-100)</label>
+              <input type="number" name="{{ field }}" class="form-control" min="0" max="100" value="{{ feedback|default_if_none:''|default:'' }}" placeholder="0">
+            </div>
+            {% endfor %}
+            <div class="form-group">
+              <label class="form-label" style="font-size:0.8rem">Grammar (0-100)</label>
+              <input type="number" name="grammar_score" class="form-control" min="0" max="100" value="{% if feedback %}{{ feedback.grammar_score }}{% endif %}">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size:0.8rem">Vocabulary (0-100)</label>
+              <input type="number" name="vocabulary_score" class="form-control" min="0" max="100" value="{% if feedback %}{{ feedback.vocabulary_score }}{% endif %}">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size:0.8rem">Fluency (0-100)</label>
+              <input type="number" name="fluency_score" class="form-control" min="0" max="100" value="{% if feedback %}{{ feedback.fluency_score }}{% endif %}">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size:0.8rem">Content (0-100)</label>
+              <input type="number" name="content_score" class="form-control" min="0" max="100" value="{% if feedback %}{{ feedback.content_score }}{% endif %}">
+            </div>
+          </div>
+          <div class="form-group mb-4">
+            <label class="form-label">🎤 {% trans 'Audio Feedback (optional)' %}</label>
+            <input type="file" name="audio_feedback" class="form-control" accept="audio/*">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block ripple-container">✓ {% trans 'Submit Feedback' %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

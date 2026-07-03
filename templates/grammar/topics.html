@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Grammar' %}{% endblock %}
+
+{% block content %}
+<div style="background:var(--gradient-hero);padding:60px 0 80px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.07) 1px,transparent 1px);background-size:50px 50px;"></div>
+  <div class="container" style="position:relative;z-index:1;text-align:center">
+    <h1 style="color:white;font-size:clamp(2rem,4vw,3rem);margin-bottom:12px">📝 {% trans 'Grammar Topics' %}</h1>
+    <p style="color:rgba(255,255,255,0.7)">{% trans 'Master English grammar from basics to advanced.' %}</p>
+  </div>
+</div>
+
+<div class="container" style="padding:40px 24px;margin-top:-40px;position:relative;z-index:1">
+  {% regroup topics by level as by_level %}
+  {% for level_group in by_level %}
+  <div style="margin-bottom:48px">
+    <h2 style="margin-bottom:20px">
+      <span class="badge badge-primary" style="font-size:0.9rem;padding:6px 16px">{{ level_group.grouper }}</span>
+    </h2>
+    <div class="grid grid-auto">
+      {% for topic in level_group.list %}
+      <a href="{% url 'grammar:topic-detail' topic.slug %}" class="card hover-lift reveal" style="text-decoration:none">
+        <div class="card-body">
+          <div style="font-size:2rem;margin-bottom:12px">{{ topic.icon }}</div>
+          <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:8px">{{ topic.title }}</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.6">{{ topic.explanation|truncatechars:80 }}</p>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <span class="badge badge-primary">{{ topic.level }}</span>
+            {% with ex_count=topic.exercises.count %}
+            {% if ex_count %}<span class="badge badge-info">{{ ex_count }} {% trans 'exercises' %}</span>{% endif %}
+            {% endwith %}
+            {% if user_progress|get_item:topic.id %}
+            <span class="badge badge-success">✓ {% trans 'Done' %}</span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <div style="text-align:center;padding:80px">
+    <div style="font-size:4rem;margin-bottom:16px">📭</div>
+    <h3>{% trans 'No grammar topics yet' %}</h3>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

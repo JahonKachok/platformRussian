@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Learning Roadmaps' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="margin-bottom:28px" class="reveal">
+    <h1>🗺️ {% trans 'Learning Roadmaps' %}</h1>
+    <p class="text-muted">{% trans 'Track your progress through each enrolled course' %}</p>
+  </div>
+
+  {% if enrollments %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+    {% for enrollment in enrollments %}
+    <a href="{% url 'roadmap:course-roadmap' enrollment.course.slug %}" class="card hover-lift reveal" style="text-decoration:none;animation-delay:{{ forloop.counter0|multiply:60 }}ms">
+      <div class="card-body">
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:6px">{{ enrollment.course.get_level_display }}</div>
+        <h3 style="margin:0 0 12px;font-size:0.95rem">{{ enrollment.course.title }}</h3>
+        <div style="background:var(--bg-tertiary);border-radius:10px;height:6px;overflow:hidden;margin-bottom:8px">
+          <div style="height:100%;border-radius:10px;background:var(--gradient-button);width:{{ enrollment.progress_percent }}%"></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--color-primary)">{{ enrollment.progress_percent }}% {% trans 'complete' %}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card reveal" style="text-align:center;padding:60px">
+    <div style="font-size:4rem;margin-bottom:16px">🗺️</div>
+    <h3>{% trans 'No enrolled courses yet' %}</h3>
+    <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-3">{% trans 'Browse Courses' %}</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

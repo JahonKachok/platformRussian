@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Certificates' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <h1 class="mb-6">🏅 {% trans 'My Certificates' %}</h1>
+
+  {% if certificates %}
+  <div class="grid grid-auto">
+    {% for cert in certificates %}
+    <div class="card hover-lift reveal">
+      <div style="background:var(--gradient-hero);padding:32px;text-align:center;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.07) 1px,transparent 1px);background-size:30px 30px"></div>
+        <div style="position:relative;z-index:1">
+          <div style="font-size:3rem;margin-bottom:12px">🏅</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);letter-spacing:0.1em;text-transform:uppercase">{% trans 'Certificate of Completion' %}</div>
+          <div style="font-size:0.5rem;color:rgba(255,255,255,0.4);margin-top:8px">ID: {{ cert.short_id }}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px">{{ cert.course.title }}</h3>
+        <p style="font-size:0.8rem;color:var(--text-muted)">{{ cert.issued_at|date:"N j, Y" }}</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+          <a href="{% url 'certificates:detail' cert.certificate_id %}" class="btn btn-primary btn-sm">{% trans 'View' %}</a>
+          <a href="{% url 'certificates:download' cert.certificate_id %}" class="btn btn-secondary btn-sm">⬇ {% trans 'PDF' %}</a>
+          <a href="{% url 'certificates:verify' cert.certificate_id %}" class="btn btn-secondary btn-sm" target="_blank">🔍 {% trans 'Verify' %}</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:80px">
+    <div style="font-size:4rem;margin-bottom:16px">🏅</div>
+    <h3>{% trans 'No certificates yet' %}</h3>
+    <p class="text-muted">{% trans 'Complete a course to earn your first certificate!' %}</p>
+    <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-4">📚 {% trans 'Browse Courses' %}</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

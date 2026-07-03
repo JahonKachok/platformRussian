@@ -1,0 +1,326 @@
+# Uzbek translation for Rustili
+# Copyright (C) 2024 Rustili
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uz\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Learn English"
+msgstr "Ingliz tilini o'rganing"
+
+msgid "Home"
+msgstr "Bosh sahifa"
+
+msgid "Courses"
+msgstr "Kurslar"
+
+msgid "Vocabulary"
+msgstr "So'z boyligi"
+
+msgid "Grammar"
+msgstr "Grammatika"
+
+msgid "Quiz"
+msgstr "Test"
+
+msgid "Dashboard"
+msgstr "Boshqaruv paneli"
+
+msgid "Leaderboard"
+msgstr "Reyting"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Login"
+msgstr "Kirish"
+
+msgid "Register"
+msgstr "Ro'yxatdan o'tish"
+
+msgid "Logout"
+msgstr "Chiqish"
+
+msgid "Get Started"
+msgstr "Boshlash"
+
+msgid "Start for Free"
+msgstr "Bepul boshlash"
+
+msgid "Continue Learning"
+msgstr "O'rganishni davom ettirish"
+
+msgid "Browse Courses"
+msgstr "Kurslarni ko'rish"
+
+msgid "All Courses"
+msgstr "Barcha kurslar"
+
+msgid "Featured"
+msgstr "Tavsiya etilgan"
+
+msgid "Free"
+msgstr "Bepul"
+
+msgid "Certificate"
+msgstr "Sertifikat"
+
+msgid "Certificates"
+msgstr "Sertifikatlar"
+
+msgid "Achievements"
+msgstr "Yutuqlar"
+
+msgid "Notifications"
+msgstr "Xabarnomalar"
+
+msgid "Settings"
+msgstr "Sozlamalar"
+
+msgid "Email"
+msgstr "Elektron pochta"
+
+msgid "Password"
+msgstr "Parol"
+
+msgid "First name"
+msgstr "Ism"
+
+msgid "Last name"
+msgstr "Familiya"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Country"
+msgstr "Mamlakat"
+
+msgid "Bio"
+msgstr "Bio"
+
+msgid "Save Changes"
+msgstr "Saqlash"
+
+msgid "Sign In"
+msgstr "Kirish"
+
+msgid "Create Account"
+msgstr "Hisob yaratish"
+
+msgid "Forgot Password?"
+msgstr "Parolni unutdingizmi?"
+
+msgid "Reset Password"
+msgstr "Parolni tiklash"
+
+msgid "Daily Goal"
+msgstr "Kunlik maqsad"
+
+msgid "Total XP"
+msgstr "Jami XP"
+
+msgid "Current Level"
+msgstr "Joriy daraja"
+
+msgid "Day Streak"
+msgstr "Ketma-ket kunlar"
+
+msgid "Enrolled Courses"
+msgstr "Yozilgan kurslar"
+
+msgid "lessons"
+msgstr "dars"
+
+msgid "questions"
+msgstr "savol"
+
+msgid "Correct"
+msgstr "To'g'ri"
+
+msgid "Score"
+msgstr "Ball"
+
+msgid "Passed"
+msgstr "O'tildi"
+
+msgid "Failed"
+msgstr "Muvaffaqiyatsiz"
+
+msgid "Congratulations!"
+msgstr "Tabriklaymiz!"
+
+msgid "Keep Practicing!"
+msgstr "Mashq qilishni davom eting!"
+
+msgid "Answer Review"
+msgstr "Javoblarni ko'rish"
+
+msgid "Try Again"
+msgstr "Qayta urinib ko'ring"
+
+msgid "All Quizzes"
+msgstr "Barcha testlar"
+
+msgid "Start Quiz"
+msgstr "Testni boshlash"
+
+msgid "Next Question"
+msgstr "Keyingi savol"
+
+msgid "Finish Quiz"
+msgstr "Testni yakunlash"
+
+msgid "Explanation"
+msgstr "Izoh"
+
+msgid "Mark as Complete"
+msgstr "Tugatildi deb belgilash"
+
+msgid "Course Content"
+msgstr "Kurs mazmuni"
+
+msgid "View Course"
+msgstr "Kursni ko'rish"
+
+msgid "Enroll Now — Free!"
+msgstr "Hoziroq yoziling — Bepul!"
+
+msgid "Register & Enroll Free"
+msgstr "Ro'yxatdan o'ting va bepul yoziling"
+
+msgid "Flashcards"
+msgstr "Kartochkalar"
+
+msgid "Mastered"
+msgstr "O'rganildi"
+
+msgid "Learning"
+msgstr "O'rganilmoqda"
+
+msgid "Total"
+msgstr "Jami"
+
+msgid "I Know It"
+msgstr "Bilaman"
+
+msgid "Don't Know"
+msgstr "Bilmayman"
+
+msgid "Flip"
+msgstr "Aylamoq"
+
+msgid "Skip"
+msgstr "O'tkazib yuborish"
+
+msgid "Grammar Topics"
+msgstr "Grammatika mavzulari"
+
+msgid "exercises"
+msgstr "mashq"
+
+msgid "Done"
+msgstr "Bajarildi"
+
+msgid "Top Learners"
+msgstr "Eng yaxshi o'quvchilar"
+
+msgid "Your Rank"
+msgstr "Sizning reytingiz"
+
+msgid "Global ranking"
+msgstr "Global reyting"
+
+msgid "Quick Access"
+msgstr "Tezkor kirish"
+
+msgid "Recent Activity"
+msgstr "Oxirgi faollik"
+
+msgid "Recent Achievements"
+msgstr "Oxirgi yutuqlar"
+
+msgid "All"
+msgstr "Hammasi"
+
+msgid "No certificates yet"
+msgstr "Hali sertifikat yo'q"
+
+msgid "Complete a course to earn your first certificate!"
+msgstr "Birinchi sertifikat olish uchun kursni tugatng!"
+
+msgid "Certificate Verified!"
+msgstr "Sertifikat tasdiqlandi!"
+
+msgid "This certificate is authentic and valid."
+msgstr "Bu sertifikat haqiqiy va amal qiladi."
+
+msgid "Issued to"
+msgstr "Berilgan"
+
+msgid "Certificate of Completion"
+msgstr "Tugatganlik haqida sertifikat"
+
+msgid "This certifies that"
+msgstr "Bu tasdiqlaydi"
+
+msgid "has successfully completed"
+msgstr "muvaffaqiyatli tugatdi"
+
+msgid "Download PDF"
+msgstr "PDF yuklash"
+
+msgid "Verify Certificate"
+msgstr "Sertifikatni tekshirish"
+
+msgid "No notifications"
+msgstr "Xabarnomalar yo'q"
+
+msgid "Mark all read"
+msgstr "Hammasini o'qilgan deb belgilash"
+
+msgid "Active Students"
+msgstr "Faol o'quvchilar"
+
+msgid "Expert Courses"
+msgstr "Mutaxassis kurslar"
+
+msgid "Interactive Lessons"
+msgstr "Interaktiv darslar"
+
+msgid "Completion Rate"
+msgstr "Tugatish darajasi"
+
+msgid "AI-Powered English Learning"
+msgstr "Sun'iy intellekt yordamida ingliz tili o'rganish"
+
+msgid "Learn English Smarter & Faster with Rustili"
+msgstr "Rustili bilan ingliz tilini aqlliroq va tezroq o'rganing"
+
+msgid "Frequently Asked Questions"
+msgstr "Ko'p so'raladigan savollar"
+
+msgid "Is Rustili completely free?"
+msgstr "Rustili to'liq bepulmi?"
+
+msgid "Yes! Rustili is completely free for all students. Register and start learning today."
+msgstr "Ha! Rustili barcha o'quvchilar uchun to'liq bepul. Ro'yxatdan o'ting va bugun o'rganishni boshlang."
+
+msgid "Start Your English Journey Today"
+msgstr "Bugun ingliz tili sayohatingizni boshlang"
+
+msgid "Register Free"
+msgstr "Bepul ro'yxatdan o'tish"
+
+msgid "Good day, %(name)s! 👋"
+msgstr "Xayrli kun, %(name)s! 👋"
+
+msgid "Ready to learn some English today?"
+msgstr "Bugun ingliz tili o'rganishga tayyormisiz?"
+
+msgid "to"
+msgstr "gacha"
+
+msgid "ago"
+msgstr "oldin"

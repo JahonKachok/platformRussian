@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Submission Detail' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:760px">
+  <a href="{% url 'feedback:student' %}" class="btn btn-secondary btn-sm mb-4 reveal">← {% trans 'Back' %}</a>
+
+  <div class="card mb-4 reveal delay-100">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+        <div>
+          <h2 style="margin:0 0 4px">{{ submission.lesson.title }}</h2>
+          <div style="font-size:0.82rem;color:var(--text-muted)">{{ submission.lesson.course.title }} · {{ submission.created_at|date:"d M Y H:i" }}</div>
+        </div>
+        <span class="badge badge-{% if submission.status == 'reviewed' %}success{% else %}warning{% endif %}">
+          {% if submission.status == 'reviewed' %}✓ {% trans 'Reviewed' %}{% else %}⏳ {% trans 'Pending' %}{% endif %}
+        </span>
+      </div>
+      {% if submission.text %}
+      <div style="background:var(--bg-secondary);padding:16px;border-radius:12px;line-height:1.75;white-space:pre-wrap;font-size:0.9rem;color:var(--text-secondary)">{{ submission.text }}</div>
+      {% endif %}
+      {% if submission.file %}<div class="mt-3"><a href="{{ submission.file.url }}" class="btn btn-secondary btn-sm" target="_blank">📎 {% trans 'View File' %}</a></div>{% endif %}
+      {% if submission.audio %}<div class="mt-3"><audio controls style="width:100%"><source src="{{ submission.audio.url }}"></audio></div>{% endif %}
+    </div>
+  </div>
+
+  {% with fb=submission.feedback %}
+  {% if fb %}
+  <div class="card reveal delay-200" style="border-left:4px solid #10b981">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px">👨‍🏫 {% trans 'Teacher Feedback' %} <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400">by {{ fb.teacher.get_full_name }}</span></h3>
+
+      <!-- Rubric scores -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px">
+        {% for label, val in rubric_scores %}
+        <div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:1.4rem;font-weight:800;color:var(--color-primary)">{{ val }}%</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">{{ label }}</div>
+        </div>
+        {% endfor %}
+        <div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:1.4rem;font-weight:800;color:var(--color-primary)">{{ fb.grammar_score }}%</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">Grammar</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:1.4rem;font-weight:800;color:#8b5cf6">{{ fb.vocabulary_score }}%</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">Vocabulary</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:1.4rem;font-weight:800;color:#10b981">{{ fb.fluency_score }}%</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">Fluency</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:1.4rem;font-weight:800;color:#f59e0b">{{ fb.content_score }}%</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">Content</div>
+        </div>
+      </div>
+
+      {% if fb.score %}<div style="font-size:1.1rem;font-weight:800;color:var(--color-accent);margin-bottom:16px">{% trans 'Overall Score' %}: {{ fb.score }}</div>{% endif %}
+
+      <div style="background:var(--bg-secondary);padding:16px;border-radius:12px;line-height:1.75;color:var(--text-secondary);white-space:pre-wrap">{{ fb.text_feedback }}</div>
+      {% if fb.audio_feedback %}<div class="mt-3"><audio controls style="width:100%"><source src="{{ fb.audio_feedback.url }}"></audio></div>{% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="card" style="text-align:center;padding:32px;color:var(--text-muted)">
+    ⏳ {% trans 'Feedback pending from teacher' %}
+  </div>
+  {% endif %}
+  {% endwith %}
+</div>
+{% endblock %}

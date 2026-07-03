@@ -1,0 +1,149 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Reflection Journal' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.journal-card { border-radius:16px; border:1px solid var(--border-light); background:var(--bg-secondary); padding:20px; transition:all 0.2s; }
+.journal-card:hover { border-color:var(--color-primary); box-shadow:var(--shadow-md); }
+.mood-emoji { font-size:1.5rem; }
+.star-filled { color:#f59e0b; }
+.star-empty { color:var(--bg-tertiary); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+    <div class="reveal">
+      <h1>📓 {% trans 'Reflection Journal' %}</h1>
+      <p class="text-muted">{% trans 'Write down your learning reflections after each session' %}</p>
+    </div>
+    <button class="btn btn-primary ripple-container reveal delay-100" onclick="document.getElementById('new-entry-form').scrollIntoView({behavior:'smooth'})">
+      + {% trans 'New Entry' %}
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+    <div class="card reveal delay-100" style="flex:1;min-width:120px;text-align:center;padding:16px">
+      <div style="font-size:2rem;font-weight:900;color:var(--color-primary)">{{ total_entries }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Total Entries' %}</div>
+    </div>
+    <div class="card reveal delay-200" style="flex:1;min-width:120px;text-align:center;padding:16px">
+      <div style="font-size:2rem;font-weight:900;color:#f59e0b">{{ avg_rating }}⭐</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Avg Rating' %}</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start">
+    <!-- Entries List -->
+    <div>
+      {% for entry in entries %}
+      <div class="journal-card mb-4 reveal" style="animation-delay:{{ forloop.counter0|multiply:60 }}ms">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="mood-emoji">{{ entry.mood_emoji }}</span>
+            <div>
+              <div style="font-size:0.9rem;font-weight:700">{{ entry.date|date:"d M Y" }}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">{{ entry.get_mood_display }}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div>
+              {% for i in "12345" %}
+              <span class="{% if forloop.counter <= entry.self_rating %}star-filled{% else %}star-empty{% endif %}">★</span>
+              {% endfor %}
+            </div>
+            <form method="post" action="{% url 'journal:delete' entry.pk %}" style="display:inline">
+              {% csrf_token %}
+              <button type="submit" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem" onclick="return confirm('{% trans "Delete entry?" %}')">✕</button>
+            </form>
+          </div>
+        </div>
+
+        {% if entry.lesson %}<div class="badge badge-primary" style="margin-bottom:10px;font-size:0.72rem">📖 {{ entry.lesson.title }}</div>{% endif %}
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">{% trans 'What I learned' %}</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary)">{{ entry.what_learned|truncatechars:200 }}</div>
+        </div>
+        {% if entry.what_was_difficult %}
+        <div style="margin-bottom:8px">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">⚠️ {% trans 'Difficulties' %}</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary)">{{ entry.what_was_difficult|truncatechars:150 }}</div>
+        </div>
+        {% endif %}
+        {% if entry.topics_to_revisit %}
+        <div style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-tertiary);border-radius:8px">
+          🔄 <strong>{% trans 'To revisit' %}:</strong> {{ entry.topics_to_revisit|truncatechars:120 }}
+        </div>
+        {% endif %}
+        <a href="{% url 'journal:entry' entry.pk %}" class="btn btn-sm btn-secondary mt-3">{% trans 'Read More' %}</a>
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:60px" class="card">
+        <div style="font-size:4rem;margin-bottom:16px">📓</div>
+        <h3>{% trans 'No journal entries yet' %}</h3>
+        <p class="text-muted">{% trans 'Start reflecting on your learning journey!' %}</p>
+      </div>
+      {% endfor %}
+
+      {% if is_paginated %}
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:24px">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← {% trans 'Prev' %}</a>{% endif %}
+        <span style="padding:8px 16px;background:var(--bg-secondary);border-radius:8px;font-size:0.875rem">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">{% trans 'Next' %} →</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- New Entry Form -->
+    <div id="new-entry-form" class="card reveal delay-200" style="position:sticky;top:80px">
+      <div class="card-body">
+        <h3 style="margin-bottom:20px">📝 {% trans 'New Entry' %}</h3>
+        <form method="post" action="{% url 'journal:create' %}">
+          {% csrf_token %}
+
+          <div class="form-group mb-3">
+            <label class="form-label">✅ {% trans 'What did you learn today?' %} *</label>
+            <textarea name="what_learned" class="form-control" rows="3" required placeholder="{% trans 'Grammar rules, new vocabulary, speaking tips...' %}"></textarea>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label">⚠️ {% trans 'What was difficult?' %}</label>
+            <textarea name="what_was_difficult" class="form-control" rows="2" placeholder="{% trans 'Which topics or exercises were challenging?' %}"></textarea>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label">🔄 {% trans 'Topics to revisit' %}</label>
+            <input type="text" name="topics_to_revisit" class="form-control" placeholder="{% trans 'e.g. Past Perfect, Conditionals...' %}">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="form-group">
+              <label class="form-label">🌟 {% trans 'Self Rating' %}</label>
+              <select name="self_rating" class="form-control">
+                <option value="1">⭐ 1 - {% trans 'Needs work' %}</option>
+                <option value="2">⭐⭐ 2</option>
+                <option value="3" selected>⭐⭐⭐ 3 - {% trans 'OK' %}</option>
+                <option value="4">⭐⭐⭐⭐ 4</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5 - {% trans 'Great!' %}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">😊 {% trans 'Mood' %}</label>
+              <select name="mood" class="form-control">
+                {% for code, label in moods %}<option value="{{ code }}">{{ label }}</option>{% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block ripple-container">💾 {% trans 'Save Entry' %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

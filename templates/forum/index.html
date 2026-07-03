@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Discussion Forum' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="margin-bottom:32px" class="reveal">
+    <h1>💬 {% trans 'Discussion Forum' %}</h1>
+    <p class="text-muted">{% trans 'Ask questions, share tips, and help fellow learners' %}</p>
+  </div>
+
+  {% if courses %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:40px">
+    {% for course in courses %}
+    <a href="{% url 'forum:course' course.slug %}" class="card hover-lift reveal" style="text-decoration:none;animation-delay:{{ forloop.counter0|multiply:60 }}ms">
+      <div class="card-body">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">{{ course.get_level_display }}</div>
+        <h3 style="margin:0 0 8px;font-size:1rem">{{ course.title }}</h3>
+        <div style="font-size:0.8rem;color:var(--color-primary)">{{ course.forum_topics.count }} {% trans 'topics' %}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card reveal" style="text-align:center;padding:60px">
+    <div style="font-size:4rem;margin-bottom:16px">💬</div>
+    <h3>{% trans 'Enroll in a course to join its forum' %}</h3>
+    <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-3">{% trans 'Browse Courses' %}</a>
+  </div>
+  {% endif %}
+
+  {% if recent_topics %}
+  <h2 class="mb-4 reveal">🔥 {% trans 'Recent Discussions' %}</h2>
+  <div class="card reveal delay-100">
+    <div class="card-body">
+      {% for topic in recent_topics %}
+      <a href="{% url 'forum:topic' topic.pk %}" style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border-light);text-decoration:none;transition:all 0.2s" class="topic-row">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--gradient-button);color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0">
+          {{ topic.author.get_initials }}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            {% if topic.is_pinned %}📌 {% endif %}{% if topic.is_announcement %}📢 {% endif %}{{ topic.title }}
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted)">{{ topic.course.title }} · {{ topic.author }} · {{ topic.created_at|timesince }} {% trans 'ago' %}</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:var(--text-muted);flex-shrink:0">
+          <div>💬 {{ topic.reply_count }}</div>
+          <div>👁️ {{ topic.views }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+<style>.topic-row:hover{background:var(--bg-secondary);border-radius:12px;padding-left:12px!important;margin-left:-12px}</style>
+{% endblock %}

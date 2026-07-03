@@ -1,0 +1,154 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Administrator Analytics' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="margin-bottom:32px" class="reveal">
+    <h1>📊 {% trans 'Administrator Analytics' %}</h1>
+    <p class="text-muted">{% trans 'Platform-wide statistics and insights' %}</p>
+  </div>
+
+  <!-- Key metrics -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px">
+    {% for stat in key_stats %}
+    <div class="card hover-lift reveal" style="animation-delay:{{ forloop.counter0|multiply:60 }}ms">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">{{ stat.icon }}</div>
+        <div style="font-size:2rem;font-weight:900;color:{{ stat.color }}">{{ stat.value }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{{ stat.label }}</div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="card hover-lift reveal">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">👥</div>
+        <div style="font-size:2rem;font-weight:900;color:var(--color-primary)">{{ total_users }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Total Users' %}</div>
+      </div>
+    </div>
+    <div class="card hover-lift reveal delay-60">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">🎓</div>
+        <div style="font-size:2rem;font-weight:900;color:#10b981">{{ active_users }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Active (30d)' %}</div>
+      </div>
+    </div>
+    <div class="card hover-lift reveal delay-120">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">📚</div>
+        <div style="font-size:2rem;font-weight:900;color:#8b5cf6">{{ total_courses }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Courses' %}</div>
+      </div>
+    </div>
+    <div class="card hover-lift reveal delay-180">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">📋</div>
+        <div style="font-size:2rem;font-weight:900;color:#f59e0b">{{ total_enrollments }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Enrollments' %}</div>
+      </div>
+    </div>
+    <div class="card hover-lift reveal delay-240">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">🎯</div>
+        <div style="font-size:2rem;font-weight:900;color:#ef4444">{{ total_quiz_attempts }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Quiz Attempts' %}</div>
+      </div>
+    </div>
+    <div class="card hover-lift reveal delay-300">
+      <div class="card-body" style="text-align:center;padding:20px">
+        <div style="font-size:2.2rem;margin-bottom:6px">🏆</div>
+        <div style="font-size:2rem;font-weight:900;color:var(--color-accent)">{{ total_certificates }}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted)">{% trans 'Certificates' %}</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
+    <!-- Popular Courses -->
+    <div class="card reveal delay-100">
+      <div class="card-body">
+        <h3 style="margin-bottom:16px">🔥 {% trans 'Popular Courses' %}</h3>
+        {% for course in popular_courses %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-light)">
+          <div>
+            <div style="font-size:0.875rem;font-weight:700">{{ course.title|truncatechars:30 }}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">{{ course.get_level_display }}</div>
+          </div>
+          <span style="background:var(--bg-tertiary);padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:700;color:var(--color-primary)">{{ course.enrollment_count }}</span>
+        </div>
+        {% empty %}
+        <p class="text-muted" style="font-size:0.875rem">{% trans 'No data yet' %}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Registrations -->
+    <div class="card reveal delay-200">
+      <div class="card-body">
+        <h3 style="margin-bottom:16px">🆕 {% trans 'Recent Users' %}</h3>
+        {% for user in recent_users %}
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light)">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gradient-button);color:white;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0">
+            {{ user.get_initials }}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.85rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ user.get_full_name }}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted)">{{ user.date_joined|date:"d M Y" }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted" style="font-size:0.875rem">{% trans 'No users yet' %}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Registrations chart (last 12 months) -->
+  <div class="card reveal delay-300">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px">📈 {% trans 'New Registrations (Last 12 Months)' %}</h3>
+      <div id="reg-chart" style="height:180px;display:flex;align-items:flex-end;gap:6px;padding:0 4px"></div>
+      <div id="reg-labels" style="display:flex;gap:6px;margin-top:6px;padding:0 4px"></div>
+    </div>
+  </div>
+
+  <!-- Pending Feedback -->
+  {% if pending_feedback %}
+  <div class="card mt-4 reveal delay-400" style="border-left:4px solid #f59e0b">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="margin:0">⏳ {% trans 'Pending Homework Reviews' %}</h3>
+        <a href="{% url 'feedback:teacher-list' %}" class="btn btn-sm btn-secondary">{% trans 'View All' %}</a>
+      </div>
+      <div style="font-size:1.8rem;font-weight:900;color:#f59e0b">{{ pending_feedback }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'submissions awaiting teacher feedback' %}</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+const REG_DATA = {{ reg_data|safe }};
+function buildAdminChart() {
+  const container = document.getElementById('reg-chart');
+  const labelsEl = document.getElementById('reg-labels');
+  if (!container || !REG_DATA || !REG_DATA.length) return;
+  const max = Math.max(...REG_DATA.map(d => d.count), 1);
+  REG_DATA.forEach(d => {
+    const pct = Math.round((d.count / max) * 100);
+    const bar = document.createElement('div');
+    bar.style.cssText = `flex:1;background:var(--gradient-button);border-radius:6px 6px 0 0;height:0;transition:height 0.8s cubic-bezier(.34,1.56,.64,1);position:relative`;
+    bar.title = `${d.label}: ${d.count}`;
+    container.appendChild(bar);
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted)';
+    lbl.textContent = d.label;
+    labelsEl.appendChild(lbl);
+    setTimeout(() => { bar.style.height = `${pct}%`; }, 100);
+  });
+}
+document.addEventListener('DOMContentLoaded', buildAdminChart);
+</script>
+{% endblock %}

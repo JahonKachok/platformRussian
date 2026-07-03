@@ -1,0 +1,15 @@
+# English translation for Rustili
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+msgid "Learn English"
+msgstr "Learn English"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Good day, %(name)s! 👋"
+msgstr "Good day, %(name)s! 👋"

@@ -1,0 +1,117 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ topic.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:900px">
+  <!-- Breadcrumb -->
+  <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px">
+    <a href="{% url 'forum:index' %}" style="color:var(--text-muted)">{% trans 'Forum' %}</a> /
+    <a href="{% url 'forum:course' topic.course.slug %}" style="color:var(--text-muted)">{{ topic.course.title }}</a> /
+    <span>{{ topic.title|truncatechars:40 }}</span>
+  </div>
+
+  <!-- Topic -->
+  <div class="card mb-4 reveal {% if topic.is_announcement %}style='border-left:4px solid #ef4444'{% endif %}">
+    <div class="card-body">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--gradient-button);color:white;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;flex-shrink:0">
+          {{ topic.author.get_initials }}
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+            <h2 style="margin:0;font-size:1.1rem">
+              {% if topic.is_pinned %}📌 {% endif %}{% if topic.is_announcement %}📢 {% endif %}{{ topic.title }}
+            </h2>
+            {% if topic.is_locked %}<span class="badge badge-warning">🔒 {% trans 'Locked' %}</span>{% endif %}
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px">
+            <strong>{{ topic.author.get_full_name }}</strong> · {{ topic.created_at|timesince }} {% trans 'ago' %} · 👁️ {{ topic.views }} {% trans 'views' %}
+          </div>
+          <div style="line-height:1.8;white-space:pre-wrap;color:var(--text-secondary)">{{ topic.content }}</div>
+          {% if topic.attachment %}
+          <div style="margin-top:12px"><a href="{{ topic.attachment.url }}" class="btn btn-secondary btn-sm" target="_blank">📎 {% trans 'Attachment' %}</a></div>
+          {% endif %}
+          <div style="margin-top:16px">
+            <button onclick="toggleLike('topic',{{ topic.id }},this)" class="btn btn-sm btn-ghost" id="like-topic-{{ topic.id }}" style="color:{% if liked_topic %}#ef4444{% else %}var(--text-muted){% endif %}">
+              ♥ <span id="like-count-topic-{{ topic.id }}">{{ topic.like_count }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Replies -->
+  <h3 class="mb-4 reveal delay-100">💬 {{ replies.count }} {% trans 'Replies' %}</h3>
+  {% for reply in replies %}
+  <div class="card mb-3 reveal {% if reply.is_solution %}border-color:#10b981{% endif %}" {% if reply.is_solution %}style="border-left:4px solid #10b981"{% endif %}>
+    <div class="card-body">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">
+          {{ reply.author.get_initials }}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:0.82rem;margin-bottom:8px">
+            <strong>{{ reply.author.get_full_name }}</strong>
+            <span style="color:var(--text-muted)"> · {{ reply.created_at|timesince }} {% trans 'ago' %}</span>
+            {% if reply.is_solution %}<span class="badge badge-success ml-2">✓ {% trans 'Solution' %}</span>{% endif %}
+          </div>
+          <div style="line-height:1.75;color:var(--text-secondary);white-space:pre-wrap">{{ reply.content }}</div>
+          {% if reply.attachment %}<div style="margin-top:8px"><a href="{{ reply.attachment.url }}" class="btn btn-sm btn-secondary" target="_blank">📎</a></div>{% endif %}
+          <div style="margin-top:10px">
+            <button onclick="toggleLike('reply',{{ reply.id }},this)" class="btn btn-sm btn-ghost" style="color:{% if reply.id in liked_reply_ids %}#ef4444{% else %}var(--text-muted){% endif %}">
+              ♥ <span id="like-count-reply-{{ reply.id }}">{{ reply.like_count }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="card mb-4" style="text-align:center;padding:32px;color:var(--text-muted)">{% trans 'No replies yet. Be the first!' %}</div>
+  {% endfor %}
+
+  <!-- Reply Form -->
+  {% if not topic.is_locked %}
+  <div class="card reveal delay-200">
+    <div class="card-body">
+      <h4 style="margin-bottom:16px">✍️ {% trans 'Write a Reply' %}</h4>
+      <form method="post" action="{% url 'forum:reply-create' topic.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+          <textarea name="content" class="form-control" rows="4" required placeholder="{% trans 'Share your thoughts or answer...' %}"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button type="submit" class="btn btn-primary ripple-container">{% trans 'Post Reply' %}</button>
+          <label style="font-size:0.85rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px">
+            <input type="file" name="attachment" style="width:0;height:0;opacity:0;position:absolute">
+            <span onclick="this.previousElementSibling.click()">📎 {% trans 'Attach' %}</span>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div class="card" style="text-align:center;padding:20px;color:var(--text-muted)">🔒 {% trans 'This topic is locked.' %}</div>
+  {% endif %}
+</div>
+
+<script>
+const LIKE_URL = "{% url 'forum:like' %}";
+function toggleLike(type, id, btn) {
+  const form = new FormData();
+  form.append('type', type);
+  form.append('pk', id);
+  form.append('csrfmiddlewaretoken', window.CSRF_TOKEN);
+  fetch(LIKE_URL, { method: 'POST', body: form })
+    .then(r => r.json())
+    .then(d => {
+      btn.style.color = d.liked ? '#ef4444' : 'var(--text-muted)';
+      const countEl = document.getElementById(`like-count-${type}-${id}`);
+      if (countEl) countEl.textContent = d.count;
+    });
+}
+</script>
+{% endblock %}

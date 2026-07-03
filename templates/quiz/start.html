@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:60px 24px;max-width:600px;text-align:center">
+  <div style="font-size:4rem;margin-bottom:24px">
+    {% if quiz.quiz_type == 'daily' %}🎯{% else %}❓{% endif %}
+  </div>
+  <h1 style="margin-bottom:12px">{{ quiz.title }}</h1>
+  <p class="text-muted mb-6">{{ quiz.description }}</p>
+
+  <div class="card mb-6">
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;text-align:center">
+        <div>
+          <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary)">{{ question_count }}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Questions' %}</div>
+        </div>
+        <div>
+          <div style="font-size:1.5rem;font-weight:800;color:#f59e0b">{{ quiz.time_limit_minutes }}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Minutes' %}</div>
+        </div>
+        <div>
+          <div style="font-size:1.5rem;font-weight:800;color:#10b981">{{ quiz.xp_reward }}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">XP</div>
+        </div>
+      </div>
+
+      {% if best_attempt %}
+      <div style="margin-top:16px;padding:12px;background:rgba(16,185,129,0.1);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
+        <div style="font-size:0.875rem;color:#10b981;font-weight:600">
+          {% trans 'Best score' %}: {{ best_attempt.percentage }}% {{ best_attempt.passed|yesno:'✓ Passed,✗ Failed' }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:16px;margin-bottom:32px;text-align:left">
+    <h4 style="margin-bottom:8px;font-size:0.9rem">📋 {% trans 'Instructions' %}:</h4>
+    <ul style="font-size:0.85rem;color:var(--text-muted);padding-left:16px">
+      <li>{% trans 'You have' %} {{ quiz.time_limit_minutes }} {% trans 'minutes to complete this quiz' %}</li>
+      <li>{% trans 'Pass score' %}: {{ quiz.pass_score }}%</li>
+      <li>{% trans 'You will earn' %} {{ quiz.xp_reward }} XP {% trans 'for passing' %}</li>
+    </ul>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-lg">🚀 {% trans 'Start Quiz' %}</button>
+  </form>
+  <a href="{% url 'quiz:list' %}" class="btn btn-secondary mt-3">← {% trans 'Back' %}</a>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'My Homework & Feedback' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="margin-bottom:28px" class="reveal">
+    <h1>📝 {% trans 'Homework & Teacher Feedback' %}</h1>
+    <p class="text-muted">{% trans 'Submit homework and view teacher feedback' %}</p>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+    <div class="card reveal" style="flex:1;min-width:140px;text-align:center;padding:16px">
+      <div style="font-size:2rem;font-weight:900;color:#f59e0b">{{ pending_count }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Pending Review' %}</div>
+    </div>
+    <div class="card reveal delay-100" style="flex:1;min-width:140px;text-align:center;padding:16px">
+      <div style="font-size:2rem;font-weight:900;color:#10b981">{{ reviewed_count }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Reviewed' %}</div>
+    </div>
+  </div>
+
+  <!-- Submissions -->
+  <div class="card reveal delay-200">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px">📋 {% trans 'My Submissions' %}</h3>
+      {% for sub in submissions %}
+      <div style="padding:16px;border-radius:14px;border:1px solid var(--border-light);background:var(--bg-secondary);margin-bottom:12px;transition:all 0.2s" class="hover-lift">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div>
+            <div style="font-weight:700;font-size:0.95rem">{{ sub.lesson.title }}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted)">{{ sub.lesson.course.title }} · {{ sub.created_at|date:"d M Y" }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="badge badge-{% if sub.status == 'reviewed' %}success{% else %}warning{% endif %}">
+              {% if sub.status == 'reviewed' %}✓ {% trans 'Reviewed' %}{% else %}⏳ {% trans 'Pending' %}{% endif %}
+            </span>
+            <a href="{% url 'feedback:detail' sub.pk %}" class="btn btn-sm btn-secondary">{% trans 'View' %}</a>
+          </div>
+        </div>
+        {% if sub.text %}
+        <div style="font-size:0.82rem;color:var(--text-secondary);border-left:3px solid var(--color-primary);padding-left:12px">{{ sub.text|truncatechars:120 }}</div>
+        {% endif %}
+        {% if sub.status == 'reviewed' %}
+        {% with fb=sub.feedback %}
+        {% if fb %}
+        <div style="margin-top:12px;padding:12px;background:rgba(16,185,129,0.06);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
+          <div style="font-size:0.75rem;font-weight:700;color:#059669;margin-bottom:6px">📌 {% trans 'Teacher Feedback' %}</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary)">{{ fb.text_feedback|truncatechars:150 }}</div>
+          {% if fb.score %}<div style="margin-top:6px;font-weight:700;color:var(--color-accent)">{% trans 'Score' %}: {{ fb.score }}</div>{% endif %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:60px">
+        <div style="font-size:4rem;margin-bottom:16px">📝</div>
+        <h3>{% trans 'No submissions yet' %}</h3>
+        <p class="text-muted">{% trans 'Submit your homework from any lesson page.' %}</p>
+        <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-3">{% trans 'Browse Courses' %}</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

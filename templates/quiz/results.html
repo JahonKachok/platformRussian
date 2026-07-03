@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Quiz Results' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:700px">
+  <!-- Result header -->
+  <div class="card text-center mb-6" style="padding:40px">
+    <div style="font-size:4rem;margin-bottom:16px">
+      {% if attempt.passed %}🎉{% else %}📚{% endif %}
+    </div>
+    <h1 style="margin-bottom:8px">
+      {% if attempt.passed %}{% trans 'Congratulations!' %}{% else %}{% trans 'Keep Practicing!' %}{% endif %}
+    </h1>
+    <p class="text-muted">{{ attempt.quiz.title }}</p>
+
+    <div style="display:flex;justify-content:center;gap:32px;margin:32px 0">
+      <div>
+        <div style="font-size:3rem;font-weight:900;color:{% if attempt.passed %}#10b981{% else %}#ef4444{% endif %}">{{ attempt.percentage }}%</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Score' %}</div>
+      </div>
+      <div>
+        <div style="font-size:3rem;font-weight:900;color:var(--color-primary)">{{ correct_count }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Correct' %}</div>
+      </div>
+      <div>
+        <div style="font-size:3rem;font-weight:900;color:#f59e0b">{{ attempt.xp_earned }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">XP {% trans 'Earned' %}</div>
+      </div>
+    </div>
+
+    <div class="progress-bar-container" style="margin:0 auto;max-width:300px;height:12px">
+      <div class="progress-bar {% if attempt.passed %}progress-bar-success{% endif %}" style="width:{{ attempt.percentage }}%"></div>
+    </div>
+    <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px">{% trans 'Pass score' %}: {{ attempt.quiz.pass_score }}%</div>
+
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+      <a href="{% url 'quiz:start' attempt.quiz.pk %}" class="btn btn-primary">🔄 {% trans 'Try Again' %}</a>
+      <a href="{% url 'quiz:list' %}" class="btn btn-secondary">📋 {% trans 'All Quizzes' %}</a>
+      <a href="{% url 'courses:dashboard' %}" class="btn btn-secondary">⚡ {% trans 'Dashboard' %}</a>
+    </div>
+  </div>
+
+  <!-- Answers Review -->
+  <h2 class="mb-4">📋 {% trans 'Answer Review' %}</h2>
+  {% for answer in answers %}
+  <div class="card mb-3" style="border-left:3px solid {% if answer.is_correct %}#10b981{% else %}#ef4444{% endif %}">
+    <div class="card-body">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:1.25rem;flex-shrink:0">{% if answer.is_correct %}✅{% else %}❌{% endif %}</span>
+        <div>
+          <div style="font-weight:600;margin-bottom:8px">{{ answer.question.text }}</div>
+          {% if answer.selected_choice %}
+          <div style="font-size:0.875rem;margin-bottom:4px">
+            <span style="color:var(--text-muted)">{% trans 'Your answer' %}:</span>
+            <span style="color:{% if answer.is_correct %}#10b981{% else %}#ef4444{% endif %}">{{ answer.selected_choice.text }}</span>
+          </div>
+          {% endif %}
+          {% if not answer.is_correct %}
+          {% with correct=answer.question.choices.filter %}
+          <div style="font-size:0.875rem;margin-bottom:4px">
+            <span style="color:var(--text-muted)">{% trans 'Correct' %}:</span>
+            <span style="color:#10b981">{% for c in answer.question.choices.all %}{% if c.is_correct %}{{ c.text }}{% endif %}{% endfor %}</span>
+          </div>
+          {% endwith %}
+          {% endif %}
+          {% if answer.question.explanation %}
+          <div style="font-size:0.8rem;color:var(--text-muted);background:var(--bg-secondary);padding:8px 12px;border-radius:8px;margin-top:8px">
+            💡 {{ answer.question.explanation }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if attempt.passed %}
+<script>
+setTimeout(() => {
+  if (window.RustiliAnimations) window.RustiliAnimations.Confetti.burst(80);
+}, 500);
+</script>
+{% endif %}
+{% endblock %}

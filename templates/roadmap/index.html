@@ -1,0 +1,153 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Learning Roadmap' %} — {{ course.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.roadmap-header { background: var(--gradient-button); color: white; padding: 40px 24px; border-radius: 20px; margin-bottom: 40px; }
+.roadmap-timeline { position: relative; padding-left: 60px; }
+.roadmap-timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #6366f1, #8b5cf6, #10b981); }
+.roadmap-step { position: relative; margin-bottom: 24px; animation: fadeInLeft 0.5s ease both; }
+.roadmap-step:nth-child(1){animation-delay:0.1s}
+.roadmap-step:nth-child(2){animation-delay:0.15s}
+.roadmap-step:nth-child(3){animation-delay:0.2s}
+.roadmap-step:nth-child(4){animation-delay:0.25s}
+.roadmap-step:nth-child(5){animation-delay:0.3s}
+.roadmap-step:nth-child(n+6){animation-delay:0.35s}
+.step-node {
+  position: absolute; left: -48px; top: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; z-index: 1; border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 0 3px;
+}
+.step-node.completed { background: #10b981; color: white; box-shadow-color: #10b981; }
+.step-node.current { background: var(--color-primary); color: white; box-shadow: 0 0 0 4px rgba(99,102,241,0.3); animation: pulse 2s infinite; }
+.step-node.locked { background: var(--bg-tertiary); color: var(--text-muted); }
+.step-card { border-radius: 16px; padding: 18px 20px; border: 2px solid; transition: all 0.3s; cursor: pointer; }
+.step-card.completed { border-color: #10b981; background: rgba(16,185,129,0.05); }
+.step-card.current { border-color: var(--color-primary); background: rgba(99,102,241,0.05); }
+.step-card.locked { border-color: var(--border-light); background: var(--bg-secondary); opacity: 0.6; }
+.step-card:hover:not(.locked) { transform: translateX(6px); box-shadow: var(--shadow-md); }
+.step-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badge-completed { background: rgba(16,185,129,0.15); color: #059669; }
+.badge-current { background: rgba(99,102,241,0.15); color: var(--color-primary); }
+.badge-locked { background: var(--bg-tertiary); color: var(--text-muted); }
+.progress-overview { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
+@media(max-width:640px){.progress-overview{grid-template-columns:1fr}}
+.est-time { font-size: 0.8rem; color: var(--text-muted); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:900px">
+
+  <!-- Roadmap Header -->
+  <div class="roadmap-header reveal">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-size:0.85rem;opacity:0.8;margin-bottom:8px">
+          <a href="{% url 'courses:course-detail' course.slug %}" style="color:rgba(255,255,255,0.8);text-decoration:none">← {{ course.title }}</a>
+        </div>
+        <h1 style="color:white;margin:0 0 8px">🗺️ {% trans 'Learning Roadmap' %}</h1>
+        <p style="opacity:0.85;margin:0">{{ course.short_description|default:course.description|truncatechars:120 }}</p>
+      </div>
+      <div style="text-align:center;min-width:100px">
+        <div style="font-size:3rem;font-weight:900;color:white">{{ progress_percent }}%</div>
+        <div style="font-size:0.85rem;opacity:0.8">{% trans 'Complete' %}</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div style="margin-top:24px">
+      <div style="height:8px;background:rgba(255,255,255,0.25);border-radius:4px;overflow:hidden">
+        <div style="width:{{ progress_percent }}%;height:100%;background:white;border-radius:4px;transition:width 1s ease"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.8rem;opacity:0.8">
+        <span>{{ completed_count }}/{{ total_count }} {% trans 'lessons' %}</span>
+        <span>⏱️ ~{{ remaining_minutes }} {% trans 'min remaining' %}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overview Stats -->
+  <div class="progress-overview">
+    <div class="card reveal delay-100">
+      <div class="card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:4px">✅</div>
+        <div style="font-size:1.5rem;font-weight:800;color:#10b981">{{ completed_count }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Completed' %}</div>
+      </div>
+    </div>
+    <div class="card reveal delay-200">
+      <div class="card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:4px">🔓</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary)">{{ total_count|add:"-"|add:completed_count }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Remaining' %}</div>
+      </div>
+    </div>
+    <div class="card reveal delay-300">
+      <div class="card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:4px">⏱️</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--color-accent)">{{ remaining_minutes }}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Minutes left' %}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="roadmap-timeline">
+    {% for step in steps %}
+    <div class="roadmap-step">
+      <!-- Node -->
+      <div class="step-node {{ step.state }}">
+        {% if step.state == 'completed' %}✓
+        {% elif step.state == 'current' %}{{ step.number }}
+        {% else %}🔒{% endif %}
+      </div>
+
+      <!-- Card -->
+      <div class="step-card {{ step.state }}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+              <span style="font-size:1.1rem">{{ step.lesson.type_icon }}</span>
+              <span class="step-badge badge-{{ step.state }}">
+                {% if step.state == 'completed' %}✓ {% trans 'Completed' %}
+                {% elif step.state == 'current' %}▶ {% trans 'Current' %}
+                {% else %}🔒 {% trans 'Locked' %}{% endif %}
+              </span>
+              <span style="font-size:0.75rem;color:var(--text-muted)">{{ step.lesson.get_lesson_type_display }}</span>
+            </div>
+            <h3 style="margin:0 0 6px;font-size:1rem;font-weight:700">
+              {{ step.number }}. {{ step.lesson.title }}
+            </h3>
+            {% if step.lesson.description %}
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0">{{ step.lesson.description|truncatechars:100 }}</p>
+            {% endif %}
+          </div>
+          <div style="text-align:right;min-width:80px">
+            <div style="font-size:0.8rem;color:var(--text-muted)">⏱️ {{ step.lesson.duration_minutes }}m</div>
+            <div style="font-size:0.8rem;color:#f59e0b;margin-top:2px">⚡ {{ step.lesson.xp_reward }} XP</div>
+            {% if step.state != 'locked' %}
+            <a href="{% url 'courses:lesson' step.lesson.slug %}" class="btn btn-sm btn-primary mt-2">
+              {% if step.state == 'completed' %}{% trans 'Review' %}{% else %}{% trans 'Start' %}{% endif %}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Finish Node -->
+    <div style="position:relative;padding-left:0;display:flex;align-items:center;gap:16px;margin-top:8px">
+      <div style="width:32px;height:32px;border-radius:50%;background:{% if progress_percent == 100 %}var(--color-accent){% else %}var(--bg-tertiary){% endif %};display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-left:-48px">🏁</div>
+      <div style="font-weight:700;color:{% if progress_percent == 100 %}var(--color-accent){% else %}var(--text-muted){% endif %}">
+        {% if progress_percent == 100 %}🎉 {% trans 'Course Complete!' %}{% else %}{% trans 'Finish Line' %}{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

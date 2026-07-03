@@ -1,0 +1,203 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'My Portfolio' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.portfolio-header { background:var(--gradient-button); color:white; border-radius:24px; padding:40px; margin-bottom:32px; position:relative; overflow:hidden; }
+.portfolio-header::before { content:''; position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.1); }
+.tab-nav { display:flex; gap:4px; margin-bottom:24px; flex-wrap:wrap; background:var(--bg-secondary); padding:4px; border-radius:12px; }
+.tab-btn { padding:8px 16px; border-radius:10px; border:none; background:none; cursor:pointer; font-size:0.875rem; color:var(--text-secondary); transition:all 0.2s; font-weight:500; }
+.tab-btn.active { background:var(--bg-primary); color:var(--color-primary); font-weight:700; box-shadow:var(--shadow-sm); }
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeIn 0.3s ease; }
+.item-card { border-radius:16px; border:1px solid var(--border-light); background:var(--bg-secondary); padding:16px; transition:all 0.2s; }
+.item-card:hover { border-color:var(--color-primary); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.achievement-badge { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; background:var(--gradient-button); color:white; border-radius:20px; font-size:0.8rem; font-weight:600; margin:4px; }
+.stat-pill { display:flex; flex-direction:column; align-items:center; padding:12px 20px; background:var(--bg-secondary); border-radius:14px; border:1px solid var(--border-light); min-width:80px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+
+  <!-- Header -->
+  <div class="portfolio-header reveal">
+    <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+      <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;flex-shrink:0;border:3px solid rgba(255,255,255,0.5)">
+        {{ request.user.get_initials }}
+      </div>
+      <div style="flex:1">
+        <h1 style="color:white;margin:0 0 4px">{{ request.user.get_full_name }}</h1>
+        <p style="opacity:0.85;margin:0 0 8px">{{ request.user.email }}</p>
+        {% if portfolio.bio %}
+        <p style="opacity:0.9;margin:0;font-size:0.9rem">{{ portfolio.bio|truncatechars:150 }}</p>
+        {% endif %}
+      </div>
+      <div>
+        <a href="{% url 'portfolio:download-pdf' %}" class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4)">📥 {% trans 'Download PDF' %}</a>
+        <a href="{% url 'portfolio:edit' %}" class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.4);margin-left:6px">✏️ {% trans 'Edit' %}</a>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    {% if progress %}
+    <div style="display:flex;gap:16px;margin-top:24px;flex-wrap:wrap">
+      {% for label, val in level_stats %}
+      <div style="text-align:center">
+        <div style="font-size:1.4rem;font-weight:900;color:white">{{ val }}</div>
+        <div style="font-size:0.75rem;opacity:0.8">{{ label }}</div>
+      </div>
+      {% endfor %}
+      <div style="text-align:center"><div style="font-size:1.4rem;font-weight:900;color:white">{{ progress.level }}</div><div style="font-size:0.75rem;opacity:0.8">Level</div></div>
+      <div style="text-align:center"><div style="font-size:1.4rem;font-weight:900;color:white">{{ progress.xp }}</div><div style="font-size:0.75rem;opacity:0.8">XP</div></div>
+      <div style="text-align:center"><div style="font-size:1.4rem;font-weight:900;color:white">{{ progress.streak_days }}</div><div style="font-size:0.75rem;opacity:0.8">Streak</div></div>
+      <div style="text-align:center"><div style="font-size:1.4rem;font-weight:900;color:white">{{ enrollments.count }}</div><div style="font-size:0.75rem;opacity:0.8">Courses</div></div>
+      <div style="text-align:center"><div style="font-size:1.4rem;font-weight:900;color:white">{{ certificates.count }}</div><div style="font-size:0.75rem;opacity:0.8">Certs</div></div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-nav reveal delay-100">
+    <button class="tab-btn active" onclick="switchTab('courses',this)">📚 {% trans 'Courses' %}</button>
+    <button class="tab-btn" onclick="switchTab('certs',this)">🏆 {% trans 'Certificates' %}</button>
+    <button class="tab-btn" onclick="switchTab('works',this)">✍️ {% trans 'Works' %}</button>
+    <button class="tab-btn" onclick="switchTab('achievements',this)">⭐ {% trans 'Achievements' %}</button>
+    <button class="tab-btn" onclick="switchTab('add',this)">+ {% trans 'Add Item' %}</button>
+  </div>
+
+  <!-- Courses Tab -->
+  <div class="tab-content active" id="tab-courses">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      {% for e in enrollments %}
+      <div class="item-card reveal">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="badge badge-success">✓ {% trans 'Completed' %}</span>
+          <span class="badge badge-info">{{ e.course.get_level_display }}</span>
+        </div>
+        <h4 style="margin:0 0 6px">{{ e.course.title }}</h4>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin:0">{{ e.course.short_description|default:e.course.description|truncatechars:80 }}</p>
+      </div>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px">
+        <div style="font-size:3rem;margin-bottom:12px">📚</div>
+        <p class="text-muted">{% trans 'No completed courses yet' %}</p>
+        <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-3">{% trans 'Browse Courses' %}</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Certificates Tab -->
+  <div class="tab-content" id="tab-certs">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      {% for cert in certificates %}
+      <div class="card hover-lift reveal" style="border:2px solid #f59e0b">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span style="font-size:2rem">🏅</span>
+            <span class="badge badge-warning">{{ cert.issued_at|date:"Y" }}</span>
+          </div>
+          <h4 style="margin:0 0 4px">{{ cert.course.title }}</h4>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 12px">{% trans 'Issued' %}: {{ cert.issued_at|date:"d M Y" }}</p>
+          <a href="{% url 'certificates:detail' cert.uuid %}" class="btn btn-sm btn-secondary">{% trans 'View' %}</a>
+          <a href="{% url 'certificates:download' cert.uuid %}" class="btn btn-sm btn-primary" style="margin-left:6px">📥 PDF</a>
+        </div>
+      </div>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px">
+        <div style="font-size:3rem;margin-bottom:12px">🏅</div>
+        <p class="text-muted">{% trans 'No certificates yet' %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Portfolio Works Tab -->
+  <div class="tab-content" id="tab-works">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      {% for item in items %}
+      <div class="item-card reveal">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <span style="font-size:1.4rem">{{ item.type_icon }}</span>
+          <form method="post" action="{% url 'portfolio:item-delete' item.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem" onclick="return confirm('Delete?')">✕</button>
+          </form>
+        </div>
+        <h4 style="margin:0 0 4px;font-size:0.95rem">{{ item.title }}</h4>
+        <span class="badge badge-primary" style="font-size:0.7rem">{{ item.get_item_type_display }}</span>
+        {% if item.description %}<p style="font-size:0.8rem;color:var(--text-muted);margin:8px 0 0">{{ item.description|truncatechars:80 }}</p>{% endif %}
+        {% if item.score %}<div style="margin-top:8px;font-size:0.85rem;font-weight:700;color:var(--color-accent)">Score: {{ item.score }}</div>{% endif %}
+        {% if item.teacher_feedback %}<div style="margin-top:6px;font-size:0.78rem;color:var(--text-muted);font-style:italic">"{{ item.teacher_feedback|truncatechars:80 }}"</div>{% endif %}
+        {% if item.file %}<a href="{{ item.file.url }}" class="btn btn-sm btn-secondary mt-2" target="_blank">📎 {% trans 'View File' %}</a>{% endif %}
+      </div>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px">
+        <div style="font-size:3rem">📁</div>
+        <p class="text-muted mt-3">{% trans 'No portfolio items yet. Add writing tasks, projects or homework.' %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Achievements Tab -->
+  <div class="tab-content" id="tab-achievements">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;padding:8px 0">
+      {% for ach in achievements %}
+      <div class="achievement-badge animate-float reveal" style="animation-delay:{{ forloop.counter0|multiply:50 }}ms">
+        {{ ach.icon }} {{ ach.name }}
+      </div>
+      {% empty %}
+      <p class="text-muted" style="padding:40px">{% trans 'No achievements yet. Keep learning!' %}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Add Item Tab -->
+  <div class="tab-content" id="tab-add">
+    <div class="card reveal" style="max-width:560px">
+      <div class="card-body">
+        <h3 style="margin-bottom:20px">+ {% trans 'Add Portfolio Item' %}</h3>
+        <form method="post" action="{% url 'portfolio:item-add' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label">{% trans 'Type' %}</label>
+            <select name="item_type" class="form-control">
+              <option value="writing">✍️ Writing Task</option>
+              <option value="speaking">🎤 Speaking Record</option>
+              <option value="project">📁 Project</option>
+              <option value="homework">📝 Homework</option>
+              <option value="achievement">🏆 Achievement</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">{% trans 'Title' %} *</label>
+            <input type="text" name="title" class="form-control" required placeholder="e.g. Essay about My City">
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">{% trans 'Description' %}</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="{% trans 'What did you create? What did you learn?' %}"></textarea>
+          </div>
+          <div class="form-group mb-4">
+            <label class="form-label">{% trans 'File (optional)' %}</label>
+            <input type="file" name="file" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block ripple-container">{% trans 'Add to Portfolio' %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+{% endblock %}

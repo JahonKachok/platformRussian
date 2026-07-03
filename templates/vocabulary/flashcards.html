@@ -1,0 +1,196 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Vocabulary Flashcards' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.flashcard-scene { width: 360px; height: 220px; perspective: 1000px; margin: 0 auto; cursor: pointer; }
+.flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-front, .card-back {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden; border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+}
+.card-front { background: var(--gradient-button); color: white; }
+.card-back { background: var(--bg-primary); border: 2px solid var(--border-color); transform: rotateY(180deg); }
+.word-display { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+.pronunciation { font-size: 0.9rem; opacity: 0.8; font-style: italic; }
+.translation { font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.example { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+.flashcard-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+.btn-incorrect { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+.btn-incorrect:hover { background: #ef4444; color: white; }
+.btn-correct { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.btn-correct:hover { background: #10b981; color: white; }
+.progress-info { font-size: 0.875rem; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
+.words-counter { font-size: 0.8rem; background: var(--bg-tertiary); padding: 4px 12px; border-radius: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div style="text-align:center;margin-bottom:40px">
+    <h1>💬 {% trans 'Vocabulary Flashcards' %}</h1>
+    <p class="text-muted">{% trans 'Click the card to see the translation' %}</p>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:flex;justify-content:center;gap:24px;margin-bottom:32px;flex-wrap:wrap">
+    <div style="text-align:center">
+      <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary)">{{ mastered_count }}</div>
+      <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Mastered' %}</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:1.5rem;font-weight:800;color:#f59e0b">{{ learning_count }}</div>
+      <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Learning' %}</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:1.5rem;font-weight:800;color:var(--text-primary)">{{ total_count }}</div>
+      <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Total' %}</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <form method="get" style="display:flex;gap:12px;justify-content:center;margin-bottom:32px;flex-wrap:wrap">
+    <select name="category" class="form-control" style="width:auto" onchange="this.form.submit()">
+      <option value="">{% trans 'All categories' %}</option>
+      {% for cat in categories %}<option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>{{ cat.icon }} {{ cat.name }}</option>{% endfor %}
+    </select>
+    <select name="difficulty" class="form-control" style="width:auto" onchange="this.form.submit()">
+      <option value="">{% trans 'All levels' %}</option>
+      {% for code, name in difficulties %}<option value="{{ code }}" {% if request.GET.difficulty == code %}selected{% endif %}>{{ name }}</option>{% endfor %}
+    </select>
+  </form>
+
+  {% if words %}
+  <!-- Card -->
+  <div class="progress-info">
+    <span class="words-counter" id="card-counter">1 / {{ words|length }}</span>
+  </div>
+
+  <div class="flashcard-scene" id="flashcard-scene" onclick="flipCard()">
+    <div class="flashcard" id="flashcard">
+      <div class="card-front">
+        <div class="word-display" id="word-display">{{ words.0.word }}</div>
+        <div class="pronunciation" id="pronunciation">{{ words.0.pronunciation }}</div>
+        <div style="margin-top:12px;font-size:0.8rem;opacity:0.7">{% trans 'Click to see translation' %}</div>
+      </div>
+      <div class="card-back">
+        <div class="translation" id="translation">{{ words.0.translation_uz }}</div>
+        <div class="example" id="example">{{ words.0.example_sentence|truncatechars:80 }}</div>
+        {% if words.0.part_of_speech %}
+        <span class="badge badge-primary mt-2" id="pos">{{ words.0.part_of_speech }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="flashcard-actions">
+    <button class="btn btn-incorrect btn-lg" onclick="markAnswer(false)" id="btn-incorrect" style="display:none">
+      ✗ {% trans "Don't Know" %}
+    </button>
+    <button class="btn btn-secondary btn-lg" onclick="flipCard()" id="btn-flip">
+      🔄 {% trans 'Flip' %}
+    </button>
+    <button class="btn btn-correct btn-lg" onclick="markAnswer(true)" id="btn-correct" style="display:none">
+      ✓ {% trans 'I Know It' %}
+    </button>
+  </div>
+
+  <div style="text-align:center;margin-top:16px">
+    <button class="btn btn-ghost btn-sm" onclick="nextCard()" id="btn-next">{% trans 'Skip' %} →</button>
+  </div>
+
+  <!-- All words list (hidden, for JS) -->
+  <script>
+  const WORDS = [
+    {% for word in words %}
+    {
+      id: {{ word.id }},
+      word: "{{ word.word|escapejs }}",
+      pronunciation: "{{ word.pronunciation|escapejs }}",
+      translation: "{{ word.translation_uz|escapejs }}",
+      example: "{{ word.example_sentence|truncatechars:80|escapejs }}",
+      pos: "{{ word.part_of_speech|escapejs }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  const WORD_STATUS_URL = "{% url 'vocabulary:word-status' 0 %}";
+  </script>
+
+  {% else %}
+  <div style="text-align:center;padding:80px">
+    <div style="font-size:4rem;margin-bottom:16px">📭</div>
+    <h3>{% trans 'No words found' %}</h3>
+    <p class="text-muted">{% trans 'Try different filters' %}</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+let currentIdx = 0;
+let isFlipped = false;
+
+function updateCard() {
+  const w = WORDS[currentIdx];
+  if (!w) return;
+
+  document.getElementById('word-display').textContent = w.word;
+  document.getElementById('pronunciation').textContent = w.pronunciation;
+  document.getElementById('translation').textContent = w.translation;
+  document.getElementById('example').textContent = w.example;
+  document.getElementById('card-counter').textContent = `${currentIdx + 1} / ${WORDS.length}`;
+
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  isFlipped = false;
+
+  document.getElementById('btn-flip').style.display = '';
+  document.getElementById('btn-next').style.display = '';
+  document.getElementById('btn-correct').style.display = 'none';
+  document.getElementById('btn-incorrect').style.display = 'none';
+}
+
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  fc.classList.toggle('flipped');
+  isFlipped = !isFlipped;
+
+  if (isFlipped) {
+    document.getElementById('btn-flip').style.display = 'none';
+    document.getElementById('btn-correct').style.display = '';
+    document.getElementById('btn-incorrect').style.display = '';
+  } else {
+    document.getElementById('btn-flip').style.display = '';
+    document.getElementById('btn-correct').style.display = 'none';
+    document.getElementById('btn-incorrect').style.display = 'none';
+  }
+}
+
+function nextCard() {
+  currentIdx = (currentIdx + 1) % WORDS.length;
+  updateCard();
+}
+
+function markAnswer(correct) {
+  const w = WORDS[currentIdx];
+  if (!w) return;
+
+  fetch(WORD_STATUS_URL.replace('/0/', `/${w.id}/`), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': window.CSRF_TOKEN
+    },
+    body: JSON.stringify({ action: correct ? 'correct' : 'incorrect' })
+  }).then(r => r.json()).then(() => {
+    nextCard();
+  });
+}
+
+if (typeof WORDS !== 'undefined') updateCard();
+</script>
+{% endblock %}

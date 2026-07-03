@@ -1,0 +1,403 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Dashboard' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-header {
+  background: var(--gradient-hero);
+  padding: 48px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+.dashboard-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: var(--bg-secondary);
+  border-radius: 40px 40px 0 0;
+}
+.dashboard-hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: hero-glow 8s ease-in-out infinite;
+}
+.dh-orb-1 { width:400px;height:400px;background:rgba(99,102,241,0.2);top:-100px;right:-50px; }
+.dh-orb-2 { width:300px;height:300px;background:rgba(16,185,129,0.1);bottom:0;left:10%;animation-delay:3s; }
+
+.dashboard-content {
+  padding: 0 0 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.db-greeting { font-size: 1.75rem; font-weight: 800; color: white; }
+.db-sub { color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+/* Stats row */
+.db-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 32px;
+}
+
+.db-stat {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.db-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.db-stat-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.db-stat-icon { font-size: 1.5rem; }
+.db-stat-trend { font-size: 0.75rem; font-weight: 600; color: #10b981; background: rgba(16,185,129,0.1); padding: 2px 8px; border-radius: 20px; }
+.db-stat-value { font-size: 1.75rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+.db-stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+/* Main layout */
+.db-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+}
+
+.db-section-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; }
+
+/* Course progress cards */
+.progress-course-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.progress-course-card:hover { border-color: var(--border-color); background: var(--bg-secondary); transform: translateX(4px); }
+
+.pcc-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-button);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; flex-shrink: 0;
+}
+
+.pcc-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.pcc-meta { font-size: 0.8rem; color: var(--text-muted); }
+.pcc-progress { margin-top: 8px; }
+
+/* Activity item */
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(99,102,241,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+.activity-text { font-size: 0.85rem; color: var(--text-primary); font-weight: 500; }
+.activity-time { font-size: 0.75rem; color: var(--text-muted); }
+
+/* Leaderboard item */
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+.lb-item:hover { background: var(--bg-secondary); }
+.lb-rank { font-size: 1rem; font-weight: 800; color: var(--text-muted); width: 24px; text-align: center; flex-shrink: 0; }
+.lb-rank.gold { color: #f59e0b; }
+.lb-rank.silver { color: #94a3b8; }
+.lb-rank.bronze { color: #d97706; }
+.lb-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); flex: 1; }
+.lb-xp { font-size: 0.8rem; color: var(--color-primary); font-weight: 700; }
+
+/* Daily goal ring */
+.goal-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--gradient-button);
+  border-radius: var(--radius-xl);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.goal-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,...") repeat;
+  opacity: 0.1;
+}
+
+.goal-text { color: white; }
+.goal-title { font-size: 1rem; font-weight: 700; }
+.goal-sub { font-size: 0.8rem; opacity: 0.8; margin-top: 4px; }
+.goal-percent { font-size: 1.75rem; font-weight: 800; margin-top: 4px; }
+
+/* Achievement card mini */
+.achievement-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.12);
+  border-radius: var(--radius-md);
+}
+.achievement-icon { font-size: 1.5rem; }
+.achievement-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
+.achievement-desc { font-size: 0.7rem; color: var(--text-muted); }
+
+@media (max-width: 1024px) {
+  .db-stats { grid-template-columns: repeat(2, 1fr); }
+  .db-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .db-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="dashboard-header">
+  <div class="dashboard-hero-orb dh-orb-1"></div>
+  <div class="dashboard-hero-orb dh-orb-2"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="avatar avatar-lg" style="border:2px solid rgba(255,255,255,0.3)">
+        {% if request.user.avatar %}
+          <img src="{{ request.user.avatar.url }}" alt="">
+        {% else %}{{ request.user.get_initials }}{% endif %}
+      </div>
+      <div>
+        <div class="db-greeting">
+          {% blocktrans with name=request.user.first_name %}Good day, {{ name }}! 👋{% endblocktrans %}
+        </div>
+        <div class="db-sub">{% trans 'Ready to learn some English today?' %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-content">
+  <div class="container">
+
+    <!-- Stats -->
+    <div class="db-stats">
+      <div class="db-stat reveal">
+        <div class="db-stat-top">
+          <span class="db-stat-icon">⚡</span>
+          <span class="db-stat-trend">+{{ progress.daily_xp|default:0 }} {% trans 'today' %}</span>
+        </div>
+        <div class="db-stat-value">{{ progress.xp|default:0 }}</div>
+        <div class="db-stat-label">{% trans 'Total XP' %}</div>
+      </div>
+
+      <div class="db-stat reveal delay-100">
+        <div class="db-stat-top">
+          <span class="db-stat-icon">⭐</span>
+        </div>
+        <div class="db-stat-value">{{ progress.level|default:1 }}</div>
+        <div class="db-stat-label">{% trans 'Current Level' %}</div>
+        <div class="progress-bar-container mt-2">
+          <div class="progress-bar" style="width:{{ progress.level_progress_percent|default:0 }}%"></div>
+        </div>
+      </div>
+
+      <div class="db-stat reveal delay-200">
+        <div class="db-stat-top">
+          <span class="db-stat-icon">🔥</span>
+        </div>
+        <div class="db-stat-value">{{ progress.streak_days|default:0 }}</div>
+        <div class="db-stat-label">{% trans 'Day Streak' %}</div>
+      </div>
+
+      <div class="db-stat reveal delay-300">
+        <div class="db-stat-top">
+          <span class="db-stat-icon">📚</span>
+        </div>
+        <div class="db-stat-value">{{ total_enrolled }}</div>
+        <div class="db-stat-label">{% trans 'Enrolled Courses' %}</div>
+      </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="db-layout">
+
+      <!-- Left -->
+      <div>
+        <!-- Daily Goal -->
+        <div class="goal-section reveal">
+          <div style="position:relative">
+            {% progress_ring progress.daily_goal_percent|default:0 70 6 '#fff' %}
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-size:0.7rem;font-weight:700">
+              {{ progress.daily_goal_percent|default:0 }}%
+            </div>
+          </div>
+          <div class="goal-text">
+            <div class="goal-title">🎯 {% trans 'Daily Goal' %}</div>
+            <div class="goal-sub">{{ progress.daily_xp|default:0 }} / {{ progress.daily_goal|default:100 }} XP {% trans 'earned today' %}</div>
+            {% if progress.daily_goal_percent >= 100 %}
+            <div style="margin-top:6px;font-size:0.8rem;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;display:inline-block">
+              🎉 {% trans 'Goal achieved!' %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Continue Learning -->
+        {% if enrollments %}
+        <div class="reveal">
+          <div class="db-section-title">📚 {% trans 'Continue Learning' %}</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            {% for enrollment in enrollments %}
+            <a href="{% url 'courses:course-detail' enrollment.course.slug %}" class="progress-course-card">
+              <div class="pcc-icon">{{ enrollment.course.category.icon|default:"📚" }}</div>
+              <div style="flex:1">
+                <div class="pcc-title">{{ enrollment.course.title }}</div>
+                <div class="pcc-meta">{{ enrollment.completed_lessons }} / {{ enrollment.course.lesson_count }} {% trans 'lessons' %}</div>
+                <div class="pcc-progress">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar" style="width:{{ enrollment.progress_percent }}%"></div>
+                  </div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px">{{ enrollment.progress_percent }}%</div>
+                </div>
+              </div>
+              <div style="color:var(--text-muted);font-size:1.25rem">→</div>
+            </a>
+            {% endfor %}
+          </div>
+          <a href="{% url 'courses:course-list' %}" class="btn btn-secondary btn-sm mt-4">➕ {% trans 'Browse More Courses' %}</a>
+        </div>
+        {% else %}
+        <div class="card reveal" style="text-align:center;padding:40px">
+          <div style="font-size:3rem;margin-bottom:16px">📚</div>
+          <h3>{% trans 'Start Learning!' %}</h3>
+          <p class="text-muted">{% trans 'Enroll in a course to track your progress here.' %}</p>
+          <a href="{% url 'courses:course-list' %}" class="btn btn-primary mt-4">{% trans 'Browse Courses' %}</a>
+        </div>
+        {% endif %}
+
+        <!-- Recent Activity -->
+        {% if recent_activity %}
+        <div class="card reveal mt-6">
+          <div class="card-body">
+            <div class="db-section-title">🕐 {% trans 'Recent Activity' %}</div>
+            {% for item in recent_activity %}
+            <div class="activity-item">
+              <div class="activity-icon">{{ item.lesson.type_icon }}</div>
+              <div style="flex:1">
+                <div class="activity-text">{{ item.lesson.title }}</div>
+                <div class="activity-time">{{ item.lesson.course.title }}</div>
+              </div>
+              {% if item.is_completed %}
+              <span class="badge badge-success">✓</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Right -->
+      <div>
+        <!-- User Rank -->
+        <div class="card reveal mb-4">
+          <div class="card-body">
+            <div class="flex items-center justify-between mb-3">
+              <div class="db-section-title" style="margin:0">🏆 {% trans 'Your Rank' %}</div>
+              <a href="{% url 'gamification:leaderboard' %}" style="font-size:0.8rem;color:var(--color-primary)">{% trans 'Full board' %} →</a>
+            </div>
+            <div style="text-align:center;padding:16px 0">
+              <div style="font-size:3rem;font-weight:900;color:var(--color-primary)">#{{ user_rank }}</div>
+              <div style="font-size:0.875rem;color:var(--text-muted)">{% trans 'Global ranking' %}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard preview -->
+        {% if leaderboard %}
+        <div class="card reveal mb-4">
+          <div class="card-body">
+            <div class="db-section-title">🥇 {% trans 'Top Learners' %}</div>
+            {% for entry in leaderboard|slice:":5" %}
+            <div class="lb-item">
+              <span class="lb-rank {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}">
+                {% if forloop.counter == 1 %}🥇{% elif forloop.counter == 2 %}🥈{% elif forloop.counter == 3 %}🥉{% else %}{{ forloop.counter }}{% endif %}
+              </span>
+              <div class="avatar avatar-sm">{{ entry.user.get_initials }}</div>
+              <span class="lb-name">{{ entry.user.get_full_name|truncatechars:18 }}</span>
+              <span class="lb-xp">{{ entry.xp }} XP</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Achievements -->
+        {% if achievements %}
+        <div class="card reveal">
+          <div class="card-body">
+            <div class="flex items-center justify-between mb-3">
+              <div class="db-section-title" style="margin:0">🎖️ {% trans 'Recent Achievements' %}</div>
+              <a href="{% url 'gamification:achievements' %}" style="font-size:0.8rem;color:var(--color-primary)">{% trans 'All' %} →</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              {% for ach in achievements %}
+              <div class="achievement-mini">
+                <span class="achievement-icon">{{ ach.icon }}</span>
+                <div>
+                  <div class="achievement-name">{{ ach.name }}</div>
+                  <div class="achievement-desc">{{ ach.description|truncatechars:40 }}</div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick actions -->
+        <div class="card reveal mt-4">
+          <div class="card-body">
+            <div class="db-section-title">⚡ {% trans 'Quick Access' %}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <a href="{% url 'vocabulary:flashcards' %}" class="btn btn-secondary btn-sm">💬 {% trans 'Vocabulary' %}</a>
+              <a href="{% url 'grammar:topics' %}" class="btn btn-secondary btn-sm">📝 {% trans 'Grammar' %}</a>
+              <a href="{% url 'quiz:list' %}" class="btn btn-secondary btn-sm">❓ {% trans 'Quiz' %}</a>
+              <a href="{% url 'certificates:list' %}" class="btn btn-secondary btn-sm">🏅 {% trans 'Certificates' %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

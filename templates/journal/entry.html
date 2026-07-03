@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Journal Entry' %} — {{ entry.date }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:760px">
+  <a href="{% url 'journal:index' %}" class="btn btn-secondary btn-sm mb-4 reveal">← {% trans 'Back to Journal' %}</a>
+
+  <div class="card reveal delay-100">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:2.5rem">{{ entry.mood_emoji }}</span>
+          <div>
+            <h2 style="margin:0 0 4px">{{ entry.date|date:"l, d F Y" }}</h2>
+            <div style="color:var(--text-muted);font-size:0.875rem">{{ entry.get_mood_display }}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:1.5rem">
+            {% for i in "12345" %}
+            <span style="color:{% if forloop.counter <= entry.self_rating %}#f59e0b{% else %}var(--bg-tertiary){% endif %}">★</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% if entry.lesson %}<div class="badge badge-primary mb-4">📖 Lesson: {{ entry.lesson.title }}</div>{% endif %}
+
+      <div style="border-left:3px solid var(--color-primary);padding-left:20px;margin-bottom:20px">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">✅ {% trans 'What I Learned' %}</div>
+        <p style="color:var(--text-secondary);line-height:1.75;white-space:pre-wrap;margin:0">{{ entry.what_learned }}</p>
+      </div>
+
+      {% if entry.what_was_difficult %}
+      <div style="border-left:3px solid #f59e0b;padding-left:20px;margin-bottom:20px">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">⚠️ {% trans 'Difficulties' %}</div>
+        <p style="color:var(--text-secondary);line-height:1.75;white-space:pre-wrap;margin:0">{{ entry.what_was_difficult }}</p>
+      </div>
+      {% endif %}
+
+      {% if entry.topics_to_revisit %}
+      <div style="border-left:3px solid #10b981;padding-left:20px">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">🔄 {% trans 'Topics to Revisit' %}</div>
+        <p style="color:var(--text-secondary);line-height:1.75;white-space:pre-wrap;margin:0">{{ entry.topics_to_revisit }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:20px">
+    <form method="post" action="{% url 'journal:delete' entry.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('{% trans "Delete this entry?" %}')">🗑️ {% trans 'Delete' %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

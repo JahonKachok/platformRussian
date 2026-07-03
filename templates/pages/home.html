@@ -1,0 +1,816 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Home' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  background: var(--gradient-hero);
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-bg-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: hero-glow 8s ease-in-out infinite;
+}
+
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: rgba(99,102,241,0.2);
+  top: -100px; right: -100px;
+  animation-delay: 0s;
+}
+
+.hero-orb-2 {
+  width: 400px; height: 400px;
+  background: rgba(139,92,246,0.15);
+  bottom: -80px; left: 20%;
+  animation-delay: 2s;
+}
+
+.hero-orb-3 {
+  width: 300px; height: 300px;
+  background: rgba(16,185,129,0.1);
+  top: 30%; left: -60px;
+  animation-delay: 4s;
+}
+
+.hero-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 100px 0 80px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.4);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.hero-title .highlight {
+  background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 480px;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  padding: 16px 32px;
+  background: white;
+  color: #6366f1;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  color: #4f46e5;
+}
+
+.hero-btn-secondary {
+  padding: 16px 28px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero-stat-item { text-align: center; }
+.hero-stat-value { font-size: 1.75rem; font-weight: 800; color: white; }
+.hero-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+/* Hero Visual */
+.hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-phone {
+  width: 280px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 32px;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+  animation: float 6s ease-in-out infinite;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+}
+
+.hero-phone-screen {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+  border-radius: 20px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.hp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.hp-title { font-size: 0.875rem; font-weight: 700; color: white; }
+.hp-xp { font-size: 0.75rem; color: #a5b4fc; background: rgba(99,102,241,0.2); padding: 3px 10px; border-radius: 20px; }
+
+.hp-lesson {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: background 0.3s;
+}
+
+.hp-lesson:hover { background: rgba(99,102,241,0.15); }
+
+.hp-lesson-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--gradient-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.hp-lesson-title { font-size: 0.8rem; font-weight: 600; color: white; }
+.hp-lesson-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+.hp-progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.hp-progress-fill {
+  height: 100%;
+  background: var(--gradient-button);
+  border-radius: 2px;
+}
+
+.hp-streak {
+  background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(239,68,68,0.2) 100%);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(245,158,11,0.3);
+}
+
+.hp-streak-icon { font-size: 1.25rem; }
+.hp-streak-text { font-size: 0.8rem; font-weight: 600; color: #fbbf24; }
+.hp-streak-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+
+/* Floating cards */
+.float-card {
+  position: absolute;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.float-card-1 {
+  top: 5%;
+  right: -40px;
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.float-card-2 {
+  bottom: 10%;
+  right: -30px;
+  animation: float-slow 9s ease-in-out infinite 1s;
+}
+
+.float-card-3 {
+  top: 40%;
+  left: -60px;
+  animation: float-slow 8s ease-in-out infinite 2s;
+}
+
+/* ============ FEATURES ============ */
+.features-section { padding: 100px 0; }
+
+.features-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 64px;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-card);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--border-color); }
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--gradient-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.3);
+}
+
+.feature-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+.feature-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; }
+
+/* ============ COURSES SECTION ============ */
+.courses-section { padding: 80px 0; background: var(--bg-secondary); }
+
+.course-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.course-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.course-cover {
+  height: 160px;
+  background: var(--gradient-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.course-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4));
+}
+
+.course-level {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.course-body { padding: 20px; }
+.course-category { font-size: 0.75rem; font-weight: 600; color: var(--color-primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.course-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
+.course-meta { display: flex; gap: 12px; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; flex-wrap: wrap; }
+.course-meta-item { display: flex; align-items: center; gap: 4px; }
+
+.course-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ============ STATS SECTION ============ */
+.stats-section {
+  padding: 80px 0;
+  background: var(--gradient-hero);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-item { text-align: center; }
+.stat-number { font-size: 3rem; font-weight: 900; color: white; font-variant-numeric: tabular-nums; }
+.stat-number .counter { display: inline-block; }
+.stat-title { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+/* ============ FAQ ============ */
+.faq-section { padding: 80px 0; }
+
+.faq-item {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.faq-item.open { border-color: var(--border-color); box-shadow: var(--shadow-sm); }
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: background var(--transition-fast);
+}
+
+.faq-question:hover { background: var(--bg-secondary); }
+
+.faq-chevron {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+  font-size: 0.75rem;
+}
+
+.faq-item.open .faq-chevron { background: var(--color-primary); color: white; transform: rotate(180deg); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.faq-answer-inner {
+  padding: 0 24px 20px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.faq-item.open .faq-answer { max-height: 500px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-bg-orbs">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-grid-lines"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-inner">
+      <!-- Content -->
+      <div class="hero-content reveal-left">
+        <div class="hero-badge">
+          <span>✨</span>
+          {% trans 'AI-Powered English Learning' %}
+        </div>
+
+        <h1 class="hero-title">
+          {% trans 'Learn English' %}<br>
+          <span class="highlight">{% trans 'Smarter & Faster' %}</span><br>
+          {% trans 'with Rustili' %}
+        </h1>
+
+        <p class="hero-subtitle">
+          {% trans 'Interactive lessons, vocabulary flashcards, grammar exercises, and gamification. Learn at your own pace with personalized AI feedback.' %}
+        </p>
+
+        <div class="hero-cta">
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'courses:dashboard' %}" class="hero-btn-primary">
+            <span>⚡</span> {% trans 'Continue Learning' %}
+          </a>
+          <a href="{% url 'courses:course-list' %}" class="hero-btn-secondary">
+            📚 {% trans 'Browse Courses' %}
+          </a>
+          {% else %}
+          <a href="{% url 'accounts:register' %}" class="hero-btn-primary">
+            <span>🚀</span> {% trans 'Start for Free' %}
+          </a>
+          <a href="{% url 'accounts:login' %}" class="hero-btn-secondary">
+            🔑 {% trans 'Login' %}
+          </a>
+          {% endif %}
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">
+              <span class="counter" data-target="{{ stats.total_students }}">{{ stats.total_students }}</span>+
+            </div>
+            <div class="hero-stat-label">{% trans 'Students' %}</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">
+              <span class="counter" data-target="{{ stats.total_courses }}">{{ stats.total_courses }}</span>+
+            </div>
+            <div class="hero-stat-label">{% trans 'Courses' %}</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">
+              <span class="counter" data-target="{{ stats.completion_rate }}">{{ stats.completion_rate }}</span>%
+            </div>
+            <div class="hero-stat-label">{% trans 'Completion Rate' %}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="hero-visual reveal-right">
+        <div class="hero-phone">
+          <div class="hero-phone-screen">
+            <div class="hp-header">
+              <span class="hp-title">Rustili 🎓</span>
+              <span class="hp-xp">⚡ 450 XP</span>
+            </div>
+
+            <div class="hp-lesson">
+              <div class="hp-lesson-icon">📖</div>
+              <div style="flex:1">
+                <div class="hp-lesson-title">Reading: Daily Life</div>
+                <div class="hp-lesson-sub">Lesson 3 of 12</div>
+                <div class="hp-progress-bar">
+                  <div class="hp-progress-fill" style="width:65%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hp-lesson">
+              <div class="hp-lesson-icon">💬</div>
+              <div style="flex:1">
+                <div class="hp-lesson-title">Vocabulary: 50 words</div>
+                <div class="hp-lesson-sub">12 mastered</div>
+                <div class="hp-progress-bar">
+                  <div class="hp-progress-fill" style="width:24%; background: linear-gradient(135deg, #10b981, #059669)"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hp-streak">
+              <span class="hp-streak-icon">🔥</span>
+              <div>
+                <div class="hp-streak-text">7 Day Streak!</div>
+                <div class="hp-streak-sub">Keep it up!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating badges -->
+        <div class="float-card float-card-1">🏆 Level 5 Unlocked!</div>
+        <div class="float-card float-card-2">⚡ +50 XP Earned</div>
+        <div class="float-card float-card-3">🎯 Daily Goal: 80%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-header reveal">
+      <div class="section-label">✨ {% trans 'Features' %}</div>
+      <h2>{% trans 'Everything You Need to' %} <span class="gradient-text">{% trans 'Master English' %}</span></h2>
+      <p class="section-subtitle">{% trans 'A complete learning ecosystem designed for real progress' %}</p>
+    </div>
+
+    <div class="features-grid">
+      {% with features='' %}
+      <div class="feature-card reveal delay-100">
+        <div class="feature-icon">📖</div>
+        <h3 class="feature-title">{% trans 'Reading & Comprehension' %}</h3>
+        <p class="feature-desc">{% trans 'Engaging reading materials with audio support, vocabulary popups, and comprehension questions.' %}</p>
+      </div>
+      <div class="feature-card reveal delay-200">
+        <div class="feature-icon">🎧</div>
+        <h3 class="feature-title">{% trans 'Listening Practice' %}</h3>
+        <p class="feature-desc">{% trans 'Native speaker audio with adjustable speed, transcripts, and fill-in-the-blank dictation exercises.' %}</p>
+      </div>
+      <div class="feature-card reveal delay-300">
+        <div class="feature-icon">💬</div>
+        <h3 class="feature-title">{% trans 'Smart Vocabulary' %}</h3>
+        <p class="feature-desc">{% trans 'Flashcard system with spaced repetition, pronunciation guide, synonyms, antonyms, and examples.' %}</p>
+      </div>
+      <div class="feature-card reveal delay-400">
+        <div class="feature-icon">📝</div>
+        <h3 class="feature-title">{% trans 'Grammar Mastery' %}</h3>
+        <p class="feature-desc">{% trans 'Structured grammar topics with clear explanations, examples, and instant-check exercises.' %}</p>
+      </div>
+      <div class="feature-card reveal delay-500">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title">{% trans 'Gamification' %}</h3>
+        <p class="feature-desc">{% trans 'XP points, levels, badges, streaks, leaderboard, daily challenges, and achievements.' %}</p>
+      </div>
+      <div class="feature-card reveal delay-600">
+        <div class="feature-icon">🏅</div>
+        <h3 class="feature-title">{% trans 'Certificates' %}</h3>
+        <p class="feature-desc">{% trans 'Professional PDF certificates with QR verification upon completing any course.' %}</p>
+      </div>
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ COURSES ============ -->
+{% if featured_courses %}
+<section class="courses-section">
+  <div class="container">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <div class="section-label">📚 {% trans 'Courses' %}</div>
+        <h2>{% trans 'Popular Courses' %}</h2>
+      </div>
+      <a href="{% url 'courses:course-list' %}" class="btn btn-secondary">{% trans 'All Courses' %} →</a>
+    </div>
+
+    <div class="grid grid-auto">
+      {% for course in featured_courses %}
+      <div class="course-card reveal delay-{{ forloop.counter }}00">
+        <div class="course-cover">
+          {% if course.cover %}
+            <img src="{{ course.cover.url }}" alt="{{ course.title }}" loading="lazy">
+            <div class="course-cover-overlay"></div>
+          {% else %}
+            <span>{{ course.category.icon|default:"📚" }}</span>
+          {% endif %}
+          <div class="course-level">
+            <span class="badge badge-primary">{{ course.level }}</span>
+          </div>
+        </div>
+        <div class="course-body">
+          <div class="course-category">{{ course.category.name|default:"-" }}</div>
+          <h3 class="course-title">{{ course.title }}</h3>
+          <p class="text-sm text-muted">{{ course.short_description|default:course.description|truncatechars:80 }}</p>
+          <div class="course-meta">
+            <span class="course-meta-item">📚 {{ course.lesson_count }} {% trans 'lessons' %}</span>
+            <span class="course-meta-item">⏱️ {{ course.duration_hours }}h</span>
+            <span class="course-meta-item">⚡ {{ course.xp_reward }} XP</span>
+          </div>
+        </div>
+        <div class="course-footer">
+          {% if course.is_free %}<span class="badge badge-success">{% trans 'Free' %}</span>{% endif %}
+          <a href="{% url 'courses:course-detail' course.slug %}" class="btn btn-primary btn-sm">{% trans 'View Course' %}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ============ STATS ============ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-number"><span class="counter" data-target="{{ stats.total_students }}">0</span>+</div>
+        <div class="stat-title">{% trans 'Active Students' %}</div>
+      </div>
+      <div class="stat-item reveal delay-200">
+        <div class="stat-number"><span class="counter" data-target="{{ stats.total_courses }}">0</span></div>
+        <div class="stat-title">{% trans 'Expert Courses' %}</div>
+      </div>
+      <div class="stat-item reveal delay-400">
+        <div class="stat-number"><span class="counter" data-target="{{ stats.total_lessons }}">0</span></div>
+        <div class="stat-title">{% trans 'Interactive Lessons' %}</div>
+      </div>
+      <div class="stat-item reveal delay-600">
+        <div class="stat-number"><span class="counter" data-target="{{ stats.completion_rate }}">0</span>%</div>
+        <div class="stat-title">{% trans 'Completion Rate' %}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq-section">
+  <div class="container container-sm">
+    <div class="text-center reveal mb-8">
+      <div class="section-label">❓ FAQ</div>
+      <h2>{% trans 'Frequently Asked Questions' %}</h2>
+    </div>
+
+    <div class="faq-list">
+      {% for faq in faq_items %}
+      <div class="faq-item reveal">
+        <div class="faq-question">
+          {{ faq.q }}
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">{{ faq.a }}</div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="faq-item reveal">
+        <div class="faq-question">{% trans 'Is Rustili completely free?' %}<span class="faq-chevron">▾</span></div>
+        <div class="faq-answer"><div class="faq-answer-inner">{% trans 'Yes! Rustili is completely free for all students. Register and start learning today.' %}</div></div>
+      </div>
+      <div class="faq-item reveal delay-100">
+        <div class="faq-question">{% trans 'How does the gamification system work?' %}<span class="faq-chevron">▾</span></div>
+        <div class="faq-answer"><div class="faq-answer-inner">{% trans 'Earn XP by completing lessons, quizzes, and vocabulary reviews. Level up, unlock achievements, and compete on the leaderboard!' %}</div></div>
+      </div>
+      <div class="faq-item reveal delay-200">
+        <div class="faq-question">{% trans 'Can I get a certificate?' %}<span class="faq-chevron">▾</span></div>
+        <div class="faq-answer"><div class="faq-answer-inner">{% trans 'Yes! Complete any course to receive a professional PDF certificate with a unique ID and QR code for verification.' %}</div></div>
+      </div>
+      <div class="faq-item reveal delay-300">
+        <div class="faq-question">{% trans 'What languages is the platform available in?' %}<span class="faq-chevron">▾</span></div>
+        <div class="faq-answer"><div class="faq-answer-inner">{% trans 'Rustili supports 3 languages: Uzbek (O\'zbek), English, and Russian. Switch languages anytime from the navbar.' %}</div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+{% if not request.user.is_authenticated %}
+<section style="padding:80px 0; background: var(--gradient-button); position:relative; overflow:hidden;">
+  <div style="position:absolute;inset:0;background:url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23fff\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+  <div class="container text-center" style="position:relative;z-index:1">
+    <h2 style="color:white;margin-bottom:16px;font-size:clamp(1.75rem,4vw,2.5rem)">{% trans 'Start Your English Journey Today' %}</h2>
+    <p style="color:rgba(255,255,255,0.8);margin-bottom:40px;font-size:1.1rem">{% trans 'Join thousands of students already learning with Rustili' %}</p>
+    <a href="{% url 'accounts:register' %}" style="display:inline-flex;align-items:center;gap:10px;padding:18px 40px;background:white;color:#6366f1;border-radius:999px;font-weight:700;font-size:1.1rem;box-shadow:0 8px 30px rgba(0,0,0,0.2);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"">
+      🚀 {% trans 'Register Free' %}
+    </a>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ Accordion
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
+{% endblock %}

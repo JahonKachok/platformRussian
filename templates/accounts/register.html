@@ -1,0 +1,120 @@
+{% extends 'base/base_auth.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Register' %}{% endblock %}
+
+{% block left_title %}{% trans 'Start Learning' %}<br><span>{% trans 'for Free!' %}</span>{% endblock %}
+{% block left_subtitle %}{% trans 'Create your account and begin your English learning journey today.' %}{% endblock %}
+
+{% block auth_content %}
+<div class="auth-title">{% trans 'Create Account' %}</div>
+<div class="auth-subtitle">{% trans 'Join thousands of English learners' %}</div>
+
+<form method="post" id="register-form">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="grid grid-2" style="gap:16px">
+    <div class="form-group">
+      <label class="form-label">{% trans 'First name' %}</label>
+      <input type="text" name="first_name" class="form-control {% if form.first_name.errors %}error{% endif %}"
+             placeholder="{% trans 'First name' %}"
+             value="{{ form.first_name.value|default:'' }}" required>
+      {% if form.first_name.errors %}<span class="form-error">{{ form.first_name.errors.0 }}</span>{% endif %}
+    </div>
+    <div class="form-group">
+      <label class="form-label">{% trans 'Last name' %}</label>
+      <input type="text" name="last_name" class="form-control {% if form.last_name.errors %}error{% endif %}"
+             placeholder="{% trans 'Last name' %}"
+             value="{{ form.last_name.value|default:'' }}" required>
+      {% if form.last_name.errors %}<span class="form-error">{{ form.last_name.errors.0 }}</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">{% trans 'Email' %}</label>
+    <div class="input-group">
+      <span class="input-icon">✉️</span>
+      <input type="email" name="email" class="form-control {% if form.email.errors %}error{% endif %}"
+             placeholder="{% trans 'Email address' %}"
+             value="{{ form.email.value|default:'' }}" required>
+    </div>
+    {% if form.email.errors %}<span class="form-error">{{ form.email.errors.0 }}</span>{% endif %}
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">{% trans 'Password' %}</label>
+    <div class="input-group">
+      <span class="input-icon">🔒</span>
+      <input type="password" name="password1" class="form-control {% if form.password1.errors %}error{% endif %}"
+             placeholder="{% trans 'Create password' %}" id="pwd1" required>
+    </div>
+    {% if form.password1.errors %}<span class="form-error">{{ form.password1.errors.0 }}</span>{% endif %}
+    <!-- Password strength -->
+    <div style="margin-top:6px;height:4px;border-radius:2px;background:var(--bg-tertiary)">
+      <div id="pwd-strength-bar" style="height:100%;border-radius:2px;transition:all 0.3s;width:0"></div>
+    </div>
+    <div id="pwd-strength-text" style="font-size:0.75rem;margin-top:4px;color:var(--text-muted)"></div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">{% trans 'Confirm password' %}</label>
+    <div class="input-group">
+      <span class="input-icon">🔒</span>
+      <input type="password" name="password2" class="form-control {% if form.password2.errors %}error{% endif %}"
+             placeholder="{% trans 'Repeat password' %}" id="pwd2" required>
+    </div>
+    {% if form.password2.errors %}<span class="form-error">{{ form.password2.errors.0 }}</span>{% endif %}
+  </div>
+
+  <div class="form-group">
+    <label class="form-check">
+      <input type="checkbox" name="agree_terms" required>
+      <span style="font-size:0.8rem;color:var(--text-secondary)">
+        {% trans "I agree to the" %} <a href="#" style="color:var(--color-primary)">{% trans 'Terms of Service' %}</a>
+      </span>
+    </label>
+    {% if form.agree_terms.errors %}<span class="form-error">{{ form.agree_terms.errors.0 }}</span>{% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-block btn-lg">
+    🚀 {% trans 'Create Account' %}
+  </button>
+</form>
+
+<div class="auth-nav-link">
+  {% trans 'Already have an account?' %} <a href="{% url 'accounts:login' %}">{% trans 'Sign In' %}</a>
+</div>
+
+<script>
+const pwd1 = document.getElementById('pwd1');
+const bar = document.getElementById('pwd-strength-bar');
+const text = document.getElementById('pwd-strength-text');
+
+pwd1.addEventListener('input', () => {
+  const v = pwd1.value;
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Z]/.test(v)) score++;
+  if (/[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+
+  const colors = ['#ef4444','#f59e0b','#10b981','#6366f1'];
+  const labels = ['{% trans "Weak" %}','{% trans "Fair" %}','{% trans "Good" %}','{% trans "Strong" %}'];
+  const widths = ['25%','50%','75%','100%'];
+
+  if (v.length > 0) {
+    bar.style.width = widths[score - 1] || '5%';
+    bar.style.background = colors[score - 1] || '#ef4444';
+    text.textContent = labels[score - 1] || '';
+    text.style.color = colors[score - 1] || '#ef4444';
+  } else {
+    bar.style.width = '0';
+    text.textContent = '';
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,177 @@
+# Russian translation for Rustili
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+
+msgid "Learn English"
+msgstr "Учите английский"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Courses"
+msgstr "Курсы"
+
+msgid "Vocabulary"
+msgstr "Словарь"
+
+msgid "Grammar"
+msgstr "Грамматика"
+
+msgid "Quiz"
+msgstr "Тест"
+
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Leaderboard"
+msgstr "Рейтинг"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Login"
+msgstr "Войти"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Get Started"
+msgstr "Начать"
+
+msgid "Start for Free"
+msgstr "Начать бесплатно"
+
+msgid "Continue Learning"
+msgstr "Продолжить обучение"
+
+msgid "Browse Courses"
+msgstr "Просмотр курсов"
+
+msgid "All Courses"
+msgstr "Все курсы"
+
+msgid "Free"
+msgstr "Бесплатно"
+
+msgid "Certificate"
+msgstr "Сертификат"
+
+msgid "Certificates"
+msgstr "Сертификаты"
+
+msgid "Achievements"
+msgstr "Достижения"
+
+msgid "Notifications"
+msgstr "Уведомления"
+
+msgid "Email"
+msgstr "Электронная почта"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "First name"
+msgstr "Имя"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Create Account"
+msgstr "Создать аккаунт"
+
+msgid "Forgot Password?"
+msgstr "Забыли пароль?"
+
+msgid "Reset Password"
+msgstr "Сбросить пароль"
+
+msgid "Daily Goal"
+msgstr "Ежедневная цель"
+
+msgid "Total XP"
+msgstr "Всего XP"
+
+msgid "Current Level"
+msgstr "Текущий уровень"
+
+msgid "Day Streak"
+msgstr "Дней подряд"
+
+msgid "Enrolled Courses"
+msgstr "Записанные курсы"
+
+msgid "lessons"
+msgstr "уроков"
+
+msgid "Correct"
+msgstr "Правильно"
+
+msgid "Score"
+msgstr "Очки"
+
+msgid "Congratulations!"
+msgstr "Поздравляем!"
+
+msgid "Keep Practicing!"
+msgstr "Продолжайте практиковаться!"
+
+msgid "Try Again"
+msgstr "Попробовать снова"
+
+msgid "Start Quiz"
+msgstr "Начать тест"
+
+msgid "Flashcards"
+msgstr "Карточки"
+
+msgid "Mastered"
+msgstr "Изучено"
+
+msgid "I Know It"
+msgstr "Знаю"
+
+msgid "Don't Know"
+msgstr "Не знаю"
+
+msgid "Grammar Topics"
+msgstr "Темы грамматики"
+
+msgid "Top Learners"
+msgstr "Лучшие студенты"
+
+msgid "Your Rank"
+msgstr "Ваш рейтинг"
+
+msgid "Active Students"
+msgstr "Активные студенты"
+
+msgid "Expert Courses"
+msgstr "Экспертные курсы"
+
+msgid "Start Your English Journey Today"
+msgstr "Начните изучение английского сегодня"
+
+msgid "Register Free"
+msgstr "Зарегистрироваться бесплатно"
+
+msgid "Good day, %(name)s! 👋"
+msgstr "Добрый день, %(name)s! 👋"
+
+msgid "Ready to learn some English today?"
+msgstr "Готовы учить английский сегодня?"
+
+msgid "ago"
+msgstr "назад"

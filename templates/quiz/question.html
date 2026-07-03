@@ -1,0 +1,148 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{% trans 'Quiz' %} — {{ question_num }}/{{ total_questions }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.quiz-header { background: var(--bg-primary); border-bottom: 1px solid var(--border-light); padding: 14px 24px; position: sticky; top: 64px; z-index: 90; }
+.quiz-progress-bar { height: 4px; background: var(--gradient-button); transition: width 0.5s ease; border-radius: 2px; }
+.choice-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 14px 18px; border-radius: 12px;
+  border: 2px solid var(--border-light);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  transition: all 0.2s; margin-bottom: 8px;
+}
+.choice-btn:hover { border-color: var(--color-primary); background: rgba(99,102,241,0.05); }
+.choice-btn.selected { border-color: var(--color-primary); background: rgba(99,102,241,0.08); }
+.choice-btn.correct { border-color: #10b981; background: rgba(16,185,129,0.08); color: #059669; }
+.choice-btn.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.08); color: #dc2626; }
+.timer { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.timer.warning { color: #ef4444; animation: pulse 1s ease infinite; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Quiz Header -->
+<div class="quiz-header">
+  <div style="max-width:800px;margin:0 auto;display:flex;align-items:center;gap:16px">
+    <div style="flex:1">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">
+        <span>{{ quiz.title }}</span>
+        <span>{{ question_num }}/{{ total_questions }}</span>
+      </div>
+      <div style="height:4px;background:var(--bg-tertiary);border-radius:2px;overflow:hidden">
+        <div class="quiz-progress-bar" style="width:{{ progress_percent }}%"></div>
+      </div>
+    </div>
+    <div class="timer" id="quiz-timer">{{ time_limit|default:900 |floatformat:0 }}</div>
+  </div>
+</div>
+
+<div class="container" style="padding:40px 24px;max-width:700px">
+  <!-- Question -->
+  <div class="card mb-6">
+    <div class="card-body">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px">
+        {% trans 'Question' %} {{ question_num }} — {{ question.get_question_type_display }}
+        <span class="badge badge-info ml-2">{{ question.points }} pts</span>
+      </div>
+      <h2 style="font-size:1.25rem;font-weight:700">{{ question.text }}</h2>
+      {% if question.audio %}
+      <audio controls style="margin-top:12px;width:100%"><source src="{{ question.audio.url }}"></audio>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Choices -->
+  <div id="choices-container">
+    {% for choice in choices %}
+    <button class="choice-btn" data-choice-id="{{ choice.id }}" onclick="selectChoice(this, {{ choice.id }})">
+      <span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--bg-tertiary);align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;margin-right:10px">
+        {{ forloop.counter|add:64|chr }}
+      </span>
+      {{ choice.text }}
+    </button>
+    {% endfor %}
+  </div>
+
+  <!-- Explanation (shown after answer) -->
+  <div id="explanation-box" style="display:none;margin-top:16px;padding:14px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px">
+    <div style="font-weight:600;margin-bottom:4px">💡 {% trans 'Explanation' %}:</div>
+    <div id="explanation-text" style="font-size:0.875rem;color:var(--text-secondary)"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div style="display:flex;gap:12px;margin-top:24px;justify-content:flex-end">
+    <button class="btn btn-primary btn-lg" id="btn-next" onclick="nextQuestion()" style="display:none">
+      {% if question_num == total_questions %}✅ {% trans 'Finish Quiz' %}{% else %}{% trans 'Next Question' %} →{% endif %}
+    </button>
+  </div>
+</div>
+
+<script>
+const ATTEMPT_ID = {{ attempt.id }};
+const QUESTION_ID = {{ question.id }};
+const IS_LAST = {{ question_num }} === {{ total_questions }};
+const NEXT_NUM = {{ question_num }} + 1;
+const SUBMIT_URL = "{% url 'quiz:submit-answer' attempt.id %}";
+const COMPLETE_URL = "{% url 'quiz:complete' attempt.id %}";
+const RESULTS_URL = "{% url 'quiz:results' attempt.id %}";
+const NEXT_Q_URL = "{% url 'quiz:question' attempt.id 9999 %}";
+let answered = false;
+let timeLeft = {{ time_limit }};
+
+// Timer
+const timerEl = document.getElementById('quiz-timer');
+const timerInterval = setInterval(() => {
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  timerEl.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  if (timeLeft <= 60) timerEl.classList.add('warning');
+  if (timeLeft <= 0) { clearInterval(timerInterval); nextQuestion(); }
+}, 1000);
+
+function selectChoice(btn, choiceId) {
+  if (answered) return;
+  answered = true;
+
+  document.querySelectorAll('.choice-btn').forEach(b => b.style.pointerEvents = 'none');
+  btn.classList.add('selected');
+
+  fetch(SUBMIT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': window.CSRF_TOKEN },
+    body: JSON.stringify({ question_id: QUESTION_ID, choice_id: choiceId })
+  })
+  .then(r => r.json())
+  .then(data => {
+    clearInterval(timerInterval);
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (parseInt(b.dataset.choiceId) === data.correct_choice_id) b.classList.add('correct');
+    });
+    if (!data.is_correct) btn.classList.remove('selected'), btn.classList.add('incorrect');
+
+    if (data.explanation) {
+      document.getElementById('explanation-text').textContent = data.explanation;
+      document.getElementById('explanation-box').style.display = 'block';
+    }
+    document.getElementById('btn-next').style.display = 'block';
+  });
+}
+
+function nextQuestion() {
+  clearInterval(timerInterval);
+  if (IS_LAST) {
+    fetch(COMPLETE_URL, {
+      method: 'POST', headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+    }).then(() => window.location.href = RESULTS_URL);
+  } else {
+    window.location.href = NEXT_Q_URL.replace('9999', NEXT_NUM);
+  }
+}
+</script>
+{% endblock %}

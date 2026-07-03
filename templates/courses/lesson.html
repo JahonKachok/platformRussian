@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ lesson.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.lesson-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; padding: 32px 0; }
+.lesson-sidebar { position: sticky; top: 80px; height: fit-content; }
+.lesson-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-size: 0.875rem; color: var(--text-secondary); transition: all 0.15s; text-decoration: none; margin-bottom: 4px; }
+.lesson-nav-item:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.lesson-nav-item.active { background: rgba(99,102,241,0.1); color: var(--color-primary); font-weight: 600; }
+.lesson-nav-item.completed .icon { background: #10b981; color: white; }
+.lesson-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+@media (max-width:1024px) { .lesson-layout { grid-template-columns: 1fr; } .lesson-sidebar { position: static; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Lesson Header -->
+<div style="background:var(--bg-primary);border-bottom:1px solid var(--border-light);padding:14px 24px;position:sticky;top:64px;z-index:80">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <a href="{% url 'courses:course-detail' course.slug %}" style="color:var(--text-muted);font-size:0.875rem">← {{ course.title }}</a>
+    <span style="color:var(--border-light)">/</span>
+    <span style="font-size:0.875rem;font-weight:600">{{ lesson.title }}</span>
+    <div class="spacer"></div>
+    {% if lesson_progress and lesson_progress.is_completed %}
+    <span class="badge badge-success">✓ {% trans 'Completed' %}</span>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container">
+  <div class="lesson-layout">
+    <!-- Main Content -->
+    <div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <span class="badge badge-primary">{{ lesson.get_lesson_type_display }}</span>
+        <span class="badge badge-info">⏱️ {{ lesson.duration_minutes }}m</span>
+        <span class="badge badge-warning">⚡ {{ lesson.xp_reward }} XP</span>
+      </div>
+
+      <h1 style="margin-bottom:24px">{{ lesson.title }}</h1>
+
+      {% if lesson.audio %}
+      <div class="card mb-6">
+        <div class="card-body">
+          <h4 class="mb-3">🎧 {% trans 'Audio' %}</h4>
+          <audio controls style="width:100%"><source src="{{ lesson.audio.url }}"></audio>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if lesson.content %}
+      <div class="card mb-6">
+        <div class="card-body">
+          <div style="font-size:0.95rem;line-height:1.9;color:var(--text-secondary);white-space:pre-wrap">{{ lesson.content }}</div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Navigation Buttons -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">
+        {% if prev_lesson %}
+        <a href="{% url 'courses:lesson' prev_lesson.slug %}" class="btn btn-secondary">← {{ prev_lesson.title|truncatechars:25 }}</a>
+        {% else %}<div></div>{% endif %}
+
+        {% if not lesson_progress or not lesson_progress.is_completed %}
+        <button class="btn btn-accent" id="complete-btn" onclick="completeLesson()">
+          ✓ {% trans 'Mark as Complete' %}
+        </button>
+        {% endif %}
+
+        {% if next_lesson %}
+        <a href="{% url 'courses:lesson' next_lesson.slug %}" class="btn btn-primary" id="btn-next">
+          {{ next_lesson.title|truncatechars:25 }} →
+        </a>
+        {% else %}
+        <a href="{% url 'courses:course-detail' course.slug %}" class="btn btn-accent" id="btn-next">
+          🏁 {% trans 'Finish Course' %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar: lesson list -->
+    <div class="lesson-sidebar">
+      <div class="card">
+        <div class="card-body">
+          <h4 style="margin-bottom:12px;font-size:0.9rem">📚 {% trans 'Course Lessons' %}</h4>
+          {% for l in lessons %}
+          <a href="{% url 'courses:lesson' l.slug %}" class="lesson-nav-item {% if l.id == lesson.id %}active{% endif %}">
+            <div class="lesson-icon icon">{{ l.type_icon }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:0.8rem;font-weight:{% if l.id == lesson.id %}600{% else %}400{% endif %};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.title }}</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">{{ l.duration_minutes }}m</div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function completeLesson() {
+  const btn = document.getElementById('complete-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  fetch('{% url "courses:complete-lesson" lesson.slug %}', {
+    method: 'POST',
+    headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.style.background = 'var(--gradient-green)';
+    btn.textContent = '✓ Completed! +' + data.xp + ' XP';
+    if (window.Rustili) {
+      window.Rustili.Toast.show('Lesson completed! +' + data.xp + ' XP earned!', 'success');
+    }
+  });
+}
+</script>
+{% endblock %}

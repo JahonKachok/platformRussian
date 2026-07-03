@@ -1,0 +1,98 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ topic.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:900px">
+  <div class="flex gap-2 mb-4">
+    <a href="{% url 'grammar:topics' %}" class="btn btn-secondary btn-sm">← {% trans 'Back' %}</a>
+    <span class="badge badge-primary">{{ topic.level }}</span>
+  </div>
+
+  <h1 class="mb-2">{{ topic.icon }} {{ topic.title }}</h1>
+  <p class="text-muted mb-6">{{ topic.level }} — Grammar Lesson</p>
+
+  <!-- Explanation -->
+  <div class="card mb-6">
+    <div class="card-body">
+      <h3 class="mb-3">📖 {% trans 'Explanation' %}</h3>
+      <div style="white-space:pre-wrap;font-size:0.9rem;line-height:1.8;color:var(--text-secondary)">{{ topic.explanation }}</div>
+    </div>
+  </div>
+
+  <!-- Examples -->
+  {% if examples %}
+  <div class="card mb-6">
+    <div class="card-body">
+      <h3 class="mb-3">💡 {% trans 'Examples' %}</h3>
+      {% for ex in examples %}
+      <div style="padding:12px;border-radius:10px;margin-bottom:8px;{% if ex.is_correct %}background:rgba(16,185,129,0.08);border-left:3px solid #10b981{% else %}background:rgba(239,68,68,0.08);border-left:3px solid #ef4444{% endif %}">
+        <div style="font-weight:600;margin-bottom:4px">
+          {% if ex.is_correct %}✓{% else %}✗{% endif %} {{ ex.sentence }}
+        </div>
+        <div style="font-size:0.85rem;color:var(--text-muted)">{{ ex.translation }}</div>
+        {% if ex.explanation %}<div style="font-size:0.8rem;color:var(--color-primary);margin-top:4px">💬 {{ ex.explanation }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Exercises -->
+  {% if exercises %}
+  <div class="card">
+    <div class="card-body">
+      <h3 class="mb-4">✏️ {% trans 'Practice Exercises' %}</h3>
+      {% for ex in exercises %}
+      <div class="exercise-item" data-exercise-id="{{ ex.id }}" style="padding:16px;border:1px solid var(--border-light);border-radius:12px;margin-bottom:12px">
+        <div style="font-weight:600;margin-bottom:12px">{{ forloop.counter }}. {{ ex.question }}</div>
+        <div style="display:flex;gap:8px">
+          <input type="text" class="form-control exercise-input" placeholder="{% trans 'Your answer...' %}" style="flex:1">
+          <button class="btn btn-primary btn-sm" onclick="checkExercise(this, {{ ex.id }})">{% trans 'Check' %}</button>
+        </div>
+        <div class="exercise-feedback" style="display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:0.875rem"></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function checkExercise(btn, exerciseId) {
+  const item = btn.closest('.exercise-item');
+  const input = item.querySelector('.exercise-input');
+  const feedback = item.querySelector('.exercise-feedback');
+  const answer = input.value.trim();
+  if (!answer) return;
+
+  btn.disabled = true;
+  fetch(`/grammar/exercise/${exerciseId}/check/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': window.CSRF_TOKEN },
+    body: JSON.stringify({ answer })
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.disabled = false;
+    feedback.style.display = 'block';
+    if (data.is_correct) {
+      feedback.style.background = 'rgba(16,185,129,0.1)';
+      feedback.style.border = '1px solid rgba(16,185,129,0.3)';
+      feedback.style.color = '#059669';
+      feedback.innerHTML = '✓ {% trans "Correct!" %}';
+    } else {
+      feedback.style.background = 'rgba(239,68,68,0.1)';
+      feedback.style.border = '1px solid rgba(239,68,68,0.3)';
+      feedback.style.color = '#dc2626';
+      feedback.innerHTML = `✗ {% trans "Incorrect." %} {% trans "Correct answer" %}: <strong>${data.correct_answer}</strong>`;
+    }
+    if (data.explanation) {
+      feedback.innerHTML += `<br><span style="color:var(--text-muted);font-size:0.8rem">💡 ${data.explanation}</span>`;
+    }
+    input.disabled = true;
+  });
+}
+</script>
+{% endblock %}

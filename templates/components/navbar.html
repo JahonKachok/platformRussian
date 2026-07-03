@@ -1,0 +1,182 @@
+{% load static i18n %}
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+
+    <!-- Mobile menu btn -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Logo -->
+    <a href="{% url 'home' %}" class="navbar-brand">
+      <div class="logo-icon">🎓</div>
+      <span class="logo-text">Rustili</span>
+    </a>
+
+    <!-- Nav Links -->
+    <div class="navbar-nav">
+      <a href="{% url 'courses:course-list' %}" class="nav-link {% if 'course' in request.path %}active{% endif %}">
+        📚 {% trans 'Courses' %}
+      </a>
+      <a href="{% url 'vocabulary:flashcards' %}" class="nav-link {% if 'vocabulary' in request.path %}active{% endif %}">
+        💬 {% trans 'Vocabulary' %}
+      </a>
+      <a href="{% url 'grammar:topics' %}" class="nav-link {% if 'grammar' in request.path %}active{% endif %}">
+        📝 {% trans 'Grammar' %}
+      </a>
+      <a href="{% url 'quiz:list' %}" class="nav-link {% if 'quiz' in request.path %}active{% endif %}">
+        ❓ {% trans 'Quiz' %}
+      </a>
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'gamification:leaderboard' %}" class="nav-link {% if 'gamification' in request.path %}active{% endif %}">
+        🏆 {% trans 'Leaderboard' %}
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Spacer -->
+    <div class="spacer"></div>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+
+      <!-- Language Switcher -->
+      <div class="lang-switcher" id="lang-switcher">
+        <button class="lang-btn" id="lang-btn">
+          {% if CURRENT_LANGUAGE == 'uz' %}🇺🇿 O'z
+          {% elif CURRENT_LANGUAGE == 'en' %}🇬🇧 En
+          {% else %}🇷🇺 Ru{% endif %}
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="lang-dropdown">
+          {% get_available_languages as languages %}
+          {% for lang_code, lang_name in languages %}
+          <form method="post" action="{% url 'set_language' %}">
+            {% csrf_token %}
+            <input type="hidden" name="language" value="{{ lang_code }}">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="lang-option {% if CURRENT_LANGUAGE == lang_code %}active{% endif %}">
+              {% if lang_code == 'uz' %}<span class="lang-flag">🇺🇿</span> O'zbek
+              {% elif lang_code == 'en' %}<span class="lang-flag">🇬🇧</span> English
+              {% else %}<span class="lang-flag">🇷🇺</span> Русский{% endif %}
+            </button>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Dark mode toggle -->
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <span id="theme-icon">🌙</span>
+      </button>
+
+      {% if request.user.is_authenticated %}
+
+      <!-- Notifications -->
+      <a href="{% url 'notifications:list' %}" class="notif-btn" aria-label="Notifications">
+        🔔
+        {% if unread_notifications %}
+        <span class="notif-badge">{{ unread_notifications }}</span>
+        {% endif %}
+      </a>
+
+      <!-- User menu -->
+      <div class="user-menu" id="user-menu">
+        <div class="user-menu-trigger" id="user-menu-trigger">
+          <div class="avatar avatar-sm">
+            {% if request.user.avatar %}
+              <img src="{{ request.user.avatar.url }}" alt="{{ request.user.get_full_name }}">
+            {% else %}
+              {{ request.user.get_initials }}
+            {% endif %}
+          </div>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" class="hide-mobile"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="user-menu-dropdown">
+          <div class="user-menu-header">
+            <div class="name">{{ request.user.get_full_name }}</div>
+            <div class="email">{{ request.user.email }}</div>
+            {% if user_level %}
+            <div class="mt-2">
+              <span class="level-badge">⭐ Level {{ user_level }}</span>
+              <span class="xp-display ml-2">⚡ {{ user_xp }} XP</span>
+            </div>
+            {% endif %}
+          </div>
+          <a href="{% url 'courses:dashboard' %}" class="user-menu-item">
+            <span class="icon">⚡</span> {% trans 'Dashboard' %}
+          </a>
+          <a href="{% url 'accounts:profile' %}" class="user-menu-item">
+            <span class="icon">👤</span> {% trans 'Profile' %}
+          </a>
+          <a href="{% url 'certificates:list' %}" class="user-menu-item">
+            <span class="icon">🏅</span> {% trans 'Certificates' %}
+          </a>
+          <a href="{% url 'gamification:achievements' %}" class="user-menu-item">
+            <span class="icon">🎖️</span> {% trans 'Achievements' %}
+          </a>
+          <hr style="margin:4px 0;border:none;border-top:1px solid var(--border-light)">
+          <!-- Academic modules -->
+          <div style="padding:6px 16px 2px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted)">{% trans 'Learning Tools' %}</div>
+          <a href="{% url 'roadmap:index' %}" class="user-menu-item">
+            <span class="icon">🗺️</span> {% trans 'Roadmap' %}
+          </a>
+          <a href="{% url 'study_calendar:index' %}" class="user-menu-item">
+            <span class="icon">📅</span> {% trans 'Calendar' %}
+          </a>
+          <a href="{% url 'portfolio:view' %}" class="user-menu-item">
+            <span class="icon">📁</span> {% trans 'Portfolio' %}
+          </a>
+          <a href="{% url 'diagnostic:index' %}" class="user-menu-item">
+            <span class="icon">🔬</span> {% trans 'Diagnostic' %}
+          </a>
+          <a href="{% url 'skills:index' %}" class="user-menu-item">
+            <span class="icon">📊</span> {% trans 'Skills' %}
+          </a>
+          <a href="{% url 'analytics:index' %}" class="user-menu-item">
+            <span class="icon">📈</span> {% trans 'Analytics' %}
+          </a>
+          <a href="{% url 'journal:index' %}" class="user-menu-item">
+            <span class="icon">📓</span> {% trans 'Journal' %}
+          </a>
+          <a href="{% url 'forum:index' %}" class="user-menu-item">
+            <span class="icon">💬</span> {% trans 'Forum' %}
+          </a>
+          <a href="{% url 'feedback:student' %}" class="user-menu-item">
+            <span class="icon">📝</span> {% trans 'Homework' %}
+          </a>
+          <a href="{% url 'learning_path:index' %}" class="user-menu-item">
+            <span class="icon">🧭</span> {% trans 'Learning Path' %}
+          </a>
+          <a href="{% url 'reports:index' %}" class="user-menu-item">
+            <span class="icon">📄</span> {% trans 'Reports' %}
+          </a>
+          {% if request.user.is_staff %}
+          <a href="{% url 'reports:admin-analytics' %}" class="user-menu-item">
+            <span class="icon">🛡️</span> {% trans 'Admin Analytics' %}
+          </a>
+          {% endif %}
+          <hr style="margin:4px 0;border:none;border-top:1px solid var(--border-light)">
+          <form method="post" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="user-menu-item danger w-full">
+              <span class="icon">🚪</span> {% trans 'Logout' %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {% else %}
+
+      <!-- Auth buttons -->
+      <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-sm">
+        {% trans 'Login' %}
+      </a>
+      <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">
+        {% trans 'Get Started' %}
+      </a>
+
+      {% endif %}
+    </div>
+  </div>
+</nav>

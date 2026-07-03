@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Achievements' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+  <div class="flex items-center justify-between mb-6">
+    <h1>🎖️ {% trans 'Achievements' %}</h1>
+    <div class="badge badge-primary">{{ earned_count }}/{{ total_count }} {% trans 'earned' %}</div>
+  </div>
+
+  <div style="height:8px;background:var(--bg-tertiary);border-radius:4px;margin-bottom:32px;overflow:hidden">
+    <div class="progress-bar" style="width:{% widthratio earned_count total_count 100 %}%"></div>
+  </div>
+
+  <div class="grid grid-auto">
+    {% for ach in achievements %}
+    <div class="card {% if ach.id in earned_ids %}animate-glow{% else %}opacity-50{% endif %} hover-lift">
+      <div class="card-body text-center">
+        <div style="font-size:2.5rem;margin-bottom:12px">{{ ach.icon }}</div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px">{{ ach.name }}</h3>
+        <p style="font-size:0.8rem;color:var(--text-muted)">{{ ach.description }}</p>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+          <span class="badge badge-primary">⚡ {{ ach.xp_reward }} XP</span>
+          <span class="badge badge-warning">🪙 {{ ach.coin_reward }}</span>
+        </div>
+        {% if ach.id in earned_ids %}
+        <div style="margin-top:12px">
+          <span class="badge badge-success">✓ {% trans 'Earned' %}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

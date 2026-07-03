@@ -1,0 +1,140 @@
+{% extends 'base/base.html' %}
+{% load static i18n core_tags %}
+
+{% block title %}{{ attempt.test.title }} — {% trans 'Question' %} {{ q_num }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.choice-btn { display:block; width:100%; text-align:left; padding:14px 18px; border-radius:12px; border:2px solid var(--border-light); background:var(--bg-primary); color:var(--text-primary); cursor:pointer; font-size:0.9rem; font-weight:500; transition:all 0.2s; margin-bottom:8px; }
+.choice-btn:hover { border-color:var(--color-primary); background:rgba(99,102,241,0.05); }
+.choice-btn.correct { border-color:#10b981; background:rgba(16,185,129,0.08); color:#059669; }
+.choice-btn.incorrect { border-color:#ef4444; background:rgba(239,68,68,0.08); color:#dc2626; }
+.choice-btn.selected { border-color:var(--color-primary); }
+.timer { font-size:1rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.timer.warn { color:#ef4444; animation:pulse 1s infinite; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Progress Header -->
+<div style="background:var(--bg-primary);border-bottom:1px solid var(--border-light);padding:12px 24px;position:sticky;top:64px;z-index:90">
+  <div style="max-width:700px;margin:0 auto;display:flex;align-items:center;gap:16px">
+    <div style="flex:1">
+      <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:5px">
+        <span>{{ attempt.test.title }}</span>
+        <span>{{ q_num }}/{{ total }}</span>
+      </div>
+      <div style="height:4px;background:var(--bg-tertiary);border-radius:2px;overflow:hidden">
+        <div style="width:{{ progress_percent }}%;height:100%;background:var(--gradient-button);transition:width 0.5s"></div>
+      </div>
+    </div>
+    <div class="timer" id="timer">--:--</div>
+  </div>
+</div>
+
+<div class="container" style="padding:40px 24px;max-width:680px">
+  <!-- Question -->
+  <div class="card mb-5 reveal">
+    <div class="card-body">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;display:flex;gap:10px">
+        <span>{% trans 'Question' %} {{ q_num }}</span>
+        <span class="badge badge-primary">{{ question.cefr_level }}</span>
+        <span class="badge badge-info">{{ question.points }} pts</span>
+      </div>
+      <h2 style="font-size:1.15rem;font-weight:700;margin:0">{{ question.text }}</h2>
+    </div>
+  </div>
+
+  <!-- Answer choices -->
+  <div id="choices" class="reveal delay-100">
+    {% if question.question_type == 'multiple' %}
+      {% for label, opt in options %}
+      <button class="choice-btn" onclick="answer('{{ label }}', this)">
+        <span style="display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--bg-tertiary);align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;margin-right:10px">{{ label }}</span>
+        {{ opt }}
+      </button>
+      {% endfor %}
+    {% elif question.question_type == 'true_false' %}
+      <button class="choice-btn" onclick="answer('True', this)">✓ True</button>
+      <button class="choice-btn" onclick="answer('False', this)">✗ False</button>
+    {% else %}
+      <div class="form-group">
+        <input type="text" id="text-answer" class="form-control" placeholder="{% trans 'Type your answer...' %}">
+        <button class="btn btn-primary mt-3 ripple-container" onclick="answer(document.getElementById('text-answer').value, this)">{% trans 'Submit' %}</button>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Explanation box -->
+  <div id="expl-box" style="display:none;margin-top:16px;padding:14px;background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2);border-radius:12px">
+    <div style="font-weight:600;margin-bottom:4px">💡 {% trans 'Explanation' %}</div>
+    <div id="expl-text" style="font-size:0.875rem;color:var(--text-secondary)"></div>
+  </div>
+
+  <!-- Next button -->
+  <div style="margin-top:24px;text-align:right">
+    <button class="btn btn-primary btn-lg ripple-container" id="btn-next" onclick="goNext()" style="display:none">
+      {% if q_num == total %}✅ {% trans 'Finish' %}{% else %}{% trans 'Next' %} →{% endif %}
+    </button>
+  </div>
+</div>
+
+<script>
+const ATTEMPT_ID = {{ attempt.id }};
+const Q_ID = {{ question.id }};
+const IS_LAST = {{ q_num }} === {{ total }};
+const NEXT_NUM = {{ q_num }} + 1;
+const SUBMIT_URL = "{% url 'diagnostic:submit' attempt.id %}";
+const COMPLETE_URL = "{% url 'diagnostic:complete' attempt.id %}";
+const RESULTS_URL = "{% url 'diagnostic:results' attempt.id %}";
+const NEXT_Q_URL = "{% url 'diagnostic:question' attempt.id 9999 %}";
+let timeLeft = {{ time_limit }};
+let answered = false;
+
+const timerEl = document.getElementById('timer');
+const interval = setInterval(() => {
+  timeLeft--;
+  const m = Math.floor(timeLeft/60), s = timeLeft%60;
+  timerEl.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  if (timeLeft <= 30) timerEl.classList.add('warn');
+  if (timeLeft <= 0) { clearInterval(interval); goNext(); }
+}, 1000);
+
+function answer(val, el) {
+  if (answered) return;
+  answered = true;
+  clearInterval(interval);
+  document.querySelectorAll('.choice-btn').forEach(b => b.style.pointerEvents = 'none');
+  if (el.classList) el.classList.add('selected');
+
+  fetch(SUBMIT_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':window.CSRF_TOKEN},
+    body:JSON.stringify({question_id:Q_ID, answer:val})
+  }).then(r => r.json()).then(data => {
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      const bLabel = b.querySelector('span')?.textContent?.trim();
+      if (bLabel === data.correct_answer || b.textContent.includes(data.correct_answer)) {
+        b.classList.add('correct');
+      }
+    });
+    if (!data.is_correct && el.classList) { el.classList.remove('selected'); el.classList.add('incorrect'); }
+    if (data.explanation) {
+      document.getElementById('expl-text').textContent = data.explanation;
+      document.getElementById('expl-box').style.display = 'block';
+    }
+    document.getElementById('btn-next').style.display = 'block';
+  });
+}
+
+function goNext() {
+  clearInterval(interval);
+  if (IS_LAST) {
+    fetch(COMPLETE_URL, { method:'POST', headers:{'X-CSRFToken':window.CSRF_TOKEN} })
+      .then(() => window.location.href = RESULTS_URL);
+  } else {
+    window.location.href = NEXT_Q_URL.replace('9999', NEXT_NUM);
+  }
+}
+</script>
+{% endblock %}

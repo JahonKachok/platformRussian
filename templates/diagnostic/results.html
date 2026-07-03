@@ -1,0 +1,78 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Diagnostic Results' %}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px;max-width:780px">
+  <!-- Result Hero -->
+  <div class="card mb-6 reveal" style="background:var(--gradient-button);border:none;overflow:hidden">
+    <div class="card-body" style="text-align:center;padding:40px;color:white">
+      <div style="font-size:0.9rem;opacity:0.85;margin-bottom:8px">{{ attempt.test.title }}</div>
+      <div style="font-size:5rem;font-weight:900;line-height:1">{{ attempt.cefr_level }}</div>
+      <div style="font-size:1.1rem;opacity:0.9;margin:8px 0 20px">{{ attempt.percentage }}% {% trans 'Score' %}</div>
+      <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap">
+        <div><div style="font-size:1.5rem;font-weight:800">{{ correct_count }}</div><div style="font-size:0.8rem;opacity:0.8">{% trans 'Correct' %}</div></div>
+        <div><div style="font-size:1.5rem;font-weight:800">{{ attempt.score }}</div><div style="font-size:0.8rem;opacity:0.8">{% trans 'Points' %}</div></div>
+        <div><div style="font-size:1.5rem;font-weight:800">{{ attempt.max_score }}</div><div style="font-size:0.8rem;opacity:0.8">{% trans 'Max Points' %}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendation -->
+  {% if attempt.recommendation %}
+  <div class="card mb-6 reveal delay-100" style="border-left:4px solid var(--color-primary)">
+    <div class="card-body">
+      <h3 style="margin:0 0 10px">🤖 {% trans 'AI Recommendation' %}</h3>
+      <p style="color:var(--text-secondary);margin:0">{{ attempt.recommendation }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Recommended Courses -->
+  {% if recommended_courses %}
+  <h3 class="mb-4 reveal delay-200">📚 {% trans 'Recommended Courses for You' %}</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:32px">
+    {% for course in recommended_courses %}
+    <div class="card hover-lift reveal">
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="badge badge-primary">{{ course.get_level_display }}</span>
+          <span class="badge badge-info">{{ course.lesson_count }} {% trans 'lessons' %}</span>
+        </div>
+        <h4 style="margin:0 0 8px;font-size:0.95rem">{{ course.title }}</h4>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 12px">{{ course.short_description|default:course.description|truncatechars:70 }}</p>
+        <a href="{% url 'courses:course-detail' course.slug %}" class="btn btn-primary btn-sm btn-block ripple-container">{% trans 'View Course' %}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Answer Review -->
+  <div class="card reveal delay-300">
+    <div class="card-body">
+      <h3 style="margin-bottom:20px">📋 {% trans 'Answer Review' %}</h3>
+      {% for ans in answers %}
+      <div style="padding:14px;border-radius:12px;border:1px solid {% if ans.is_correct %}rgba(16,185,129,0.3){% else %}rgba(239,68,68,0.3){% endif %};background:{% if ans.is_correct %}rgba(16,185,129,0.05){% else %}rgba(239,68,68,0.05){% endif %};margin-bottom:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.1rem;flex-shrink:0">{% if ans.is_correct %}✅{% else %}❌{% endif %}</span>
+          <div style="flex:1">
+            <div style="font-size:0.88rem;font-weight:600;margin-bottom:4px">{{ ans.question.text }}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Your answer' %}: <strong>{{ ans.given_answer|default:"—" }}</strong></div>
+            {% if not ans.is_correct %}<div style="font-size:0.8rem;color:#059669">{% trans 'Correct' %}: <strong>{{ ans.question.correct_answer }}</strong></div>{% endif %}
+            {% if ans.question.explanation %}<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;font-style:italic">{{ ans.question.explanation }}</div>{% endif %}
+          </div>
+          <span class="badge badge-{% if ans.is_correct %}success{% else %}danger{% endif %}">{{ ans.question.cefr_level }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:24px;justify-content:center">
+    <a href="{% url 'diagnostic:index' %}" class="btn btn-secondary ripple-container">← {% trans 'All Tests' %}</a>
+    <a href="{% url 'courses:course-list' %}" class="btn btn-primary ripple-container">{% trans 'Browse Courses' %} →</a>
+  </div>
+</div>
+{% endblock %}

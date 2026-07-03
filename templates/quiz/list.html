@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Quizzes' %}{% endblock %}
+
+{% block content %}
+<div style="background:var(--gradient-hero);padding:60px 0;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.07) 1px,transparent 1px);background-size:50px 50px;"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <h1 style="color:white;font-size:clamp(2rem,4vw,3rem);margin-bottom:12px">❓ {% trans 'Quizzes' %}</h1>
+    <p style="color:rgba(255,255,255,0.7)">{% trans 'Test your knowledge and earn XP!' %}</p>
+  </div>
+</div>
+
+<div class="container" style="padding:40px 24px">
+  {% if quizzes %}
+  <div class="grid grid-auto">
+    {% for quiz in quizzes %}
+    <div class="card hover-lift reveal">
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div style="width:48px;height:48px;border-radius:12px;background:var(--gradient-button);display:flex;align-items:center;justify-content:center;font-size:1.25rem">
+            {% if quiz.quiz_type == 'daily' %}🎯{% elif quiz.quiz_type == 'lesson' %}📖{% else %}❓{% endif %}
+          </div>
+          <span class="badge badge-{{ quiz.quiz_type|default:'info' }}">{{ quiz.get_quiz_type_display }}</span>
+        </div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:8px">{{ quiz.title }}</h3>
+        <p style="font-size:0.8rem;color:var(--text-muted)">{{ quiz.description|truncatechars:80 }}</p>
+        <div style="display:flex;gap:12px;font-size:0.8rem;color:var(--text-muted);margin-top:12px;flex-wrap:wrap">
+          <span>❓ {{ quiz.question_count }} {% trans 'questions' %}</span>
+          <span>⏱️ {{ quiz.time_limit_minutes }}{% trans 'min' %}</span>
+          <span>⚡ {{ quiz.xp_reward }} XP</span>
+          <span>🎯 {{ quiz.pass_score }}%</span>
+        </div>
+      </div>
+      <div style="padding:14px 20px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end">
+        <a href="{% url 'quiz:start' quiz.pk %}" class="btn btn-primary btn-sm">{% trans 'Start Quiz' %} →</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:80px">
+    <div style="font-size:4rem;margin-bottom:16px">📭</div>
+    <h3>{% trans 'No quizzes available' %}</h3>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
