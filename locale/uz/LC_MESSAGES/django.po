@@ -1,5 +1,5 @@
-# Uzbek translation for Rustili
-# Copyright (C) 2024 Rustili
+# Uzbek translation for LingvoCompetence
+# Copyright (C) 2025 LingvoCompetence
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
