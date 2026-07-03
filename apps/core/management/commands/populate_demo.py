@@ -1,6 +1,6 @@
 """
 Management command: python manage.py populate_demo
-Creates demo data for the Rustili platform.
+Creates demo data for the Rustili (Russian language learning) platform.
 """
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 class Command(BaseCommand):
-    help = 'Populate demo data for Rustili platform'
+    help = 'Populate demo data for Rustili platform (Russian language learning)'
 
     def handle(self, *args, **options):
         self.stdout.write('Creating demo data...')
@@ -22,31 +22,28 @@ class Command(BaseCommand):
         self._create_quizzes()
         self._create_leaderboard()
 
-        self.stdout.write(self.style.SUCCESS('✅ Demo data created successfully!'))
+        self.stdout.write(self.style.SUCCESS('Demo data created successfully!'))
 
     def _create_users(self):
         from apps.accounts.models import User
 
-        # Admin
         if not User.objects.filter(email='admin@rustili.uz').exists():
-            admin = User.objects.create_superuser(
+            User.objects.create_superuser(
                 username='admin', email='admin@rustili.uz',
                 password='admin123', first_name='Admin', last_name='Rustili',
                 role='admin', email_verified=True
             )
-            self.stdout.write(f'  Created admin: admin@rustili.uz / admin123')
+            self.stdout.write('  Created admin: admin@rustili.uz / admin123')
 
-        # Teacher
         if not User.objects.filter(email='teacher@rustili.uz').exists():
-            teacher = User.objects.create_user(
+            User.objects.create_user(
                 username='teacher1', email='teacher@rustili.uz',
-                password='teacher123', first_name='Sarah', last_name='Johnson',
+                password='teacher123', first_name='Наталья', last_name='Иванова',
                 role='teacher', email_verified=True, is_active=True,
-                bio='Experienced English teacher with 10+ years in education.'
+                bio='Rus tili o\'qituvchisi, 10 yillik tajriba.'
             )
-            self.stdout.write(f'  Created teacher: teacher@rustili.uz / teacher123')
+            self.stdout.write('  Created teacher: teacher@rustili.uz / teacher123')
 
-        # Students
         students_data = [
             ('ali@example.com', 'ali_student', 'Ali', 'Karimov', 850),
             ('zulfiya@example.com', 'zulfiya1', 'Zulfiya', 'Rahimova', 650),
@@ -70,19 +67,19 @@ class Command(BaseCommand):
                     prog.level = calculate_level(xp)
                     prog.streak_days = xp // 100
                     prog.save()
-                except Exception as e:
+                except Exception:
                     pass
 
-        self.stdout.write(f'  Created demo students')
+        self.stdout.write('  Created demo students')
 
     def _create_categories(self):
         from apps.courses.models import Category
         cats = [
-            ('General English', 'general-english', '📚', '#6366f1'),
-            ('Business English', 'business-english', '💼', '#8b5cf6'),
-            ('Travel English', 'travel-english', '✈️', '#3b82f6'),
-            ('Academic English', 'academic-english', '🎓', '#10b981'),
-            ('Daily Conversation', 'daily-conversation', '💬', '#f59e0b'),
+            ('Umumiy rus tili', 'umumiy-rus-tili', '📚', '#6366f1'),
+            ('Biznes rus tili', 'biznes-rus-tili', '💼', '#8b5cf6'),
+            ('Sayohat uchun rus tili', 'sayohat-rus-tili', '✈️', '#3b82f6'),
+            ('Akademik rus tili', 'akademik-rus-tili', '🎓', '#10b981'),
+            ('Kundalik muloqot', 'kundalik-muloqot', '💬', '#f59e0b'),
         ]
         for name, slug, icon, color in cats:
             Category.objects.get_or_create(
@@ -101,18 +98,18 @@ class Command(BaseCommand):
             teacher = None
 
         try:
-            gen_cat = Category.objects.get(slug='general-english')
-            biz_cat = Category.objects.get(slug='business-english')
-            conv_cat = Category.objects.get(slug='daily-conversation')
+            gen_cat = Category.objects.get(slug='umumiy-rus-tili')
+            biz_cat = Category.objects.get(slug='biznes-rus-tili')
+            conv_cat = Category.objects.get(slug='kundalik-muloqot')
         except Category.DoesNotExist:
             return
 
         courses_data = [
             {
-                'title': 'English for Beginners (A1)',
-                'slug': 'english-beginners-a1',
-                'description': 'Start your English journey with basic vocabulary, greetings, and simple conversations.',
-                'short_description': 'Perfect starting point for complete beginners.',
+                'title': 'Rus tili: Boshlang\'ich daraja (A1)',
+                'slug': 'rus-tili-boshlangich-a1',
+                'description': 'Rus alifbosi, asosiy so\'zlar, salomlashish va oddiy gaplardan boshlang.',
+                'short_description': 'Mutlaq boshlang\'ichlar uchun eng yaxshi kurs.',
                 'level': 'A1',
                 'category': gen_cat,
                 'duration_hours': 20,
@@ -120,10 +117,10 @@ class Command(BaseCommand):
                 'is_featured': True,
             },
             {
-                'title': 'Everyday English Conversations',
-                'slug': 'everyday-english-conversations',
-                'description': 'Learn how to have natural conversations in everyday situations.',
-                'short_description': 'Natural conversations for daily life.',
+                'title': 'Kundalik rus tili muloqoti',
+                'slug': 'kundalik-rus-tili-muloqoti',
+                'description': 'Kundalik hayotda tabiiy ravishda rus tilida so\'zlashishni o\'rganing.',
+                'short_description': 'Kundalik hayot uchun tabiiy muloqot.',
                 'level': 'A2',
                 'category': conv_cat,
                 'duration_hours': 15,
@@ -131,10 +128,10 @@ class Command(BaseCommand):
                 'is_featured': True,
             },
             {
-                'title': 'Business English Professional',
-                'slug': 'business-english-professional',
-                'description': 'Master business vocabulary, emails, presentations and meetings.',
-                'short_description': 'English skills for the workplace.',
+                'title': 'Biznes rus tili',
+                'slug': 'biznes-rus-tili',
+                'description': 'Biznes leksikasi, elektron xatlar, taqdimotlar va yig\'ilishlar uchun rus tili.',
+                'short_description': 'Ish joyida kerakli rus tili ko\'nikmalari.',
                 'level': 'B2',
                 'category': biz_cat,
                 'duration_hours': 30,
@@ -151,13 +148,20 @@ class Command(BaseCommand):
 
             if created:
                 lesson_types = ['reading', 'vocabulary', 'grammar', 'listening', 'quiz']
+                lesson_titles = {
+                    'reading': 'O\'qish mashqi',
+                    'vocabulary': 'Leksika mashqi',
+                    'grammar': 'Grammatika mashqi',
+                    'listening': 'Tinglash mashqi',
+                    'quiz': 'Test',
+                }
                 for i, lt in enumerate(lesson_types):
                     Lesson.objects.create(
                         course=course,
-                        title=f'{lt.title()} Practice {i+1}',
-                        slug=f'{lt}-practice-{i+1}-{course.slug[:10]}',
+                        title=f'{lesson_titles[lt]} {i + 1}',
+                        slug=f'{lt}-mashq-{i + 1}-{course.slug[:10]}',
                         lesson_type=lt,
-                        content=f'This is a {lt} lesson content for {course.title}.',
+                        content=f'Bu {course.title} kursi uchun {lesson_titles[lt].lower()} darsidir.',
                         duration_minutes=20 + i * 5,
                         xp_reward=50,
                         order=i,
@@ -170,32 +174,33 @@ class Command(BaseCommand):
         from apps.vocabulary.models import WordCategory, Word
 
         cats = [
-            ('Common Words', 'common-words', '⭐'),
-            ('Body & Health', 'body-health', '🏥'),
-            ('Food & Drinks', 'food-drinks', '🍎'),
-            ('Animals', 'animals', '🐾'),
-            ('Colors & Shapes', 'colors-shapes', '🎨'),
+            ('Umumiy so\'zlar', 'umumiy-sozlar', '⭐'),
+            ('Tana va sog\'liq', 'tana-sogliq', '🏥'),
+            ('Ovqat va ichimliklar', 'ovqat-ichimliklar', '🍎'),
+            ('Hayvonlar', 'hayvonlar', '🐾'),
+            ('Ranglar va shakllar', 'ranglar-shakllar', '🎨'),
         ]
 
         for name, slug, icon in cats:
             WordCategory.objects.get_or_create(slug=slug, defaults={'name': name, 'icon': icon})
 
         try:
-            common = WordCategory.objects.get(slug='common-words')
+            common = WordCategory.objects.get(slug='umumiy-sozlar')
         except WordCategory.DoesNotExist:
             return
 
+        # Russian words: (word, pronunciation, translation_uz, example_sentence, part_of_speech)
         words = [
-            ('hello', "'həˈloʊ'", "Salom", "Hi there!", "greeting"),
-            ('beautiful', "'bjuːtɪfl'", "Chiroyli", "What a beautiful day!", "adjective"),
-            ('understand', "'ʌndəˈstænd'", "Tushunmoq", "I understand English.", "verb"),
-            ('important', "'ɪmˈpɔːrtnt'", "Muhim", "This is very important.", "adjective"),
-            ('family', "'fæmɪli'", "Oila", "My family is big.", "noun"),
-            ('friend', "'frend'", "Do'st", "She is my best friend.", "noun"),
-            ('happy', "'hæpi'", "Baxtli", "I am very happy today.", "adjective"),
-            ('travel', "'trævl'", "Sayohat", "I love to travel.", "verb/noun"),
-            ('language', "'læŋɡwɪdʒ'", "Til", "English is a global language.", "noun"),
-            ('learn', "'lɜːrn'", "O'rganmoq", "I learn English every day.", "verb"),
+            ('привет', 'prʲɪˈvʲet', 'Salom', 'Привет! Как дела?', 'undov'),
+            ('спасибо', 'spɐˈsʲibə', 'Rahmat', 'Большое спасибо!', 'undov'),
+            ('пожалуйста', 'pɐˈʐalʊstə', 'Iltimos / Marhamat', 'Дайте, пожалуйста, книгу.', 'undov'),
+            ('да', 'da', 'Ha', 'Да, я понимаю.', 'yukla'),
+            ('нет', 'nʲet', "Yo'q", 'Нет, это неправильно.', 'yukla'),
+            ('хорошо', 'xərɐˈʂo', 'Yaxshi / Xo\'p', 'Всё хорошо, спасибо.', 'sifat/yukla'),
+            ('понимать', 'pənʲɪˈmatʲ', 'Tushunmoq', 'Я понимаю по-русски.', 'fe\'l'),
+            ('говорить', 'ɡəvɐˈrʲitʲ', 'Gapirmoq / So\'zlamoq', 'Он говорит по-русски.', 'fe\'l'),
+            ('учить', 'ʊˈtʲitʲ', "O'rganmoq", 'Я учу русский язык.', 'fe\'l'),
+            ('язык', 'jɪˈzɨk', 'Til', 'Русский язык красивый.', 'ot'),
         ]
 
         for i, (word, pron, trans, example, pos) in enumerate(words):
@@ -219,34 +224,154 @@ class Command(BaseCommand):
 
         topics = [
             {
-                'title': 'Present Simple Tense',
-                'slug': 'present-simple',
+                'title': 'Rus alifbosi (Алфавит)',
+                'slug': 'rus-alifbosi',
                 'level': 'A1',
-                'icon': '⏰',
-                'explanation': 'The present simple tense is used for habitual actions, general truths, and permanent situations.\n\nFormula:\n- I/You/We/They + verb\n- He/She/It + verb + s/es\n\nExamples:\n- I work every day.\n- She works in a hospital.\n- The sun rises in the east.',
+                'icon': '🔤',
+                'explanation': (
+                    'Rus alifbosi 33 ta harfdan iborat (кириллица — kirill yozuvi).\n\n'
+                    'Unlilar: А, Е, Ё, И, О, У, Ы, Э, Ю, Я\n'
+                    'Undoshlar: Б, В, Г, Д, Ж, З, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ\n'
+                    'Belgilar: Ъ (qattiq belgi), Ь (yumshoq belgi)\n\n'
+                    'Misollar:\n'
+                    '- А — арбуз (arbuz — tarvuz)\n'
+                    '- Б — банан (banan — banan)\n'
+                    '- В — вода (voda — suv)\n'
+                    '- Г — город (gorod — shahar)\n'
+                    '- Д — дом (dom — uy)'
+                ),
                 'examples': [
-                    ('I play tennis every weekend.', 'Men har hafta oxiri tennis o\'ynamanM.', True),
-                    ('She work in a hospital.', 'U kasalxonada ishlaydi. (noto\'g\'ri)', False),
-                    ('They study English at school.', 'Ular maktabda ingliz tilini o\'rganadilar.', True),
+                    ('Москва', 'Moskva — Rossiyaning poytaxti', True),
+                    ('Привет', 'Privet — Salom', True),
+                    ('Россия', 'Rossiya — Rossiya davlati', True),
                 ],
                 'exercises': [
-                    ('Fill in: She ___ (work) every day.', 'works', 'fill_blank', 'He/She/It + verb + s'),
-                    ('Choose the correct form:', 'works', 'multiple_choice', 'Third person singular'),
+                    ('Qaysi harf "V" tovushini beradi?', 'В', 'multiple_choice', 'В harfi "v" tovushini bildiradi'),
+                    ('Rus alifbosida nechta harf bor?', '33', 'fill_blank', 'Rus alifbosi 33 harfdan iborat'),
                 ]
             },
             {
-                'title': 'Articles: a, an, the',
-                'slug': 'articles-a-an-the',
+                'title': 'Rod (Род) — Ot jinsi',
+                'slug': 'rod-ot-jinsi',
                 'level': 'A1',
-                'icon': '📝',
-                'explanation': 'Articles in English are words placed before nouns.\n\n"a/an" - indefinite article (used for first mention or general reference)\n"the" - definite article (used for specific things)\n\nRules:\n- "a" before consonant sounds: a book, a car\n- "an" before vowel sounds: an apple, an hour\n- "the" for specific items: the sun, the book I mentioned',
+                'icon': '⚥',
+                'explanation': (
+                    'Rus tilida otlar uch jinsga bo\'linadi:\n\n'
+                    '🔵 Erkak jins (мужской род) — -й, -ь, undosh bilan tugaydi:\n'
+                    '   стол (stol — stol), брат (brat — aka), день (den\' — kun)\n\n'
+                    '🔴 Urg\'u jins (женский род) — -а, -я, -ь bilan tugaydi:\n'
+                    '   книга (kniga — kitob), земля (zemlya — yer), ночь (noch\' — tun)\n\n'
+                    '🟢 O\'rta jins (средний род) — -о, -е, -ие bilan tugaydi:\n'
+                    '   окно (okno — deraza), море (more — dengiz), здание (zdanie — bino)'
+                ),
                 'examples': [
-                    ('I saw a cat in the garden.', 'Men bog\'da bir mushuk ko\'rdim.', True),
-                    ('She is an engineer.', 'U muhandis.', True),
-                    ('The moon is bright tonight.', 'Bugun kechasi oy yorqin.', True),
+                    ('стол — мужской род', 'Stol — erkak jinsiga kiradi (undosh bilan tugaydi)', True),
+                    ('книга — женский род', 'Kitob — urg\'u jinsiga kiradi (-а bilan tugaydi)', True),
+                    ('окно — средний род', 'Deraza — o\'rta jinsiga kiradi (-о bilan tugaydi)', True),
+                    ('книга — мужской род', 'Bu noto\'g\'ri: книга urg\'u jinsiga kiradi', False),
                 ],
                 'exercises': [
-                    ('Fill in: I have ___ umbrella.', 'an', 'fill_blank', '"umbrella" starts with a vowel sound'),
+                    ('«Письмо» (xat) qaysi jinsga kiradi?', 'средний род', 'multiple_choice',
+                     'Письмо -о bilan tugaydi → o\'rta jins'),
+                    ('«Мама» qaysi jinsga kiradi?', 'женский род', 'fill_blank',
+                     'Мама -а bilan tugaydi → urg\'u jins'),
+                ]
+            },
+            {
+                'title': 'Настоящее время (Hozirgi zamon)',
+                'slug': 'nastoyashchee-vremya',
+                'level': 'A2',
+                'icon': '⏰',
+                'explanation': (
+                    'Rus tilida hozirgi zamon fe\'llari shaxs va songa qarab o\'zgaradi.\n\n'
+                    'I-tur (I спряжение): читать (o\'qimoq)\n'
+                    '   я читаю   — men o\'qiyman\n'
+                    '   ты читаешь — sen o\'qiysan\n'
+                    '   он/она читает — u o\'qiydi\n'
+                    '   мы читаем  — biz o\'qiymiz\n'
+                    '   вы читаете — siz/sizlar o\'qiysiz\n'
+                    '   они читают — ular o\'qiydi\n\n'
+                    'II-tur (II спряжение): говорить (gapirmoq)\n'
+                    '   я говорю   — men gapiraman\n'
+                    '   ты говоришь — sen gapirassan\n'
+                    '   он/она говорит — u gapiradi\n'
+                    '   мы говорим  — biz gapiramiz\n'
+                    '   вы говорите — siz/sizlar gapirasiz\n'
+                    '   они говорят — ular gapiradi'
+                ),
+                'examples': [
+                    ('Я читаю книгу.', 'Men kitob o\'qiyapman.', True),
+                    ('Она говорит по-русски.', 'U rus tilida gapiradi.', True),
+                    ('Мы учим русский язык.', 'Biz rus tilini o\'rganamiz.', True),
+                    ('Он говорю хорошо.', 'Bu noto\'g\'ri: «он» bilan «говорю» ishlatilmaydi.', False),
+                ],
+                'exercises': [
+                    ('To\'ldiring: Я ___ (читать) книгу.', 'читаю', 'fill_blank',
+                     'Men uchun I-tur fe\'li: читаю'),
+                    ('To\'ldiring: Они ___ (говорить) по-русски.', 'говорят', 'fill_blank',
+                     'Ular uchun II-tur fe\'li: говорят'),
+                    ('Tanlang: Ты ___ (учить) русский?', 'учишь', 'multiple_choice',
+                     '"Ты" bilan II-tur: учишь'),
+                ]
+            },
+            {
+                'title': 'Отрицание (Inkor)',
+                'slug': 'otricanie-inkor',
+                'level': 'A1',
+                'icon': '🚫',
+                'explanation': (
+                    'Rus tilida inkorni ifodalash uchun «не» yuklamasi ishlatiladi.\n\n'
+                    'Qoida: не + fe\'l yoki sifat\n\n'
+                    'Misollar:\n'
+                    '   Я знаю. → Я не знаю.  (Men bilaman → Men bilmayman)\n'
+                    '   Он дома. → Он не дома. (U uyda → U uyda emas)\n'
+                    '   Это хорошо. → Это не хорошо. (Bu yaxshi → Bu yaxshi emas)\n\n'
+                    'Muhim: «нет» — yo\'q (mavjud emaslik)\n'
+                    '   Есть чай? — Нет, нет чая. (Choy bormi? — Yo\'q, choy yo\'q.)'
+                ),
+                'examples': [
+                    ('Я не понимаю.', 'Men tushunmayman.', True),
+                    ('Она не говорит по-русски.', 'U rus tilida gapirmaydi.', True),
+                    ('Это не правда.', 'Bu to\'g\'ri emas.', True),
+                    ('Я не знаете.', 'Bu noto\'g\'ri: «я» bilan «знаете» ishlatilmaydi.', False),
+                ],
+                'exercises': [
+                    ('Inkorda yozing: Я знаю. → Я ___ знаю.', 'не', 'fill_blank',
+                     'Inkor uchun «не» ishlatiladi'),
+                    ('Tanlang: Он ___ дома. (u uyda emas)', 'не', 'multiple_choice',
+                     '«не» — inkor yuklamasi'),
+                ]
+            },
+            {
+                'title': 'Притяжательные местоимения (Egalik olmoshlari)',
+                'slug': 'egalik-olmoshlari',
+                'level': 'A2',
+                'icon': '👤',
+                'explanation': (
+                    'Egalik olmoshlari otning jinsi va soniga qarab o\'zgaradi.\n\n'
+                    'мой/моя/моё/мои — mening\n'
+                    '   мой брат (mening akam) — erkak jins\n'
+                    '   моя сестра (mening opam) — urg\'u jins\n'
+                    '   моё окно (mening derazam) — o\'rta jins\n'
+                    '   мои книги (mening kitoblarim) — ko\'plik\n\n'
+                    'твой/твоя/твоё/твои — sening\n'
+                    'его — uning (erkak)\n'
+                    'её — uning (ayol)\n'
+                    'наш/наша/наше/наши — bizning\n'
+                    'ваш/ваша/ваше/ваши — sizning\n'
+                    'их — ularning'
+                ),
+                'examples': [
+                    ('Это мой дом.', 'Bu mening uyim.', True),
+                    ('Где твоя книга?', 'Sening kitobing qayerda?', True),
+                    ('Это наш класс.', 'Bu bizning sinfimiz.', True),
+                    ('Это моя брат.', 'Bu noto\'g\'ri: «брат» erkak jinsida → «мой брат»', False),
+                ],
+                'exercises': [
+                    ('To\'ldiring: Это ___ (mening) книга.', 'моя', 'fill_blank',
+                     '«книга» urg\'u jinsida → «моя»'),
+                    ('To\'ldiring: Где ___ (sening) паспорт?', 'твой', 'fill_blank',
+                     '«паспорт» erkak jinsida → «твой»'),
                 ]
             },
         ]
@@ -281,14 +406,14 @@ class Command(BaseCommand):
         from apps.gamification.models import Achievement
 
         achievements = [
-            ('First Lesson!', 'Complete your first lesson.', '🎯', 'learning', 50, 10, 'lessons_completed', 1),
-            ('Word Wizard', 'Learn 50 vocabulary words.', '🧙', 'learning', 100, 20, 'words_learned', 50),
-            ('Quiz Master', 'Complete 10 quizzes.', '❓', 'learning', 150, 30, 'quizzes_completed', 10),
-            ('Streak Starter', 'Maintain a 3-day streak.', '🔥', 'streak', 75, 15, 'streak_days', 3),
-            ('Dedicated Learner', 'Maintain a 7-day streak.', '💪', 'streak', 200, 40, 'streak_days', 7),
-            ('Grammar Guru', 'Complete 5 grammar topics.', '📝', 'learning', 100, 20, 'grammar_topics', 5),
-            ('Level 5 Achiever', 'Reach Level 5.', '⭐', 'milestone', 300, 50, 'level', 5),
-            ('XP Hunter', 'Earn 1000 XP total.', '⚡', 'milestone', 200, 40, 'total_xp', 1000),
+            ('Birinchi dars!', 'Birinchi darsingizni tugatdingiz.', '🎯', 'learning', 50, 10, 'lessons_completed', 1),
+            ('So\'z ustasi', '50 ta so\'z o\'rganing.', '🧙', 'learning', 100, 20, 'words_learned', 50),
+            ('Test ustasi', '10 ta test bajaring.', '❓', 'learning', 150, 30, 'quizzes_completed', 10),
+            ('Izchil o\'quvchi', '3 kunlik seriya saqlang.', '🔥', 'streak', 75, 15, 'streak_days', 3),
+            ('Bag\'ishlangan o\'quvchi', '7 kunlik seriya saqlang.', '💪', 'streak', 200, 40, 'streak_days', 7),
+            ('Grammatika ustasi', '5 ta grammatika mavzusini tugating.', '📝', 'learning', 100, 20, 'grammar_topics', 5),
+            ('5-daraja yutuvchi', '5-darajaga yeting.', '⭐', 'milestone', 300, 50, 'level', 5),
+            ('XP ovchisi', 'Jami 1000 XP yig\'ing.', '⚡', 'milestone', 200, 40, 'total_xp', 1000),
         ]
 
         for name, desc, icon, cat, xp, coin, ctype, cval in achievements:
@@ -306,9 +431,9 @@ class Command(BaseCommand):
         from apps.quiz.models import Quiz, Question, Choice
 
         quiz, created = Quiz.objects.get_or_create(
-            title='General English Test',
+            title='Rus tili: Umumiy test',
             defaults={
-                'description': 'Test your general English knowledge.',
+                'description': 'Rus tili bo\'yicha umumiy bilimlaringizni sinab ko\'ring.',
                 'quiz_type': 'general',
                 'time_limit_minutes': 15,
                 'pass_score': 70,
@@ -320,22 +445,115 @@ class Command(BaseCommand):
         if created:
             questions_data = [
                 {
-                    'text': 'What is the plural of "child"?',
+                    'text': '«Привет» so\'zi o\'zbekcha nima degan ma\'noni anglatadi?',
                     'type': 'mcq',
-                    'choices': [('childs', False), ('children', True), ('childes', False), ('childs', False)],
-                    'explanation': '"child" has an irregular plural: children'
+                    'choices': [
+                        ('Rahmat', False),
+                        ('Salom', True),
+                        ('Xayr', False),
+                        ('Kechirasiz', False),
+                    ],
+                    'explanation': '«Привет» — norasmiy salomlashish so\'zi (salom).'
                 },
                 {
-                    'text': 'She ___ to school every day.',
+                    'text': '«Книга» so\'zi qaysi jinsga kiradi?',
                     'type': 'mcq',
-                    'choices': [('go', False), ('goes', True), ('going', False), ('gone', False)],
-                    'explanation': 'Third person singular (she) takes "goes"'
+                    'choices': [
+                        ('Мужской род (erkak jins)', False),
+                        ('Женский род (urg\'u jins)', True),
+                        ('Средний род (o\'rta jins)', False),
+                        ('Hech qanday jins yo\'q', False),
+                    ],
+                    'explanation': '«Книга» -а bilan tugaydi → urg\'u jins (женский род).'
                 },
                 {
-                    'text': 'True or False: "I am" is the contracted form of "I am".',
+                    'text': 'To\'ldiring: Я ___ (читать) книгу.',
+                    'type': 'mcq',
+                    'choices': [
+                        ('читает', False),
+                        ('читаю', True),
+                        ('читаешь', False),
+                        ('читают', False),
+                    ],
+                    'explanation': '«Я» (men) bilan I-tur fe\'li «читаю» ishlatiladi.'
+                },
+                {
+                    'text': '«Спасибо» so\'zi o\'zbekcha nima degan ma\'noni anglatadi?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('Salom', False),
+                        ('Iltimos', False),
+                        ('Rahmat', True),
+                        ('Xayr', False),
+                    ],
+                    'explanation': '«Спасибо» — minnatdorlik bildiruvchi so\'z (rahmat).'
+                },
+                {
+                    'text': 'Rus tilida inkorni ifodalash uchun qaysi yuklamadan foydalaniladi?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('да', False),
+                        ('не', True),
+                        ('и', False),
+                        ('но', False),
+                    ],
+                    'explanation': '«не» yuklamasi fe\'l va sifatlar oldiga qo\'yiladi.'
+                },
+                {
+                    'text': '«Мой» olmoshi «Моя» ga qachon o\'zgaradi?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('Erkak jinsidagi otlar oldida', False),
+                        ('Urg\'u jinsidagi otlar oldida', True),
+                        ('O\'rta jinsidagi otlar oldida', False),
+                        ('Ko\'plikdagi otlar oldida', False),
+                    ],
+                    'explanation': 'Моя — urg\'u jins (женский род) uchun ishlatiladi: моя книга, моя мама.'
+                },
+                {
+                    'text': 'To\'g\'ri yoki noto\'g\'ri: Rus alifbosi 33 ta harfdan iborat.',
                     'type': 'true_false',
-                    'choices': [('True', True), ('False', False)],
-                    'explanation': "I'm = I am"
+                    'choices': [
+                        ('To\'g\'ri', True),
+                        ('Noto\'g\'ri', False),
+                    ],
+                    'explanation': 'Rus (kirill) alifbosi 33 ta harfdan iborat.'
+                },
+                {
+                    'text': '«Окно» so\'zi qaysi jinsga kiradi?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('Мужской род', False),
+                        ('Женский род', False),
+                        ('Средний род', True),
+                        ('Aniqlab bo\'lmaydi', False),
+                    ],
+                    'explanation': '«Окно» -о bilan tugaydi → o\'rta jins (средний род).'
+                },
+                {
+                    'text': 'Qaysi jumlada hozirgi zamon to\'g\'ri ishlatilgan?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('Она говорю по-русски.', False),
+                        ('Она говорит по-русски.', True),
+                        ('Она говоришь по-русски.', False),
+                        ('Она говорим по-русски.', False),
+                    ],
+                    'explanation': '«Она» (u — ayol) bilan II-tur fe\'li «говорит» ishlatiladi.'
+                },
+                {
+                    'text': '«Нет» va «не» orasidagi farq nima?',
+                    'type': 'mcq',
+                    'choices': [
+                        ('Ikkalasi ham bir xil ma\'noda', False),
+                        ('«Нет» — yo\'q (mavjud emaslik), «не» — inkor yuklamasi', True),
+                        ('«Не» — yo\'q, «нет» — inkor yuklamasi', False),
+                        ('Faqat «нет» ishlatiladi', False),
+                    ],
+                    'explanation': (
+                        '«Нет» mustaqil so\'z (yo\'q), «не» esa fe\'l va sifatlar '
+                        'oldiga qo\'yiladigan yuklamаdir.'
+                    )
                 },
             ]
 
@@ -368,4 +586,4 @@ class Command(BaseCommand):
             LeaderboardEntry.objects.create(
                 user=student, period='weekly', xp=xp, rank=rank
             )
-        self.stdout.write(f'  Created leaderboard entries')
+        self.stdout.write('  Created leaderboard entries')

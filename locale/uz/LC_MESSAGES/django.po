@@ -7,9 +7,7 @@ msgstr ""
 "Language: uz\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Learn English"
-msgstr "Ingliz tilini o'rganing"
-
+# --- Navigation ---
 msgid "Home"
 msgstr "Bosh sahifa"
 
@@ -46,17 +44,235 @@ msgstr "Chiqish"
 msgid "Get Started"
 msgstr "Boshlash"
 
-msgid "Start for Free"
-msgstr "Bepul boshlash"
+msgid "Learning Tools"
+msgstr "O'quv vositalari"
 
-msgid "Continue Learning"
-msgstr "O'rganishni davom ettirish"
+msgid "Roadmap"
+msgstr "Yo'l xaritasi"
+
+msgid "Calendar"
+msgstr "Taqvim"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Diagnostic"
+msgstr "Diagnostika"
+
+msgid "Skills"
+msgstr "Ko'nikmalar"
+
+msgid "Analytics"
+msgstr "Tahlil"
+
+msgid "Journal"
+msgstr "Kundalik"
+
+msgid "Forum"
+msgstr "Forum"
+
+msgid "Homework"
+msgstr "Uy vazifasi"
+
+msgid "Learning Path"
+msgstr "O'qish yo'li"
+
+msgid "Reports"
+msgstr "Hisobotlar"
+
+msgid "Admin Analytics"
+msgstr "Admin tahlili"
+
+# --- Home page hero ---
+msgid "Russian language platform for Uzbeks"
+msgstr "O'zbeklar uchun rus tili platformasi"
+
+msgid "Learn Russian"
+msgstr "Rus tilini o'rganing"
+
+msgid "Smarter & Faster"
+msgstr "Tez va samarali"
+
+msgid "with Rustili"
+msgstr "Rustili bilan"
+
+msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
+msgstr "Interaktiv darslar, so'z kartochkalari, grammatika mashqlari va o'yin elementlari bilan rus tilini o'z sur'atingizda o'rganing."
+
+msgid "Students"
+msgstr "O'quvchilar"
+
+# --- Home phone mockup ---
+msgid "Alphabet: A-Ya"
+msgstr "Alifbo: A–Ya"
+
+msgid "Alphabet: A–Ya"
+msgstr "Alifbo: A–Ya"
+
+msgid "Alphabet: А–Я"
+msgstr "Alifbo: A–Ya"
+
+msgid "Lesson 3 of 12"
+msgstr "3-dars, jami 12 ta"
+
+msgid "Vocabulary: 50 words"
+msgstr "Leksika: 50 ta so'z"
+
+msgid "12 mastered"
+msgstr "12 ta o'zlashtirildi"
+
+msgid "7 Day Streak!"
+msgstr "7 kunlik seriya!"
+
+msgid "Keep it up!"
+msgstr "Davom eting!"
+
+msgid "Level 5 Unlocked!"
+msgstr "5-daraja ochildi!"
+
+msgid "+50 XP Earned"
+msgstr "+50 XP qo'shildi"
+
+msgid "Daily Goal: 80%"
+msgstr "Kunlik maqsad: 80%"
+
+# --- Features ---
+msgid "Features"
+msgstr "Imkoniyatlar"
+
+msgid "Everything You Need to"
+msgstr "Rus tilini o'rganish uchun"
+
+msgid "Master Russian"
+msgstr "barcha vositalar"
+
+msgid "A complete learning ecosystem for real progress"
+msgstr "Haqiqiy natijaga yo'naltirilgan to'liq ta'lim ekotizimi"
+
+msgid "Alphabet & Pronunciation"
+msgstr "Alifbo va talaffuz"
+
+msgid "Learn the Cyrillic alphabet with pronunciation rules and audio examples for each letter."
+msgstr "Kirill alifbosini o'rganing, har bir harf uchun talaffuz qoidalari va audio namunalar bilan."
+
+msgid "Audio Lessons"
+msgstr "Audio darslar"
+
+msgid "Improve listening and pronunciation with native speaker recordings."
+msgstr "Ona tili so'zlovchilari tomonidan yozilgan audio bilan tinglash va talaffuzni rivojlantiring."
+
+msgid "Smart Vocabulary"
+msgstr "So'z kartochkalari"
+
+msgid "Learn Russian words with Uzbek translation, examples and pronunciation using spaced repetition."
+msgstr "Intervalli takrorlash tizimi bilan rus so'zlarini o'zbek tarjimasida, misollar va talaffuz bilan o'rganing."
+
+msgid "Grammar Exercises"
+msgstr "Grammatika mashqlari"
+
+msgid "Gender, cases, verb conjugation — with explanations and instant-check exercises."
+msgstr "Rod, kelishiklar, fe'l tuslanishi — tushuntirish va darhol tekshirib ko'riladigan mashqlar bilan."
+
+msgid "Gamification"
+msgstr "O'yin elementlari"
+
+msgid "XP points, levels, achievements, streaks and leaderboard to keep learning fun."
+msgstr "XP ball, darajalar, yutuqlar, kunlik seriya va liderlar jadvali — o'rganishni qiziqarli qiling."
+
+msgid "Professional PDF certificates with QR verification upon completing any course."
+msgstr "Har bir kursni yakunlaganingizda QR-kod bilan tasdiqlangan rasmiy PDF sertifikat oling."
+
+# --- Levels section ---
+msgid "Levels"
+msgstr "Darajalar"
+
+msgid "Which level do you"
+msgstr "Qaysi darajadan"
+
+msgid "start from?"
+msgstr "boshlaysiz?"
+
+msgid "Systematic learning path from beginner to advanced"
+msgstr "Boshlang'ichdan ilg'or darajagacha tizimli o'rganish yo'li"
+
+msgid "Beginner"
+msgstr "Boshlang'ich"
+
+msgid "Elementary"
+msgstr "Boshlang'ich+"
+
+msgid "Intermediate"
+msgstr "O'rta daraja"
+
+msgid "Complete Beginner"
+msgstr "Mutlaq yangi boshlovchi"
+
+msgid "Learn Russian alphabet, basic greetings, numbers and simple sentences."
+msgstr "Rus alifbosi, asosiy salomlashish so'zlari, raqamlar va oddiy gaplar bilan tanishing."
+
+msgid "Basic Communication"
+msgstr "Asosiy muloqot"
+
+msgid "Everyday conversations, present and past tense verbs, possessive pronouns."
+msgstr "Kundalik mavzularda so'zlashuv, hozirgi va o'tgan zamon fe'llari, egalik olmoshlari."
+
+msgid "Free Communication"
+msgstr "Erkin muloqot"
+
+msgid "Cases, complex grammar, speech structure and business conversations."
+msgstr "Kelishiklar, murakkab grammatika, nutq tuzilishi va biznes suhbatlari."
+
+msgid "Alphabet"
+msgstr "Alifbo"
+
+msgid "Greetings"
+msgstr "Salomlashish"
+
+msgid "Numbers"
+msgstr "Raqamlar"
+
+msgid "Colors"
+msgstr "Ranglar"
+
+msgid "Family"
+msgstr "Oila"
+
+msgid "Present tense"
+msgstr "Hozirgi zamon"
+
+msgid "Daily life"
+msgstr "Kundalik hayot"
+
+msgid "Shopping"
+msgstr "Do'kon"
+
+msgid "Transport"
+msgstr "Transport"
+
+msgid "Cases"
+msgstr "Kelishiklar"
+
+msgid "Past tense"
+msgstr "O'tgan zamon"
+
+msgid "Business"
+msgstr "Biznes"
+
+msgid "Discussion"
+msgstr "Bahs"
+
+# --- Courses ---
+msgid "Popular Courses"
+msgstr "Mashhur kurslar"
+
+msgid "All Courses"
+msgstr "Barcha kurslar"
 
 msgid "Browse Courses"
 msgstr "Kurslarni ko'rish"
 
-msgid "All Courses"
-msgstr "Barcha kurslar"
+msgid "View Course"
+msgstr "Kursga o'tish"
 
 msgid "Featured"
 msgstr "Tavsiya etilgan"
@@ -64,21 +280,73 @@ msgstr "Tavsiya etilgan"
 msgid "Free"
 msgstr "Bepul"
 
-msgid "Certificate"
-msgstr "Sertifikat"
+msgid "lessons"
+msgstr "dars"
 
-msgid "Certificates"
-msgstr "Sertifikatlar"
+# --- Stats ---
+msgid "Active Students"
+msgstr "Faol o'quvchilar"
 
-msgid "Achievements"
-msgstr "Yutuqlar"
+msgid "Expert Courses"
+msgstr "Mutaxassis kurslar"
 
-msgid "Notifications"
-msgstr "Xabarnomalar"
+msgid "Interactive Lessons"
+msgstr "Interaktiv darslar"
 
-msgid "Settings"
-msgstr "Sozlamalar"
+msgid "Completion Rate"
+msgstr "Yakunlash darajasi"
 
+# --- FAQ ---
+msgid "Frequently Asked Questions"
+msgstr "Ko'p so'raladigan savollar"
+
+msgid "Is Rustili free?"
+msgstr "Rustili bepulmi?"
+
+msgid "Yes! Rustili is completely free. Register and start learning today."
+msgstr "Ha! Rustili barcha o'quvchilar uchun to'liq bepul. Ro'yxatdan o'ting va bugunoq o'rganishni boshlang."
+
+msgid "How does the gamification system work?"
+msgstr "O'yin tizimi qanday ishlaydi?"
+
+msgid "Earn XP by completing lessons, quizzes and vocabulary reviews. Level up, unlock achievements, and compete on the leaderboard!"
+msgstr "Darslar, testlar va so'z kartochkalarini bajarib XP ball to'plang. Darajangizni oshiring, yutuqlarni oching va liderlar jadvalida musobaqalashing!"
+
+msgid "Can I get a certificate?"
+msgstr "Sertifikat olish mumkinmi?"
+
+msgid "Yes! Complete any course to receive a PDF certificate with QR verification."
+msgstr "Ha! Har qanday kursni yakunlaganingizda noyob ID va QR-kod bilan tasdiqlangan rasmiy PDF sertifikat olasiz."
+
+msgid "How long does it take to learn Russian?"
+msgstr "Rus tilini qancha vaqtda o'rganib olaman?"
+
+msgid "With 20-30 minutes daily, you can reach A1 in 3 months, A2 in 6 months. Consistency is key!"
+msgstr "Har kuni 20-30 daqiqa vaqt ajratsangiz, 3 oyda A1 darajasini, 6 oyda A2 darajasini egallashingiz mumkin. Izchillik — eng muhim omil!"
+
+msgid "What languages is the platform available in?"
+msgstr "Platforma qaysi tillarda mavjud?"
+
+msgid "Rustili supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
+msgstr "Rustili 3 tilda ishlaydi: O'zbek, Rus va Ingliz. Tilni yuqori panel orqali istalgan vaqt o'zgartirishingiz mumkin."
+
+# --- CTA ---
+msgid "Start Your Russian Journey Today"
+msgstr "Rus tili sayohatingizni bugun boshlang"
+
+msgid "Join thousands of students already learning Russian with Rustili"
+msgstr "Rustili bilan rus tilini o'rganayotgan minglab o'quvchilarga qo'shiling"
+
+msgid "Start for Free"
+msgstr "Bepul boshlash"
+
+msgid "Continue Learning"
+msgstr "O'rganishni davom ettirish"
+
+msgid "Register Free"
+msgstr "Bepul ro'yxatdan o'tish"
+
+# --- Auth ---
 msgid "Email"
 msgstr "Elektron pochta"
 
@@ -115,6 +383,7 @@ msgstr "Parolni unutdingizmi?"
 msgid "Reset Password"
 msgstr "Parolni tiklash"
 
+# --- Dashboard ---
 msgid "Daily Goal"
 msgstr "Kunlik maqsad"
 
@@ -130,9 +399,22 @@ msgstr "Ketma-ket kunlar"
 msgid "Enrolled Courses"
 msgstr "Yozilgan kurslar"
 
-msgid "lessons"
-msgstr "dars"
+msgid "Quick Access"
+msgstr "Tezkor kirish"
 
+msgid "Recent Activity"
+msgstr "Oxirgi faollik"
+
+msgid "Recent Achievements"
+msgstr "Oxirgi yutuqlar"
+
+msgid "Good day, %(name)s! \U0001f44b"
+msgstr "Xayrli kun, %(name)s! \U0001f44b"
+
+msgid "Ready to learn some Russian today?"
+msgstr "Bugun rus tilini o'rganishga tayyormisiz?"
+
+# --- Quiz ---
 msgid "questions"
 msgstr "savol"
 
@@ -175,21 +457,35 @@ msgstr "Testni yakunlash"
 msgid "Explanation"
 msgstr "Izoh"
 
-msgid "Mark as Complete"
-msgstr "Tugatildi deb belgilash"
+# --- Grammar ---
+msgid "Grammar Topics"
+msgstr "Grammatika mavzulari"
 
-msgid "Course Content"
-msgstr "Kurs mazmuni"
+msgid "exercises"
+msgstr "mashq"
 
-msgid "View Course"
-msgstr "Kursni ko'rish"
+msgid "Done"
+msgstr "Bajarildi"
 
-msgid "Enroll Now — Free!"
-msgstr "Hoziroq yoziling — Bepul!"
+msgid "Correct!"
+msgstr "To'g'ri!"
 
-msgid "Register & Enroll Free"
-msgstr "Ro'yxatdan o'ting va bepul yoziling"
+msgid "Incorrect."
+msgstr "Noto'g'ri."
 
+msgid "Correct answer"
+msgstr "To'g'ri javob"
+
+msgid "Your answer..."
+msgstr "Javobingiz..."
+
+msgid "Check"
+msgstr "Tekshirish"
+
+msgid "Back"
+msgstr "Orqaga"
+
+# --- Vocabulary / Flashcards ---
 msgid "Flashcards"
 msgstr "Kartochkalar"
 
@@ -214,15 +510,7 @@ msgstr "Aylamoq"
 msgid "Skip"
 msgstr "O'tkazib yuborish"
 
-msgid "Grammar Topics"
-msgstr "Grammatika mavzulari"
-
-msgid "exercises"
-msgstr "mashq"
-
-msgid "Done"
-msgstr "Bajarildi"
-
+# --- Leaderboard ---
 msgid "Top Learners"
 msgstr "Eng yaxshi o'quvchilar"
 
@@ -232,17 +520,16 @@ msgstr "Sizning reytingiz"
 msgid "Global ranking"
 msgstr "Global reyting"
 
-msgid "Quick Access"
-msgstr "Tezkor kirish"
+# --- Achievements ---
+msgid "Achievements"
+msgstr "Yutuqlar"
 
-msgid "Recent Activity"
-msgstr "Oxirgi faollik"
+# --- Certificates ---
+msgid "Certificate"
+msgstr "Sertifikat"
 
-msgid "Recent Achievements"
-msgstr "Oxirgi yutuqlar"
-
-msgid "All"
-msgstr "Hammasi"
+msgid "Certificates"
+msgstr "Sertifikatlar"
 
 msgid "No certificates yet"
 msgstr "Hali sertifikat yo'q"
@@ -259,6 +546,9 @@ msgstr "Bu sertifikat haqiqiy va amal qiladi."
 msgid "Issued to"
 msgstr "Berilgan"
 
+msgid "Issued"
+msgstr "Berilgan sana"
+
 msgid "Certificate of Completion"
 msgstr "Tugatganlik haqida sertifikat"
 
@@ -274,53 +564,44 @@ msgstr "PDF yuklash"
 msgid "Verify Certificate"
 msgstr "Sertifikatni tekshirish"
 
+# --- Notifications ---
+msgid "Notifications"
+msgstr "Xabarnomalar"
+
 msgid "No notifications"
 msgstr "Xabarnomalar yo'q"
 
 msgid "Mark all read"
 msgstr "Hammasini o'qilgan deb belgilash"
 
-msgid "Active Students"
-msgstr "Faol o'quvchilar"
+# --- Lessons / Courses detail ---
+msgid "Mark as Complete"
+msgstr "Tugatildi deb belgilash"
 
-msgid "Expert Courses"
-msgstr "Mutaxassis kurslar"
+msgid "Course Content"
+msgstr "Kurs mazmuni"
 
-msgid "Interactive Lessons"
-msgstr "Interaktiv darslar"
+msgid "Enroll Now — Free!"
+msgstr "Hoziroq yoziling — Bepul!"
 
-msgid "Completion Rate"
-msgstr "Tugatish darajasi"
+msgid "Register & Enroll Free"
+msgstr "Ro'yxatdan o'ting va bepul yoziling"
 
-msgid "AI-Powered English Learning"
-msgstr "Sun'iy intellekt yordamida ingliz tili o'rganish"
+# --- Misc ---
+msgid "All"
+msgstr "Hammasi"
 
-msgid "Learn English Smarter & Faster with Rustili"
-msgstr "Rustili bilan ingliz tilini aqlliroq va tezroq o'rganing"
-
-msgid "Frequently Asked Questions"
-msgstr "Ko'p so'raladigan savollar"
-
-msgid "Is Rustili completely free?"
-msgstr "Rustili to'liq bepulmi?"
-
-msgid "Yes! Rustili is completely free for all students. Register and start learning today."
-msgstr "Ha! Rustili barcha o'quvchilar uchun to'liq bepul. Ro'yxatdan o'ting va bugun o'rganishni boshlang."
-
-msgid "Start Your English Journey Today"
-msgstr "Bugun ingliz tili sayohatingizni boshlang"
-
-msgid "Register Free"
-msgstr "Bepul ro'yxatdan o'tish"
-
-msgid "Good day, %(name)s! 👋"
-msgstr "Xayrli kun, %(name)s! 👋"
-
-msgid "Ready to learn some English today?"
-msgstr "Bugun ingliz tili o'rganishga tayyormisiz?"
+msgid "Settings"
+msgstr "Sozlamalar"
 
 msgid "to"
 msgstr "gacha"
 
 msgid "ago"
 msgstr "oldin"
+
+msgid "Learn Russian with interactive lessons"
+msgstr "Interaktiv darslar bilan rus tilini o'rganing"
+
+msgid "All rights reserved."
+msgstr "Barcha huquqlar himoyalangan."

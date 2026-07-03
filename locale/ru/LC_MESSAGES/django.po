@@ -5,9 +5,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
 
-msgid "Learn English"
-msgstr "Учите английский"
-
+# --- Navigation ---
 msgid "Home"
 msgstr "Главная"
 
@@ -44,284 +42,8 @@ msgstr "Выйти"
 msgid "Get Started"
 msgstr "Начать"
 
-msgid "Start for Free"
-msgstr "Начать бесплатно"
-
-msgid "Continue Learning"
-msgstr "Продолжить обучение"
-
-msgid "Browse Courses"
-msgstr "Просмотр курсов"
-
-msgid "All Courses"
-msgstr "Все курсы"
-
-msgid "Free"
-msgstr "Бесплатно"
-
-msgid "Certificate"
-msgstr "Сертификат"
-
-msgid "Certificates"
-msgstr "Сертификаты"
-
-msgid "Achievements"
-msgstr "Достижения"
-
-msgid "Notifications"
-msgstr "Уведомления"
-
-msgid "Email"
-msgstr "Электронная почта"
-
-msgid "Password"
-msgstr "Пароль"
-
-msgid "First name"
-msgstr "Имя"
-
-msgid "Last name"
-msgstr "Фамилия"
-
-msgid "Save Changes"
-msgstr "Сохранить изменения"
-
-msgid "Sign In"
-msgstr "Войти"
-
-msgid "Create Account"
-msgstr "Создать аккаунт"
-
-msgid "Forgot Password?"
-msgstr "Забыли пароль?"
-
-msgid "Reset Password"
-msgstr "Сбросить пароль"
-
-msgid "Daily Goal"
-msgstr "Ежедневная цель"
-
-msgid "Total XP"
-msgstr "Всего XP"
-
-msgid "Current Level"
-msgstr "Текущий уровень"
-
-msgid "Day Streak"
-msgstr "Дней подряд"
-
-msgid "Enrolled Courses"
-msgstr "Записанные курсы"
-
-msgid "lessons"
-msgstr "уроков"
-
-msgid "Correct"
-msgstr "Правильно"
-
-msgid "Score"
-msgstr "Очки"
-
-msgid "Congratulations!"
-msgstr "Поздравляем!"
-
-msgid "Keep Practicing!"
-msgstr "Продолжайте практиковаться!"
-
-msgid "Try Again"
-msgstr "Попробовать снова"
-
-msgid "Start Quiz"
-msgstr "Начать тест"
-
-msgid "Flashcards"
-msgstr "Карточки"
-
-msgid "Mastered"
-msgstr "Изучено"
-
-msgid "I Know It"
-msgstr "Знаю"
-
-msgid "Don't Know"
-msgstr "Не знаю"
-
-msgid "Grammar Topics"
-msgstr "Темы грамматики"
-
-msgid "Top Learners"
-msgstr "Лучшие студенты"
-
-msgid "Your Rank"
-msgstr "Ваш рейтинг"
-
-msgid "Active Students"
-msgstr "Активные студенты"
-
-msgid "Expert Courses"
-msgstr "Экспертные курсы"
-
-msgid "Start Your English Journey Today"
-msgstr "Начните изучение английского сегодня"
-
-msgid "Register Free"
-msgstr "Зарегистрироваться бесплатно"
-
-msgid "Good day, %(name)s! 👋"
-msgstr "Добрый день, %(name)s! 👋"
-
-msgid "Ready to learn some English today?"
-msgstr "Готовы учить английский сегодня?"
-
-msgid "ago"
-msgstr "назад"
-
-msgid "Featured"
-msgstr "Рекомендуемые"
-
-msgid "Settings"
-msgstr "Настройки"
-
-msgid "Phone"
-msgstr "Телефон"
-
-msgid "Country"
-msgstr "Страна"
-
-msgid "Bio"
-msgstr "О себе"
-
-msgid "questions"
-msgstr "вопросов"
-
-msgid "Passed"
-msgstr "Пройдено"
-
-msgid "Failed"
-msgstr "Не пройдено"
-
-msgid "Answer Review"
-msgstr "Просмотр ответов"
-
-msgid "All Quizzes"
-msgstr "Все тесты"
-
-msgid "Next Question"
-msgstr "Следующий вопрос"
-
-msgid "Finish Quiz"
-msgstr "Завершить тест"
-
-msgid "Explanation"
-msgstr "Объяснение"
-
-msgid "Mark as Complete"
-msgstr "Отметить как выполненное"
-
-msgid "Course Content"
-msgstr "Содержание курса"
-
-msgid "View Course"
-msgstr "Просмотр курса"
-
-msgid "Enroll Now — Free!"
-msgstr "Записаться сейчас — Бесплатно!"
-
-msgid "Register & Enroll Free"
-msgstr "Зарегистрироваться и записаться бесплатно"
-
-msgid "Learning"
-msgstr "Изучается"
-
-msgid "Total"
-msgstr "Итого"
-
-msgid "Flip"
-msgstr "Перевернуть"
-
-msgid "Skip"
-msgstr "Пропустить"
-
-msgid "exercises"
-msgstr "упражнений"
-
-msgid "Done"
-msgstr "Выполнено"
-
-msgid "Global ranking"
-msgstr "Глобальный рейтинг"
-
-msgid "Quick Access"
-msgstr "Быстрый доступ"
-
-msgid "Recent Activity"
-msgstr "Последняя активность"
-
-msgid "Recent Achievements"
-msgstr "Последние достижения"
-
-msgid "All"
-msgstr "Все"
-
-msgid "No certificates yet"
-msgstr "Пока нет сертификатов"
-
-msgid "Complete a course to earn your first certificate!"
-msgstr "Завершите курс, чтобы получить первый сертификат!"
-
-msgid "Certificate Verified!"
-msgstr "Сертификат подтверждён!"
-
-msgid "This certificate is authentic and valid."
-msgstr "Этот сертификат является подлинным и действительным."
-
-msgid "Issued to"
-msgstr "Выдан"
-
-msgid "Certificate of Completion"
-msgstr "Сертификат о завершении"
-
-msgid "This certifies that"
-msgstr "Настоящим удостоверяется, что"
-
-msgid "has successfully completed"
-msgstr "успешно завершил(а)"
-
-msgid "Download PDF"
-msgstr "Скачать PDF"
-
-msgid "Verify Certificate"
-msgstr "Проверить сертификат"
-
-msgid "No notifications"
-msgstr "Нет уведомлений"
-
-msgid "Mark all read"
-msgstr "Отметить все как прочитанные"
-
-msgid "Interactive Lessons"
-msgstr "Интерактивные уроки"
-
-msgid "Completion Rate"
-msgstr "Процент завершения"
-
-msgid "AI-Powered English Learning"
-msgstr "Изучение английского с помощью ИИ"
-
-msgid "Learn English Smarter & Faster with Rustili"
-msgstr "Учите английский умнее и быстрее с Rustili"
-
-msgid "Frequently Asked Questions"
-msgstr "Часто задаваемые вопросы"
-
-msgid "Is Rustili completely free?"
-msgstr "Rustili полностью бесплатный?"
-
-msgid "Yes! Rustili is completely free for all students. Register and start learning today."
-msgstr "Да! Rustili полностью бесплатен для всех студентов. Зарегистрируйтесь и начните учиться сегодня."
-
-msgid "to"
-msgstr "до"
+msgid "Learning Tools"
+msgstr "Инструменты обучения"
 
 msgid "Roadmap"
 msgstr "Дорожная карта"
@@ -359,8 +81,519 @@ msgstr "Отчёты"
 msgid "Admin Analytics"
 msgstr "Аналитика администратора"
 
-msgid "Learning Tools"
-msgstr "Инструменты обучения"
+# --- Home page hero ---
+msgid "Russian language platform for Uzbeks"
+msgstr "Платформа русского языка для узбеков"
+
+msgid "Learn Russian"
+msgstr "Учите русский"
+
+msgid "Smarter & Faster"
+msgstr "Быстрее и эффективнее"
+
+msgid "with Rustili"
+msgstr "с Rustili"
+
+msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
+msgstr "Интерактивные уроки, карточки слов, упражнения по грамматике и геймификация. Учитесь в своём темпе."
+
+msgid "Students"
+msgstr "Студентов"
+
+# --- Home phone mockup ---
+msgid "Alphabet: А–Я"
+msgstr "Алфавит: А–Я"
+
+msgid "Lesson 3 of 12"
+msgstr "Урок 3 из 12"
+
+msgid "Vocabulary: 50 words"
+msgstr "Словарный запас: 50 слов"
+
+msgid "12 mastered"
+msgstr "12 изучено"
+
+msgid "7 Day Streak!"
+msgstr "Серия 7 дней!"
+
+msgid "Keep it up!"
+msgstr "Продолжайте!"
+
+msgid "Level 5 Unlocked!"
+msgstr "Уровень 5 открыт!"
+
+msgid "+50 XP Earned"
+msgstr "+50 XP получено"
+
+msgid "Daily Goal: 80%"
+msgstr "Цель дня: 80%"
+
+# --- Features ---
+msgid "Features"
+msgstr "Возможности"
+
+msgid "Everything You Need to"
+msgstr "Всё, что нужно для"
+
+msgid "Master Russian"
+msgstr "изучения русского"
+
+msgid "A complete learning ecosystem for real progress"
+msgstr "Полная экосистема обучения для реального прогресса"
+
+msgid "Alphabet & Pronunciation"
+msgstr "Алфавит и произношение"
+
+msgid "Learn the Cyrillic alphabet with pronunciation rules and audio examples for each letter."
+msgstr "Изучите кириллицу с правилами произношения и аудиопримерами для каждой буквы."
+
+msgid "Audio Lessons"
+msgstr "Аудио уроки"
+
+msgid "Improve listening and pronunciation with native speaker recordings."
+msgstr "Улучшайте аудирование и произношение с записями носителей языка."
+
+msgid "Smart Vocabulary"
+msgstr "Умный словарь"
+
+msgid "Learn Russian words with Uzbek translation, examples and pronunciation using spaced repetition."
+msgstr "Учите русские слова с узбекским переводом, примерами и произношением по методу интервального повторения."
+
+msgid "Grammar Exercises"
+msgstr "Упражнения по грамматике"
+
+msgid "Gender, cases, verb conjugation — with explanations and instant-check exercises."
+msgstr "Род, падежи, спряжение глаголов — с объяснениями и мгновенной проверкой."
+
+msgid "Gamification"
+msgstr "Геймификация"
+
+msgid "XP points, levels, achievements, streaks and leaderboard to keep learning fun."
+msgstr "XP очки, уровни, достижения, серии и рейтинг — делайте обучение интересным."
+
+msgid "Professional PDF certificates with QR verification upon completing any course."
+msgstr "Профессиональные PDF-сертификаты с QR-верификацией после завершения любого курса."
+
+# --- Levels ---
+msgid "Levels"
+msgstr "Уровни"
+
+msgid "Which level do you"
+msgstr "С какого уровня"
+
+msgid "start from?"
+msgstr "начнёте?"
+
+msgid "Systematic learning path from beginner to advanced"
+msgstr "Системный путь обучения от начального до продвинутого уровня"
+
+msgid "Beginner"
+msgstr "Начинающий"
+
+msgid "Elementary"
+msgstr "Элементарный"
+
+msgid "Intermediate"
+msgstr "Средний"
+
+msgid "Complete Beginner"
+msgstr "Абсолютный новичок"
+
+msgid "Learn Russian alphabet, basic greetings, numbers and simple sentences."
+msgstr "Изучите русский алфавит, базовые приветствия, числа и простые предложения."
+
+msgid "Basic Communication"
+msgstr "Базовое общение"
+
+msgid "Everyday conversations, present and past tense verbs, possessive pronouns."
+msgstr "Разговоры на повседневные темы, глаголы настоящего и прошедшего времени, притяжательные местоимения."
+
+msgid "Free Communication"
+msgstr "Свободное общение"
+
+msgid "Cases, complex grammar, speech structure and business conversations."
+msgstr "Падежи, сложная грамматика, структура речи и деловые беседы."
+
+msgid "Alphabet"
+msgstr "Алфавит"
+
+msgid "Greetings"
+msgstr "Приветствия"
+
+msgid "Numbers"
+msgstr "Числа"
+
+msgid "Colors"
+msgstr "Цвета"
+
+msgid "Family"
+msgstr "Семья"
+
+msgid "Present tense"
+msgstr "Настоящее время"
+
+msgid "Daily life"
+msgstr "Повседневная жизнь"
+
+msgid "Shopping"
+msgstr "Магазин"
+
+msgid "Transport"
+msgstr "Транспорт"
+
+msgid "Cases"
+msgstr "Падежи"
+
+msgid "Past tense"
+msgstr "Прошедшее время"
+
+msgid "Business"
+msgstr "Бизнес"
+
+msgid "Discussion"
+msgstr "Обсуждение"
+
+# --- Courses ---
+msgid "Popular Courses"
+msgstr "Популярные курсы"
+
+msgid "All Courses"
+msgstr "Все курсы"
+
+msgid "Browse Courses"
+msgstr "Просмотр курсов"
+
+msgid "View Course"
+msgstr "Открыть курс"
+
+msgid "Featured"
+msgstr "Рекомендуемые"
+
+msgid "Free"
+msgstr "Бесплатно"
+
+msgid "lessons"
+msgstr "уроков"
+
+# --- Stats ---
+msgid "Active Students"
+msgstr "Активных студентов"
+
+msgid "Expert Courses"
+msgstr "Экспертных курсов"
+
+msgid "Interactive Lessons"
+msgstr "Интерактивных уроков"
+
+msgid "Completion Rate"
+msgstr "Процент завершения"
+
+# --- FAQ ---
+msgid "Frequently Asked Questions"
+msgstr "Часто задаваемые вопросы"
+
+msgid "Is Rustili free?"
+msgstr "Rustili бесплатный?"
+
+msgid "Yes! Rustili is completely free. Register and start learning today."
+msgstr "Да! Rustili полностью бесплатен для всех. Зарегистрируйтесь и начните учиться сегодня."
+
+msgid "How does the gamification system work?"
+msgstr "Как работает система геймификации?"
+
+msgid "Earn XP by completing lessons, quizzes and vocabulary reviews. Level up, unlock achievements, and compete on the leaderboard!"
+msgstr "Зарабатывайте XP, выполняя уроки, тесты и карточки слов. Повышайте уровень, открывайте достижения и соревнуйтесь в рейтинге!"
+
+msgid "Can I get a certificate?"
+msgstr "Можно ли получить сертификат?"
+
+msgid "Yes! Complete any course to receive a PDF certificate with QR verification."
+msgstr "Да! Завершите любой курс и получите официальный PDF-сертификат с QR-кодом для верификации."
+
+msgid "How long does it take to learn Russian?"
+msgstr "Сколько времени нужно для изучения русского?"
+
+msgid "With 20-30 minutes daily, you can reach A1 in 3 months, A2 in 6 months. Consistency is key!"
+msgstr "При занятиях 20-30 минут в день вы можете достичь A1 за 3 месяца, A2 за 6 месяцев. Главное — постоянство!"
+
+msgid "What languages is the platform available in?"
+msgstr "На каких языках доступна платформа?"
+
+msgid "Rustili supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
+msgstr "Rustili доступен на 3 языках: узбекском, английском и русском. Переключайте язык в любое время через навигацию."
+
+# --- CTA ---
+msgid "Start Your Russian Journey Today"
+msgstr "Начните изучение русского сегодня"
+
+msgid "Join thousands of students already learning Russian with Rustili"
+msgstr "Присоединяйтесь к тысячам студентов, уже изучающих русский с Rustili"
+
+msgid "Start for Free"
+msgstr "Начать бесплатно"
+
+msgid "Continue Learning"
+msgstr "Продолжить обучение"
+
+msgid "Register Free"
+msgstr "Зарегистрироваться бесплатно"
+
+# --- Auth ---
+msgid "Email"
+msgstr "Электронная почта"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "First name"
+msgstr "Имя"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Country"
+msgstr "Страна"
+
+msgid "Bio"
+msgstr "О себе"
+
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Create Account"
+msgstr "Создать аккаунт"
+
+msgid "Forgot Password?"
+msgstr "Забыли пароль?"
+
+msgid "Reset Password"
+msgstr "Сбросить пароль"
+
+# --- Dashboard ---
+msgid "Daily Goal"
+msgstr "Ежедневная цель"
+
+msgid "Total XP"
+msgstr "Всего XP"
+
+msgid "Current Level"
+msgstr "Текущий уровень"
+
+msgid "Day Streak"
+msgstr "Дней подряд"
+
+msgid "Enrolled Courses"
+msgstr "Записанные курсы"
+
+msgid "Quick Access"
+msgstr "Быстрый доступ"
+
+msgid "Recent Activity"
+msgstr "Последняя активность"
+
+msgid "Recent Achievements"
+msgstr "Последние достижения"
+
+msgid "Good day, %(name)s! \U0001f44b"
+msgstr "Добрый день, %(name)s! \U0001f44b"
+
+msgid "Ready to learn some Russian today?"
+msgstr "Готовы учить русский сегодня?"
+
+# --- Quiz ---
+msgid "questions"
+msgstr "вопросов"
+
+msgid "Correct"
+msgstr "Правильно"
+
+msgid "Score"
+msgstr "Очки"
+
+msgid "Passed"
+msgstr "Пройдено"
+
+msgid "Failed"
+msgstr "Не пройдено"
+
+msgid "Congratulations!"
+msgstr "Поздравляем!"
+
+msgid "Keep Practicing!"
+msgstr "Продолжайте практиковаться!"
+
+msgid "Answer Review"
+msgstr "Просмотр ответов"
+
+msgid "Try Again"
+msgstr "Попробовать снова"
+
+msgid "All Quizzes"
+msgstr "Все тесты"
+
+msgid "Start Quiz"
+msgstr "Начать тест"
+
+msgid "Next Question"
+msgstr "Следующий вопрос"
+
+msgid "Finish Quiz"
+msgstr "Завершить тест"
+
+msgid "Explanation"
+msgstr "Объяснение"
+
+# --- Grammar ---
+msgid "Grammar Topics"
+msgstr "Темы грамматики"
+
+msgid "exercises"
+msgstr "упражнений"
+
+msgid "Done"
+msgstr "Выполнено"
+
+msgid "Correct!"
+msgstr "Правильно!"
+
+msgid "Incorrect."
+msgstr "Неправильно."
+
+msgid "Correct answer"
+msgstr "Правильный ответ"
+
+msgid "Your answer..."
+msgstr "Ваш ответ..."
+
+msgid "Check"
+msgstr "Проверить"
+
+msgid "Back"
+msgstr "Назад"
+
+# --- Vocabulary / Flashcards ---
+msgid "Flashcards"
+msgstr "Карточки"
+
+msgid "Mastered"
+msgstr "Изучено"
+
+msgid "Learning"
+msgstr "Изучается"
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "I Know It"
+msgstr "Знаю"
+
+msgid "Don't Know"
+msgstr "Не знаю"
+
+msgid "Flip"
+msgstr "Перевернуть"
+
+msgid "Skip"
+msgstr "Пропустить"
+
+# --- Leaderboard ---
+msgid "Top Learners"
+msgstr "Лучшие студенты"
+
+msgid "Your Rank"
+msgstr "Ваш рейтинг"
+
+msgid "Global ranking"
+msgstr "Глобальный рейтинг"
+
+# --- Achievements ---
+msgid "Achievements"
+msgstr "Достижения"
+
+# --- Certificates ---
+msgid "Certificate"
+msgstr "Сертификат"
+
+msgid "Certificates"
+msgstr "Сертификаты"
+
+msgid "No certificates yet"
+msgstr "Пока нет сертификатов"
+
+msgid "Complete a course to earn your first certificate!"
+msgstr "Завершите курс, чтобы получить первый сертификат!"
+
+msgid "Certificate Verified!"
+msgstr "Сертификат подтверждён!"
+
+msgid "This certificate is authentic and valid."
+msgstr "Этот сертификат является подлинным и действительным."
+
+msgid "Issued to"
+msgstr "Выдан"
 
 msgid "Issued"
 msgstr "Выдан"
+
+msgid "Certificate of Completion"
+msgstr "Сертификат о завершении"
+
+msgid "This certifies that"
+msgstr "Настоящим удостоверяется, что"
+
+msgid "has successfully completed"
+msgstr "успешно завершил(а)"
+
+msgid "Download PDF"
+msgstr "Скачать PDF"
+
+msgid "Verify Certificate"
+msgstr "Проверить сертификат"
+
+# --- Notifications ---
+msgid "Notifications"
+msgstr "Уведомления"
+
+msgid "No notifications"
+msgstr "Нет уведомлений"
+
+msgid "Mark all read"
+msgstr "Отметить все как прочитанные"
+
+# --- Lessons ---
+msgid "Mark as Complete"
+msgstr "Отметить как выполненное"
+
+msgid "Course Content"
+msgstr "Содержание курса"
+
+msgid "Enroll Now — Free!"
+msgstr "Записаться сейчас — Бесплатно!"
+
+msgid "Register & Enroll Free"
+msgstr "Зарегистрироваться и записаться бесплатно"
+
+# --- Misc ---
+msgid "All"
+msgstr "Все"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "to"
+msgstr "до"
+
+msgid "ago"
+msgstr "назад"
+
+msgid "Learn Russian with interactive lessons"
+msgstr "Учите русский с интерактивными уроками"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."

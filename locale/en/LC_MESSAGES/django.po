@@ -5,11 +5,595 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
 
-msgid "Learn English"
-msgstr "Learn English"
-
+# --- Navigation ---
 msgid "Home"
 msgstr "Home"
 
-msgid "Good day, %(name)s! 👋"
-msgstr "Good day, %(name)s! 👋"
+msgid "Courses"
+msgstr "Courses"
+
+msgid "Vocabulary"
+msgstr "Vocabulary"
+
+msgid "Grammar"
+msgstr "Grammar"
+
+msgid "Quiz"
+msgstr "Quiz"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Leaderboard"
+msgstr "Leaderboard"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Get Started"
+msgstr "Get Started"
+
+msgid "Learning Tools"
+msgstr "Learning Tools"
+
+msgid "Roadmap"
+msgstr "Roadmap"
+
+msgid "Calendar"
+msgstr "Calendar"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Diagnostic"
+msgstr "Diagnostic"
+
+msgid "Skills"
+msgstr "Skills"
+
+msgid "Analytics"
+msgstr "Analytics"
+
+msgid "Journal"
+msgstr "Journal"
+
+msgid "Forum"
+msgstr "Forum"
+
+msgid "Homework"
+msgstr "Homework"
+
+msgid "Learning Path"
+msgstr "Learning Path"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Admin Analytics"
+msgstr "Admin Analytics"
+
+# --- Home page hero ---
+msgid "Russian language platform for Uzbeks"
+msgstr "Russian Language Platform for Uzbeks"
+
+msgid "Learn Russian"
+msgstr "Learn Russian"
+
+msgid "Smarter & Faster"
+msgstr "Smarter & Faster"
+
+msgid "with Rustili"
+msgstr "with Rustili"
+
+msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
+msgstr "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
+
+msgid "Students"
+msgstr "Students"
+
+# --- Home phone mockup ---
+msgid "Alphabet: А–Я"
+msgstr "Alphabet: А–Я"
+
+msgid "Lesson 3 of 12"
+msgstr "Lesson 3 of 12"
+
+msgid "Vocabulary: 50 words"
+msgstr "Vocabulary: 50 words"
+
+msgid "12 mastered"
+msgstr "12 mastered"
+
+msgid "7 Day Streak!"
+msgstr "7 Day Streak!"
+
+msgid "Keep it up!"
+msgstr "Keep it up!"
+
+msgid "Level 5 Unlocked!"
+msgstr "Level 5 Unlocked!"
+
+msgid "+50 XP Earned"
+msgstr "+50 XP Earned"
+
+msgid "Daily Goal: 80%"
+msgstr "Daily Goal: 80%"
+
+# --- Features ---
+msgid "Features"
+msgstr "Features"
+
+msgid "Everything You Need to"
+msgstr "Everything You Need to"
+
+msgid "Master Russian"
+msgstr "Master Russian"
+
+msgid "A complete learning ecosystem for real progress"
+msgstr "A complete learning ecosystem for real progress"
+
+msgid "Alphabet & Pronunciation"
+msgstr "Alphabet & Pronunciation"
+
+msgid "Learn the Cyrillic alphabet with pronunciation rules and audio examples for each letter."
+msgstr "Learn the Cyrillic alphabet with pronunciation rules and audio examples for each letter."
+
+msgid "Audio Lessons"
+msgstr "Audio Lessons"
+
+msgid "Improve listening and pronunciation with native speaker recordings."
+msgstr "Improve listening and pronunciation with native speaker recordings."
+
+msgid "Smart Vocabulary"
+msgstr "Smart Vocabulary"
+
+msgid "Learn Russian words with Uzbek translation, examples and pronunciation using spaced repetition."
+msgstr "Learn Russian words with Uzbek translation, examples and pronunciation using spaced repetition."
+
+msgid "Grammar Exercises"
+msgstr "Grammar Exercises"
+
+msgid "Gender, cases, verb conjugation — with explanations and instant-check exercises."
+msgstr "Gender, cases, verb conjugation — with explanations and instant-check exercises."
+
+msgid "Gamification"
+msgstr "Gamification"
+
+msgid "XP points, levels, achievements, streaks and leaderboard to keep learning fun."
+msgstr "XP points, levels, achievements, streaks and leaderboard to keep learning fun."
+
+msgid "Professional PDF certificates with QR verification upon completing any course."
+msgstr "Professional PDF certificates with QR verification upon completing any course."
+
+# --- Levels ---
+msgid "Levels"
+msgstr "Levels"
+
+msgid "Which level do you"
+msgstr "Which level do you"
+
+msgid "start from?"
+msgstr "start from?"
+
+msgid "Systematic learning path from beginner to advanced"
+msgstr "Systematic learning path from beginner to advanced"
+
+msgid "Beginner"
+msgstr "Beginner"
+
+msgid "Elementary"
+msgstr "Elementary"
+
+msgid "Intermediate"
+msgstr "Intermediate"
+
+msgid "Complete Beginner"
+msgstr "Complete Beginner"
+
+msgid "Learn Russian alphabet, basic greetings, numbers and simple sentences."
+msgstr "Learn Russian alphabet, basic greetings, numbers and simple sentences."
+
+msgid "Basic Communication"
+msgstr "Basic Communication"
+
+msgid "Everyday conversations, present and past tense verbs, possessive pronouns."
+msgstr "Everyday conversations, present and past tense verbs, possessive pronouns."
+
+msgid "Free Communication"
+msgstr "Free Communication"
+
+msgid "Cases, complex grammar, speech structure and business conversations."
+msgstr "Cases, complex grammar, speech structure and business conversations."
+
+msgid "Alphabet"
+msgstr "Alphabet"
+
+msgid "Greetings"
+msgstr "Greetings"
+
+msgid "Numbers"
+msgstr "Numbers"
+
+msgid "Colors"
+msgstr "Colors"
+
+msgid "Family"
+msgstr "Family"
+
+msgid "Present tense"
+msgstr "Present tense"
+
+msgid "Daily life"
+msgstr "Daily life"
+
+msgid "Shopping"
+msgstr "Shopping"
+
+msgid "Transport"
+msgstr "Transport"
+
+msgid "Cases"
+msgstr "Cases"
+
+msgid "Past tense"
+msgstr "Past tense"
+
+msgid "Business"
+msgstr "Business"
+
+msgid "Discussion"
+msgstr "Discussion"
+
+# --- Courses ---
+msgid "Popular Courses"
+msgstr "Popular Courses"
+
+msgid "All Courses"
+msgstr "All Courses"
+
+msgid "Browse Courses"
+msgstr "Browse Courses"
+
+msgid "View Course"
+msgstr "View Course"
+
+msgid "Featured"
+msgstr "Featured"
+
+msgid "Free"
+msgstr "Free"
+
+msgid "lessons"
+msgstr "lessons"
+
+# --- Stats ---
+msgid "Active Students"
+msgstr "Active Students"
+
+msgid "Expert Courses"
+msgstr "Expert Courses"
+
+msgid "Interactive Lessons"
+msgstr "Interactive Lessons"
+
+msgid "Completion Rate"
+msgstr "Completion Rate"
+
+# --- FAQ ---
+msgid "Frequently Asked Questions"
+msgstr "Frequently Asked Questions"
+
+msgid "Is Rustili free?"
+msgstr "Is Rustili free?"
+
+msgid "Yes! Rustili is completely free. Register and start learning today."
+msgstr "Yes! Rustili is completely free for all students. Register and start learning today."
+
+msgid "How does the gamification system work?"
+msgstr "How does the gamification system work?"
+
+msgid "Earn XP by completing lessons, quizzes and vocabulary reviews. Level up, unlock achievements, and compete on the leaderboard!"
+msgstr "Earn XP by completing lessons, quizzes and vocabulary reviews. Level up, unlock achievements, and compete on the leaderboard!"
+
+msgid "Can I get a certificate?"
+msgstr "Can I get a certificate?"
+
+msgid "Yes! Complete any course to receive a PDF certificate with QR verification."
+msgstr "Yes! Complete any course to receive a professional PDF certificate with a unique ID and QR code for verification."
+
+msgid "How long does it take to learn Russian?"
+msgstr "How long does it take to learn Russian?"
+
+msgid "With 20-30 minutes daily, you can reach A1 in 3 months, A2 in 6 months. Consistency is key!"
+msgstr "With 20-30 minutes of study daily, you can reach A1 in 3 months and A2 in 6 months. Consistency is key!"
+
+msgid "What languages is the platform available in?"
+msgstr "What languages is the platform available in?"
+
+msgid "Rustili supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
+msgstr "Rustili supports 3 languages: Uzbek, English and Russian. Switch languages anytime from the navbar."
+
+# --- CTA ---
+msgid "Start Your Russian Journey Today"
+msgstr "Start Your Russian Journey Today"
+
+msgid "Join thousands of students already learning Russian with Rustili"
+msgstr "Join thousands of students already learning Russian with Rustili"
+
+msgid "Start for Free"
+msgstr "Start for Free"
+
+msgid "Continue Learning"
+msgstr "Continue Learning"
+
+msgid "Register Free"
+msgstr "Register Free"
+
+# --- Auth ---
+msgid "Email"
+msgstr "Email"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Last name"
+msgstr "Last name"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Country"
+msgstr "Country"
+
+msgid "Bio"
+msgstr "Bio"
+
+msgid "Save Changes"
+msgstr "Save Changes"
+
+msgid "Sign In"
+msgstr "Sign In"
+
+msgid "Create Account"
+msgstr "Create Account"
+
+msgid "Forgot Password?"
+msgstr "Forgot Password?"
+
+msgid "Reset Password"
+msgstr "Reset Password"
+
+# --- Dashboard ---
+msgid "Daily Goal"
+msgstr "Daily Goal"
+
+msgid "Total XP"
+msgstr "Total XP"
+
+msgid "Current Level"
+msgstr "Current Level"
+
+msgid "Day Streak"
+msgstr "Day Streak"
+
+msgid "Enrolled Courses"
+msgstr "Enrolled Courses"
+
+msgid "Quick Access"
+msgstr "Quick Access"
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Recent Achievements"
+msgstr "Recent Achievements"
+
+msgid "Good day, %(name)s! \U0001f44b"
+msgstr "Good day, %(name)s! \U0001f44b"
+
+msgid "Ready to learn some Russian today?"
+msgstr "Ready to learn some Russian today?"
+
+# --- Quiz ---
+msgid "questions"
+msgstr "questions"
+
+msgid "Correct"
+msgstr "Correct"
+
+msgid "Score"
+msgstr "Score"
+
+msgid "Passed"
+msgstr "Passed"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Congratulations!"
+msgstr "Congratulations!"
+
+msgid "Keep Practicing!"
+msgstr "Keep Practicing!"
+
+msgid "Answer Review"
+msgstr "Answer Review"
+
+msgid "Try Again"
+msgstr "Try Again"
+
+msgid "All Quizzes"
+msgstr "All Quizzes"
+
+msgid "Start Quiz"
+msgstr "Start Quiz"
+
+msgid "Next Question"
+msgstr "Next Question"
+
+msgid "Finish Quiz"
+msgstr "Finish Quiz"
+
+msgid "Explanation"
+msgstr "Explanation"
+
+# --- Grammar ---
+msgid "Grammar Topics"
+msgstr "Grammar Topics"
+
+msgid "exercises"
+msgstr "exercises"
+
+msgid "Done"
+msgstr "Done"
+
+msgid "Correct!"
+msgstr "Correct!"
+
+msgid "Incorrect."
+msgstr "Incorrect."
+
+msgid "Correct answer"
+msgstr "Correct answer"
+
+msgid "Your answer..."
+msgstr "Your answer..."
+
+msgid "Check"
+msgstr "Check"
+
+msgid "Back"
+msgstr "Back"
+
+# --- Vocabulary / Flashcards ---
+msgid "Flashcards"
+msgstr "Flashcards"
+
+msgid "Mastered"
+msgstr "Mastered"
+
+msgid "Learning"
+msgstr "Learning"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "I Know It"
+msgstr "I Know It"
+
+msgid "Don't Know"
+msgstr "Don't Know"
+
+msgid "Flip"
+msgstr "Flip"
+
+msgid "Skip"
+msgstr "Skip"
+
+# --- Leaderboard ---
+msgid "Top Learners"
+msgstr "Top Learners"
+
+msgid "Your Rank"
+msgstr "Your Rank"
+
+msgid "Global ranking"
+msgstr "Global ranking"
+
+# --- Achievements ---
+msgid "Achievements"
+msgstr "Achievements"
+
+# --- Certificates ---
+msgid "Certificate"
+msgstr "Certificate"
+
+msgid "Certificates"
+msgstr "Certificates"
+
+msgid "No certificates yet"
+msgstr "No certificates yet"
+
+msgid "Complete a course to earn your first certificate!"
+msgstr "Complete a course to earn your first certificate!"
+
+msgid "Certificate Verified!"
+msgstr "Certificate Verified!"
+
+msgid "This certificate is authentic and valid."
+msgstr "This certificate is authentic and valid."
+
+msgid "Issued to"
+msgstr "Issued to"
+
+msgid "Issued"
+msgstr "Issued"
+
+msgid "Certificate of Completion"
+msgstr "Certificate of Completion"
+
+msgid "This certifies that"
+msgstr "This certifies that"
+
+msgid "has successfully completed"
+msgstr "has successfully completed"
+
+msgid "Download PDF"
+msgstr "Download PDF"
+
+msgid "Verify Certificate"
+msgstr "Verify Certificate"
+
+# --- Notifications ---
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "No notifications"
+msgstr "No notifications"
+
+msgid "Mark all read"
+msgstr "Mark all read"
+
+# --- Lessons ---
+msgid "Mark as Complete"
+msgstr "Mark as Complete"
+
+msgid "Course Content"
+msgstr "Course Content"
+
+msgid "Enroll Now — Free!"
+msgstr "Enroll Now — Free!"
+
+msgid "Register & Enroll Free"
+msgstr "Register & Enroll Free"
+
+# --- Misc ---
+msgid "All"
+msgstr "All"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "to"
+msgstr "to"
+
+msgid "ago"
+msgstr "ago"
+
+msgid "Learn Russian with interactive lessons"
+msgstr "Learn Russian with interactive lessons"
+
+msgid "All rights reserved."
+msgstr "All rights reserved."
