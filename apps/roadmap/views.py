@@ -12,7 +12,7 @@ class RoadmapIndexView(LoginRequiredMixin, TemplateView):
         ctx = super().get_context_data(**kwargs)
         enrollments = Enrollment.objects.filter(
             user=self.request.user
-        ).select_related('course').order_by('-enrolled_at')
+        ).select_related('course').order_by('-created_at')
         ctx['enrollments'] = enrollments
         return ctx
 

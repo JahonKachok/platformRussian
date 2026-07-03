@@ -63,6 +63,11 @@ const Navbar = {
         e.stopPropagation();
         langSwitcher.classList.toggle('open');
       });
+      langSwitcher.querySelectorAll('.lang-option').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      });
       document.addEventListener('click', (e) => {
         if (!langSwitcher.contains(e.target)) langSwitcher.classList.remove('open');
       });

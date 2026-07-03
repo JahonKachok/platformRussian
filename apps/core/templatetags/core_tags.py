@@ -92,3 +92,11 @@ def chr_filter(value):
         return chr(int(value))
     except (TypeError, ValueError):
         return ''
+
+
+@register.filter
+def split(value, arg):
+    """Split a string by a delimiter"""
+    if not value:
+        return []
+    return value.split(arg)

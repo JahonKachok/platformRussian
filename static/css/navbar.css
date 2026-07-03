@@ -159,6 +159,10 @@
   cursor: pointer;
   transition: background var(--transition-fast);
   text-decoration: none;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
 }
 
 .lang-option:hover { background: rgba(99,102,241,0.08); color: var(--color-primary); }

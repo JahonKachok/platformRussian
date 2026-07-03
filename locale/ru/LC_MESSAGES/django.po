@@ -175,3 +175,192 @@ msgstr "Готовы учить английский сегодня?"
 
 msgid "ago"
 msgstr "назад"
+
+msgid "Featured"
+msgstr "Рекомендуемые"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Country"
+msgstr "Страна"
+
+msgid "Bio"
+msgstr "О себе"
+
+msgid "questions"
+msgstr "вопросов"
+
+msgid "Passed"
+msgstr "Пройдено"
+
+msgid "Failed"
+msgstr "Не пройдено"
+
+msgid "Answer Review"
+msgstr "Просмотр ответов"
+
+msgid "All Quizzes"
+msgstr "Все тесты"
+
+msgid "Next Question"
+msgstr "Следующий вопрос"
+
+msgid "Finish Quiz"
+msgstr "Завершить тест"
+
+msgid "Explanation"
+msgstr "Объяснение"
+
+msgid "Mark as Complete"
+msgstr "Отметить как выполненное"
+
+msgid "Course Content"
+msgstr "Содержание курса"
+
+msgid "View Course"
+msgstr "Просмотр курса"
+
+msgid "Enroll Now — Free!"
+msgstr "Записаться сейчас — Бесплатно!"
+
+msgid "Register & Enroll Free"
+msgstr "Зарегистрироваться и записаться бесплатно"
+
+msgid "Learning"
+msgstr "Изучается"
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "Flip"
+msgstr "Перевернуть"
+
+msgid "Skip"
+msgstr "Пропустить"
+
+msgid "exercises"
+msgstr "упражнений"
+
+msgid "Done"
+msgstr "Выполнено"
+
+msgid "Global ranking"
+msgstr "Глобальный рейтинг"
+
+msgid "Quick Access"
+msgstr "Быстрый доступ"
+
+msgid "Recent Activity"
+msgstr "Последняя активность"
+
+msgid "Recent Achievements"
+msgstr "Последние достижения"
+
+msgid "All"
+msgstr "Все"
+
+msgid "No certificates yet"
+msgstr "Пока нет сертификатов"
+
+msgid "Complete a course to earn your first certificate!"
+msgstr "Завершите курс, чтобы получить первый сертификат!"
+
+msgid "Certificate Verified!"
+msgstr "Сертификат подтверждён!"
+
+msgid "This certificate is authentic and valid."
+msgstr "Этот сертификат является подлинным и действительным."
+
+msgid "Issued to"
+msgstr "Выдан"
+
+msgid "Certificate of Completion"
+msgstr "Сертификат о завершении"
+
+msgid "This certifies that"
+msgstr "Настоящим удостоверяется, что"
+
+msgid "has successfully completed"
+msgstr "успешно завершил(а)"
+
+msgid "Download PDF"
+msgstr "Скачать PDF"
+
+msgid "Verify Certificate"
+msgstr "Проверить сертификат"
+
+msgid "No notifications"
+msgstr "Нет уведомлений"
+
+msgid "Mark all read"
+msgstr "Отметить все как прочитанные"
+
+msgid "Interactive Lessons"
+msgstr "Интерактивные уроки"
+
+msgid "Completion Rate"
+msgstr "Процент завершения"
+
+msgid "AI-Powered English Learning"
+msgstr "Изучение английского с помощью ИИ"
+
+msgid "Learn English Smarter & Faster with Rustili"
+msgstr "Учите английский умнее и быстрее с Rustili"
+
+msgid "Frequently Asked Questions"
+msgstr "Часто задаваемые вопросы"
+
+msgid "Is Rustili completely free?"
+msgstr "Rustili полностью бесплатный?"
+
+msgid "Yes! Rustili is completely free for all students. Register and start learning today."
+msgstr "Да! Rustili полностью бесплатен для всех студентов. Зарегистрируйтесь и начните учиться сегодня."
+
+msgid "to"
+msgstr "до"
+
+msgid "Roadmap"
+msgstr "Дорожная карта"
+
+msgid "Calendar"
+msgstr "Календарь"
+
+msgid "Portfolio"
+msgstr "Портфолио"
+
+msgid "Diagnostic"
+msgstr "Диагностика"
+
+msgid "Skills"
+msgstr "Навыки"
+
+msgid "Analytics"
+msgstr "Аналитика"
+
+msgid "Journal"
+msgstr "Журнал"
+
+msgid "Forum"
+msgstr "Форум"
+
+msgid "Homework"
+msgstr "Домашнее задание"
+
+msgid "Learning Path"
+msgstr "Путь обучения"
+
+msgid "Reports"
+msgstr "Отчёты"
+
+msgid "Admin Analytics"
+msgstr "Аналитика администратора"
+
+msgid "Learning Tools"
+msgstr "Инструменты обучения"
+
+msgid "Issued"
+msgstr "Выдан"
