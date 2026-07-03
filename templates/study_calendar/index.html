@@ -177,7 +177,7 @@ document.getElementById('ev-form').addEventListener('submit', function(e) {
       description: document.getElementById('ev-desc').value,
     })
   }).then(r => r.json()).then(() => {
-    window.Rustili?.Toast.show('{% trans "Event added!" %}', 'success');
+    window.LingvoCompetence?.Toast.show('{% trans "Event added!" %}', 'success');
     setTimeout(() => location.reload(), 600);
   });
 });
@@ -196,7 +196,7 @@ function deleteEv(id) {
     method:'POST', headers:{'X-CSRFToken':window.CSRF_TOKEN}
   }).then(() => {
     document.getElementById(`ev-${id}`)?.remove();
-    window.Rustili?.Toast.show('Deleted', 'info');
+    window.LingvoCompetence?.Toast.show('Deleted', 'info');
   });
 }
 </script>

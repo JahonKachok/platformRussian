@@ -110,7 +110,7 @@ class ProgressReportPDFView(LoginRequiredMixin, View):
 
         p.setFont('Helvetica', 8)
         p.setFillColorRGB(0.5, 0.5, 0.5)
-        p.drawString(40, 30, 'Rustili English Learning Platform')
+        p.drawString(40, 30, 'LingvoCompetence — Russian Language Learning Platform')
         p.save()
         buffer.seek(0)
         resp = HttpResponse(buffer, content_type='application/pdf')

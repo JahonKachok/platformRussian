@@ -117,8 +117,8 @@ function completeLesson() {
   .then(data => {
     btn.style.background = 'var(--gradient-green)';
     btn.textContent = '✓ Completed! +' + data.xp + ' XP';
-    if (window.Rustili) {
-      window.Rustili.Toast.show('Lesson completed! +' + data.xp + ' XP earned!', 'success');
+    if (window.LingvoCompetence) {
+      window.LingvoCompetence.Toast.show('Lesson completed! +' + data.xp + ' XP earned!', 'success');
     }
   });
 }

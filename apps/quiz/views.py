@@ -144,6 +144,28 @@ class QuizCompleteView(LoginRequiredMixin, View):
             except Exception:
                 pass
 
+        try:
+            from apps.notifications.utils import notify
+            from apps.notifications.models import Notification
+            if passed:
+                notify(
+                    user=request.user,
+                    title=f'Test muvaffaqiyatli o\'tildi: {attempt.quiz.title}',
+                    message=f'Ball: {percentage}%. Siz testdan o\'tdingiz! +{xp_earned} XP.',
+                    notification_type=Notification.TYPE_QUIZ,
+                    icon='🏆',
+                )
+            else:
+                notify(
+                    user=request.user,
+                    title=f'Test tugadi: {attempt.quiz.title}',
+                    message=f'Ball: {percentage}%. O\'tish ballidan past. Qayta urinib ko\'ring! +{xp_earned} XP.',
+                    notification_type=Notification.TYPE_QUIZ,
+                    icon='📝',
+                )
+        except Exception:
+            pass
+
         return redirect('quiz:results', attempt_id=attempt_id)
 
 

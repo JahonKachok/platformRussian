@@ -116,6 +116,18 @@ class EnrollView(LoginRequiredMixin, View):
         enrollment, created = Enrollment.objects.get_or_create(user=request.user, course=course)
         if created:
             messages.success(request, _('Successfully enrolled in course!'))
+            try:
+                from apps.notifications.utils import notify
+                from apps.notifications.models import Notification
+                notify(
+                    user=request.user,
+                    title=f'"{course.title}" kursiga yozildingiz',
+                    message=f'Tabriklaymiz! Siz "{course.title}" kursini boshlashga tayyorsiz.',
+                    notification_type=Notification.TYPE_LESSON,
+                    icon='📚',
+                )
+            except Exception:
+                pass
         return redirect('courses:course-detail', slug=slug)
 
 
@@ -187,7 +199,38 @@ class CompleteLessonView(LoginRequiredMixin, View):
                 from apps.gamification.models import UserProgress
                 up = UserProgress.objects.get(user=request.user)
                 up.add_xp(lesson.xp_reward, 'lesson_complete')
+                up.total_lessons_completed += 1
+                up.save(update_fields=['total_lessons_completed'])
             except Exception:
                 pass
+
+            # Notify lesson complete
+            try:
+                from apps.notifications.utils import notify
+                from apps.notifications.models import Notification
+                notify(
+                    user=request.user,
+                    title=f'Dars yakunlandi: {lesson.title}',
+                    message=f'Siz "{lesson.title}" darsini muvaffaqiyatli tugatdingiz. +{lesson.xp_reward} XP.',
+                    notification_type=Notification.TYPE_LESSON,
+                    icon='✅',
+                )
+            except Exception:
+                pass
+
+            # Notify course complete
+            if enrollment and enrollment.is_completed:
+                try:
+                    from apps.notifications.utils import notify
+                    from apps.notifications.models import Notification
+                    notify(
+                        user=request.user,
+                        title=f'Kurs yakunlandi: {lesson.course.title}',
+                        message=f'Tabriklaymiz! Siz "{lesson.course.title}" kursini to\'liq tugatdingiz. Sertifikat olish uchun sertifikatlar bo\'limiga o\'ting.',
+                        notification_type=Notification.TYPE_CERTIFICATE,
+                        icon='🎓',
+                    )
+                except Exception:
+                    pass
 
         return JsonResponse({'status': 'ok', 'xp': lesson.xp_reward})

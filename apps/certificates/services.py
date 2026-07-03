@@ -65,7 +65,7 @@ def generate_certificate_pdf(certificate):
 
     # QR code
     qr = qrcode.QRCode(version=1, box_size=3, border=2)
-    verify_url = f'https://rustili.uz/certificates/verify/{certificate.certificate_id}/'
+    verify_url = f'https://lingvocompetence.uz/certificates/verify/{certificate.certificate_id}/'
     qr.add_data(verify_url)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color='black', back_color='white')
@@ -80,13 +80,13 @@ def generate_certificate_pdf(certificate):
     c.setFillColor(HexColor('#6b7280'))
     c.drawCentredString(width - 90, 55, 'Scan to verify')
 
-    # Rustili branding
+    # LingvoCompetence branding
     c.setFont('Helvetica-Bold', 14)
     c.setFillColor(HexColor('#6366f1'))
-    c.drawString(40, 80, 'RUSTILI')
+    c.drawString(40, 80, 'LINGVOCOMPETENCE')
     c.setFont('Helvetica', 10)
     c.setFillColor(HexColor('#9ca3af'))
-    c.drawString(40, 65, 'rustili.uz')
+    c.drawString(40, 65, 'lingvocompetence.uz')
 
     c.save()
     buffer.seek(0)
@@ -99,4 +99,19 @@ def issue_certificate(user, course):
         pdf_data = generate_certificate_pdf(cert)
         filename = f'certificate_{cert.certificate_id}.pdf'
         cert.pdf_file.save(filename, ContentFile(pdf_data), save=True)
+
+    if created:
+        try:
+            from apps.notifications.utils import notify
+            from apps.notifications.models import Notification
+            notify(
+                user=user,
+                title=f'Sertifikat olindi: {course.title}',
+                message=f'Tabriklaymiz! "{course.title}" kursi uchun sertifikatingiz tayyor. Sertifikatlar bo\'limidan yuklab olishingiz mumkin.',
+                notification_type=Notification.TYPE_CERTIFICATE,
+                icon='📜',
+            )
+        except Exception:
+            pass
+
     return cert

@@ -121,7 +121,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Email (console for dev)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@rustili.uz'
+DEFAULT_FROM_EMAIL = 'noreply@lingvocompetence.uz'
 
 # Session
 SESSION_COOKIE_AGE = 86400 * 30  # 30 days
@@ -131,7 +131,7 @@ SESSION_SAVE_EVERY_REQUEST = False
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'rustili-cache',
+        'LOCATION': 'lingvocompetence-cache',
     }
 }
 

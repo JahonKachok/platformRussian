@@ -264,4 +264,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export
-window.RustiliAnimations = { Confetti, TypeWriter, Counter };
+window.LingvoAnimations = { Confetti, TypeWriter, Counter };

@@ -32,7 +32,7 @@ urlpatterns += i18n_patterns(
     path('feedback/', include('apps.feedback.urls', namespace='feedback')),
     path('learning-path/', include('apps.learning_path.urls', namespace='learning_path')),
     path('reports/', include('apps.reports.urls', namespace='reports')),
-    prefix_default_language=False,
+    prefix_default_language=True,
 )
 
 if settings.DEBUG:

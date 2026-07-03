@@ -4,8 +4,8 @@ from django.utils.translation import get_language
 
 def global_context(request):
     ctx = {
-        'SITE_NAME': 'Rustili',
-        'SITE_TAGLINE': 'Learn English Smartly',
+        'SITE_NAME': 'LingvoCompetence',
+        'SITE_TAGLINE': 'Rus tilini o\'rganing',
         'CURRENT_LANGUAGE': get_language(),
         'LANGUAGES': settings.LANGUAGES,
         'DEBUG': settings.DEBUG,

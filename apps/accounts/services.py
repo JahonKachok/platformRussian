@@ -12,7 +12,7 @@ def send_verification_email(user, request):
     domain = request.get_host()
     link = f'{scheme}://{domain}/accounts/verify-email/{token}/'
     send_mail(
-        subject=str(_('Verify your Rustili account')),
+        subject=str(_('Verify your LingvoCompetence account')),
         message=str(_('Click the link to verify your email: ')) + link,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[user.email],
@@ -30,7 +30,7 @@ def send_password_reset_email(user, request):
     domain = request.get_host()
     link = f'{scheme}://{domain}/accounts/reset-password/{token}/'
     send_mail(
-        subject=str(_('Reset your Rustili password')),
+        subject=str(_('Reset your LingvoCompetence password')),
         message=str(_('Click the link to reset your password: ')) + link,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[user.email],

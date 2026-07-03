@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% trans 'Auth' %}{% endblock %} — Rustili</title>
+  <title>{% block title %}{% trans 'Auth' %}{% endblock %} — LingvoCompetence</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='16' y='22' text-anchor='middle' font-size='16' fill='white'>R</text></svg>">
 
   <script>
-    const savedTheme = localStorage.getItem('rustili-theme') || 'light';
+    const savedTheme = localStorage.getItem('lingvocompetence-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     window.CSRF_TOKEN = '{{ csrf_token }}';
   </script>
@@ -189,7 +189,7 @@
       <div class="auth-left-content animate-fade-in">
         <div class="auth-logo">
           <div class="icon">🎓</div>
-          <div class="name">Rustili</div>
+          <div class="name">LingvoCompetence</div>
         </div>
 
         <h2 class="auth-tagline">

@@ -4,14 +4,14 @@
 // ============ THEME ============
 const ThemeManager = {
   init() {
-    const saved = localStorage.getItem('rustili-theme') || 'light';
+    const saved = localStorage.getItem('lingvocompetence-theme') || 'light';
     this.set(saved);
     const btn = document.getElementById('theme-toggle');
     if (btn) btn.addEventListener('click', () => this.toggle());
   },
   set(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('rustili-theme', theme);
+    localStorage.setItem('lingvocompetence-theme', theme);
     const icon = document.getElementById('theme-icon');
     if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
   },
@@ -217,4 +217,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for templates
-window.Rustili = { Toast, Modal, API, Utils, ThemeManager };
+window.LingvoCompetence = { Toast, Modal, API, Utils, ThemeManager };

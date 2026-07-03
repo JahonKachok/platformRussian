@@ -7,7 +7,7 @@
   <meta name="description" content="{% block meta_description %}{% trans 'Learn Russian with interactive lessons' %}{% endblock %}">
   <meta name="theme-color" content="#6366f1">
 
-  <title>{% block title %}{% trans 'Home' %}{% endblock %} — Rustili</title>
+  <title>{% block title %}{% trans 'Home' %}{% endblock %} — LingvoCompetence</title>
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,7 @@
   <script>
     window.LANGUAGE_CODE = '{{ CURRENT_LANGUAGE }}';
     window.CSRF_TOKEN = '{{ csrf_token }}';
-    const savedTheme = localStorage.getItem('rustili-theme') || 'light';
+    const savedTheme = localStorage.getItem('lingvocompetence-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   </script>
 </head>

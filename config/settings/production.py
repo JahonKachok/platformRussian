@@ -1,7 +1,7 @@
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['rustili.uz', 'www.rustili.uz']
+ALLOWED_HOSTS = ['lingvocompetence.uz', 'www.lingvocompetence.uz']
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True

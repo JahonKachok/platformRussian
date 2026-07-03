@@ -1,4 +1,4 @@
-# English translation for Rustili
+# English translation for LingvoCompetence
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,8 +91,8 @@ msgstr "Learn Russian"
 msgid "Smarter & Faster"
 msgstr "Smarter & Faster"
 
-msgid "with Rustili"
-msgstr "with Rustili"
+msgid "with LingvoCompetence"
+msgstr "with LingvoCompetence"
 
 msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
 msgstr "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
@@ -292,11 +292,11 @@ msgstr "Completion Rate"
 msgid "Frequently Asked Questions"
 msgstr "Frequently Asked Questions"
 
-msgid "Is Rustili free?"
-msgstr "Is Rustili free?"
+msgid "Is LingvoCompetence free?"
+msgstr "Is LingvoCompetence free?"
 
-msgid "Yes! Rustili is completely free. Register and start learning today."
-msgstr "Yes! Rustili is completely free for all students. Register and start learning today."
+msgid "Yes! LingvoCompetence is completely free. Register and start learning today."
+msgstr "Yes! LingvoCompetence is completely free for all students. Register and start learning today."
 
 msgid "How does the gamification system work?"
 msgstr "How does the gamification system work?"
@@ -319,15 +319,15 @@ msgstr "With 20-30 minutes of study daily, you can reach A1 in 3 months and A2 i
 msgid "What languages is the platform available in?"
 msgstr "What languages is the platform available in?"
 
-msgid "Rustili supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
-msgstr "Rustili supports 3 languages: Uzbek, English and Russian. Switch languages anytime from the navbar."
+msgid "LingvoCompetence supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
+msgstr "LingvoCompetence supports 3 languages: Uzbek, English and Russian. Switch languages anytime from the navbar."
 
 # --- CTA ---
 msgid "Start Your Russian Journey Today"
 msgstr "Start Your Russian Journey Today"
 
-msgid "Join thousands of students already learning Russian with Rustili"
-msgstr "Join thousands of students already learning Russian with Rustili"
+msgid "Join thousands of students already learning Russian with LingvoCompetence"
+msgstr "Join thousands of students already learning Russian with LingvoCompetence"
 
 msgid "Start for Free"
 msgstr "Start for Free"

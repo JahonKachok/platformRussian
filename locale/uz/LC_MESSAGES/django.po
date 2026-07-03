@@ -93,8 +93,8 @@ msgstr "Rus tilini o'rganing"
 msgid "Smarter & Faster"
 msgstr "Tez va samarali"
 
-msgid "with Rustili"
-msgstr "Rustili bilan"
+msgid "with LingvoCompetence"
+msgstr "LingvoCompetence bilan"
 
 msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
 msgstr "Interaktiv darslar, so'z kartochkalari, grammatika mashqlari va o'yin elementlari bilan rus tilini o'z sur'atingizda o'rganing."
@@ -300,11 +300,11 @@ msgstr "Yakunlash darajasi"
 msgid "Frequently Asked Questions"
 msgstr "Ko'p so'raladigan savollar"
 
-msgid "Is Rustili free?"
-msgstr "Rustili bepulmi?"
+msgid "Is LingvoCompetence free?"
+msgstr "LingvoCompetence bepulmi?"
 
-msgid "Yes! Rustili is completely free. Register and start learning today."
-msgstr "Ha! Rustili barcha o'quvchilar uchun to'liq bepul. Ro'yxatdan o'ting va bugunoq o'rganishni boshlang."
+msgid "Yes! LingvoCompetence is completely free. Register and start learning today."
+msgstr "Ha! LingvoCompetence barcha o'quvchilar uchun to'liq bepul. Ro'yxatdan o'ting va bugunoq o'rganishni boshlang."
 
 msgid "How does the gamification system work?"
 msgstr "O'yin tizimi qanday ishlaydi?"
@@ -327,15 +327,15 @@ msgstr "Har kuni 20-30 daqiqa vaqt ajratsangiz, 3 oyda A1 darajasini, 6 oyda A2 
 msgid "What languages is the platform available in?"
 msgstr "Platforma qaysi tillarda mavjud?"
 
-msgid "Rustili supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
-msgstr "Rustili 3 tilda ishlaydi: O'zbek, Rus va Ingliz. Tilni yuqori panel orqali istalgan vaqt o'zgartirishingiz mumkin."
+msgid "LingvoCompetence supports 3 languages: Uzbek, English and Russian. Switch anytime from the navbar."
+msgstr "LingvoCompetence 3 tilda ishlaydi: O'zbek, Rus va Ingliz. Tilni yuqori panel orqali istalgan vaqt o'zgartirishingiz mumkin."
 
 # --- CTA ---
 msgid "Start Your Russian Journey Today"
 msgstr "Rus tili sayohatingizni bugun boshlang"
 
-msgid "Join thousands of students already learning Russian with Rustili"
-msgstr "Rustili bilan rus tilini o'rganayotgan minglab o'quvchilarga qo'shiling"
+msgid "Join thousands of students already learning Russian with LingvoCompetence"
+msgstr "LingvoCompetence bilan rus tilini o'rganayotgan minglab o'quvchilarga qo'shiling"
 
 msgid "Start for Free"
 msgstr "Bepul boshlash"

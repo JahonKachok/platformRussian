@@ -1,6 +1,6 @@
 """
 Management command: python manage.py populate_demo
-Creates demo data for the Rustili (Russian language learning) platform.
+Creates demo data for the LingvoCompetence (Russian language learning) platform.
 """
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 class Command(BaseCommand):
-    help = 'Populate demo data for Rustili platform (Russian language learning)'
+    help = 'Populate demo data for LingvoCompetence platform (Russian language learning)'
 
     def handle(self, *args, **options):
         self.stdout.write('Creating demo data...')
@@ -27,22 +27,22 @@ class Command(BaseCommand):
     def _create_users(self):
         from apps.accounts.models import User
 
-        if not User.objects.filter(email='admin@rustili.uz').exists():
+        if not User.objects.filter(email='admin@lingvocompetence.uz').exists():
             User.objects.create_superuser(
-                username='admin', email='admin@rustili.uz',
-                password='admin123', first_name='Admin', last_name='Rustili',
+                username='admin', email='admin@lingvocompetence.uz',
+                password='admin123', first_name='Admin', last_name='LingvoCompetence',
                 role='admin', email_verified=True
             )
-            self.stdout.write('  Created admin: admin@rustili.uz / admin123')
+            self.stdout.write('  Created admin: admin@lingvocompetence.uz / admin123')
 
-        if not User.objects.filter(email='teacher@rustili.uz').exists():
+        if not User.objects.filter(email='teacher@lingvocompetence.uz').exists():
             User.objects.create_user(
-                username='teacher1', email='teacher@rustili.uz',
+                username='teacher1', email='teacher@lingvocompetence.uz',
                 password='teacher123', first_name='Наталья', last_name='Иванова',
                 role='teacher', email_verified=True, is_active=True,
                 bio='Rus tili o\'qituvchisi, 10 yillik tajriba.'
             )
-            self.stdout.write('  Created teacher: teacher@rustili.uz / teacher123')
+            self.stdout.write('  Created teacher: teacher@lingvocompetence.uz / teacher123')
 
         students_data = [
             ('ali@example.com', 'ali_student', 'Ali', 'Karimov', 850),
@@ -93,7 +93,7 @@ class Command(BaseCommand):
         from apps.accounts.models import User
 
         try:
-            teacher = User.objects.get(email='teacher@rustili.uz')
+            teacher = User.objects.get(email='teacher@lingvocompetence.uz')
         except User.DoesNotExist:
             teacher = None
 
