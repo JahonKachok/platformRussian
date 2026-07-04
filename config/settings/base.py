@@ -64,6 +64,9 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'apps.core.context_processors.global_context',
             ],
+            'builtins': [
+                'apps.core.templatetags.core_tags',
+            ],
         },
     },
 ]
