@@ -3,7 +3,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = 'django-insecure-rustili-platform-change-in-production-xyz123'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-rustili-platform-change-in-production-xyz123',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -103,9 +107,12 @@ LANGUAGES = [
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
+# Persist the user's language choice for a year instead of only for the
+# browser session, so the switcher's effect survives closing the browser.
+LANGUAGE_COOKIE_AGE = 60 * 60 * 24 * 365
+
 TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 # Static files

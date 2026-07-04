@@ -55,24 +55,6 @@ const Navbar = {
       }
     }
 
-    // Language switcher
-    const langSwitcher = document.getElementById('lang-switcher');
-    const langBtn = document.getElementById('lang-btn');
-    if (langSwitcher && langBtn) {
-      langBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        langSwitcher.classList.toggle('open');
-      });
-      langSwitcher.querySelectorAll('.lang-option').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-      });
-      document.addEventListener('click', (e) => {
-        if (!langSwitcher.contains(e.target)) langSwitcher.classList.remove('open');
-      });
-    }
-
     // User menu
     const userMenu = document.getElementById('user-menu');
     const userTrigger = document.getElementById('user-menu-trigger');
@@ -85,6 +67,40 @@ const Navbar = {
         if (!userMenu.contains(e.target)) userMenu.classList.remove('open');
       });
     }
+  }
+};
+
+// ============ LANGUAGE SWITCHER ============
+// Initialized independently of Navbar so it also works on pages with no
+// navbar (e.g. login/register), and so a failure elsewhere never disables it.
+const LangSwitcher = {
+  init() {
+    const switcher = document.getElementById('lang-switcher');
+    const btn = document.getElementById('lang-btn');
+    if (!switcher || !btn) return;
+
+    const close = () => {
+      switcher.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    };
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = switcher.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    switcher.querySelectorAll('.lang-option').forEach(option => {
+      option.addEventListener('click', (e) => e.stopPropagation());
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!switcher.contains(e.target)) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
   }
 };
 
@@ -210,11 +226,22 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============ INIT ============
+// Each module is initialized in isolation so a failure in one (e.g. Navbar)
+// can never prevent the others (e.g. LangSwitcher) from wiring up.
 document.addEventListener('DOMContentLoaded', () => {
-  ThemeManager.init();
-  Navbar.init();
-  Ripple.init();
+  [
+    ['ThemeManager', ThemeManager],
+    ['Navbar', Navbar],
+    ['LangSwitcher', LangSwitcher],
+    ['Ripple', Ripple],
+  ].forEach(([name, module]) => {
+    try {
+      module.init();
+    } catch (err) {
+      console.error(`[init] ${name} failed:`, err);
+    }
+  });
 });
 
 // Export for templates
-window.LingvoCompetence = { Toast, Modal, API, Utils, ThemeManager };
+window.LingvoCompetence = { Toast, Modal, API, Utils, ThemeManager, LangSwitcher };

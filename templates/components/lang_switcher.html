@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="lang-switcher" id="lang-switcher">
+  <button class="lang-btn" id="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="{% trans 'Change language' %}">
+    <span>{{ CURRENT_LANGUAGE_INFO.flag }} {{ CURRENT_LANGUAGE_INFO.short }}</span>
+    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="lang-dropdown" role="menu">
+    {% for lang in LANGUAGE_CHOICES %}
+    <form method="post" action="{% url 'set_language' %}">
+      {% csrf_token %}
+      <input type="hidden" name="language" value="{{ lang.code }}">
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button type="submit" class="lang-option {% if CURRENT_LANGUAGE == lang.code %}active{% endif %}" role="menuitem">
+        <span class="lang-flag">{{ lang.flag }}</span> {{ lang.name }}
+      </button>
+    </form>
+    {% endfor %}
+  </div>
+</div>

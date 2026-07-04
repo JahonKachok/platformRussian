@@ -166,6 +166,10 @@
   </style>
 </head>
 <body>
+  <div class="lang-switcher-floating">
+    {% include 'components/lang_switcher.html' %}
+  </div>
+
   {% if messages %}
   <div class="toast-container">
     {% for msg in messages %}

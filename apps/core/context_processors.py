@@ -1,12 +1,40 @@
 from django.conf import settings
 from django.utils.translation import get_language
 
+# Single source of truth for language display metadata. Any language code
+# missing here (e.g. a new one added to settings.LANGUAGES) still renders
+# safely via the fallback in _language_info() instead of breaking templates.
+LANGUAGE_META = {
+    'uz': {'flag': '🇺🇿', 'short': "O'z", 'name': "O'zbek"},
+    'en': {'flag': '🇬🇧', 'short': 'En', 'name': 'English'},
+    'ru': {'flag': '🇷🇺', 'short': 'Ru', 'name': 'Русский'},
+}
+
+
+def _language_info(code, fallback_name):
+    meta = LANGUAGE_META.get(code, {})
+    return {
+        'code': code,
+        'flag': meta.get('flag', '🌐'),
+        'short': meta.get('short', code.upper()),
+        'name': meta.get('name', fallback_name),
+    }
+
 
 def global_context(request):
+    current_language = get_language()
+    language_choices = [_language_info(code, name) for code, name in settings.LANGUAGES]
+    current_language_info = next(
+        (lang for lang in language_choices if lang['code'] == current_language),
+        _language_info(current_language, current_language),
+    )
+
     ctx = {
         'SITE_NAME': 'LingvoCompetence',
         'SITE_TAGLINE': 'Rus tilini o\'rganing',
-        'CURRENT_LANGUAGE': get_language(),
+        'CURRENT_LANGUAGE': current_language,
+        'CURRENT_LANGUAGE_INFO': current_language_info,
+        'LANGUAGE_CHOICES': language_choices,
         'LANGUAGES': settings.LANGUAGES,
         'DEBUG': settings.DEBUG,
     }

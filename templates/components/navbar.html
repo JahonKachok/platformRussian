@@ -41,29 +41,7 @@
     <div class="navbar-actions">
 
       <!-- Language Switcher -->
-      <div class="lang-switcher" id="lang-switcher">
-        <button class="lang-btn" id="lang-btn" type="button">
-          {% if CURRENT_LANGUAGE == 'uz' %}🇺🇿 O'z
-          {% elif CURRENT_LANGUAGE == 'en' %}🇬🇧 En
-          {% else %}🇷🇺 Ru{% endif %}
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="lang-dropdown">
-          {% get_available_languages as languages %}
-          {% for lang_code, lang_name in languages %}
-          <form method="post" action="{% url 'set_language' %}">
-            {% csrf_token %}
-            <input type="hidden" name="language" value="{{ lang_code }}">
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <button type="submit" class="lang-option {% if CURRENT_LANGUAGE == lang_code %}active{% endif %}">
-              {% if lang_code == 'uz' %}<span class="lang-flag">🇺🇿</span> O'zbek
-              {% elif lang_code == 'en' %}<span class="lang-flag">🇬🇧</span> English
-              {% else %}<span class="lang-flag">🇷🇺</span> Русский{% endif %}
-            </button>
-          </form>
-          {% endfor %}
-        </div>
-      </div>
+      {% include 'components/lang_switcher.html' %}
 
       <!-- Dark mode toggle -->
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
