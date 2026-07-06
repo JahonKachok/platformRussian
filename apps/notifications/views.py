@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.views import View
 from django.http import JsonResponse
@@ -25,7 +26,9 @@ class MarkReadView(LoginRequiredMixin, View):
             Notification.objects.filter(pk=pk, user=request.user).update(is_read=True)
         else:
             Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
-        return JsonResponse({'status': 'ok'})
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.headers.get('accept') == 'application/json':
+            return JsonResponse({'status': 'ok'})
+        return redirect('notifications:list')
 
 
 class NotificationCountView(LoginRequiredMixin, View):

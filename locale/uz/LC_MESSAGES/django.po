@@ -268,6 +268,12 @@ msgstr "Mashhur kurslar"
 msgid "All Courses"
 msgstr "Barcha kurslar"
 
+msgid "Learn Russian at Your Own Pace"
+msgstr "Rus tilini o'z sur'atingizda o'rganing"
+
+msgid "Choose from our structured courses designed for every level."
+msgstr "Har bir daraja uchun mo'ljallangan tizimli kurslarimizdan birini tanlang."
+
 msgid "Browse Courses"
 msgstr "Kurslarni ko'rish"
 
@@ -408,8 +414,8 @@ msgstr "Oxirgi faollik"
 msgid "Recent Achievements"
 msgstr "Oxirgi yutuqlar"
 
-msgid "Good day, %(name)s! \U0001f44b"
-msgstr "Xayrli kun, %(name)s! \U0001f44b"
+msgid "Good day, %(name)s! 👋"
+msgstr "Xayrli kun, %(name)s! 👋"
 
 msgid "Ready to learn some Russian today?"
 msgstr "Bugun rus tilini o'rganishga tayyormisiz?"

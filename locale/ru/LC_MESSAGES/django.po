@@ -260,6 +260,12 @@ msgstr "Популярные курсы"
 msgid "All Courses"
 msgstr "Все курсы"
 
+msgid "Learn Russian at Your Own Pace"
+msgstr "Изучайте русский язык в своём темпе"
+
+msgid "Choose from our structured courses designed for every level."
+msgstr "Выберите один из наших структурированных курсов, разработанных для любого уровня."
+
 msgid "Browse Courses"
 msgstr "Просмотр курсов"
 
@@ -400,8 +406,8 @@ msgstr "Последняя активность"
 msgid "Recent Achievements"
 msgstr "Последние достижения"
 
-msgid "Good day, %(name)s! \U0001f44b"
-msgstr "Добрый день, %(name)s! \U0001f44b"
+msgid "Good day, %(name)s! 👋"
+msgstr "Добрый день, %(name)s! 👋"
 
 msgid "Ready to learn some Russian today?"
 msgstr "Готовы учить русский сегодня?"

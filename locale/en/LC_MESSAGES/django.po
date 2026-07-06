@@ -260,6 +260,12 @@ msgstr "Popular Courses"
 msgid "All Courses"
 msgstr "All Courses"
 
+msgid "Learn Russian at Your Own Pace"
+msgstr "Learn Russian at Your Own Pace"
+
+msgid "Choose from our structured courses designed for every level."
+msgstr "Choose from our structured courses designed for every level."
+
 msgid "Browse Courses"
 msgstr "Browse Courses"
 
@@ -400,8 +406,8 @@ msgstr "Recent Activity"
 msgid "Recent Achievements"
 msgstr "Recent Achievements"
 
-msgid "Good day, %(name)s! \U0001f44b"
-msgstr "Good day, %(name)s! \U0001f44b"
+msgid "Good day, %(name)s! 👋"
+msgstr "Good day, %(name)s! 👋"
 
 msgid "Ready to learn some Russian today?"
 msgstr "Ready to learn some Russian today?"
