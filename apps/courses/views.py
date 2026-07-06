@@ -141,6 +141,8 @@ class LessonView(LoginRequiredMixin, DetailView):
         return Lesson.objects.filter(is_published=True).select_related('course')
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
         lesson = self.get_object()
         if not lesson.is_free_preview:
             enrollment = lesson.course.get_enrollment(request.user)
