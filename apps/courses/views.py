@@ -163,6 +163,9 @@ class LessonView(LoginRequiredMixin, DetailView):
         except LessonProgress.DoesNotExist:
             ctx['lesson_progress'] = None
 
+        if lesson.lesson_type == 'quiz':
+            ctx['linked_quiz'] = lesson.quizzes.filter(is_published=True).first()
+
         # Next/Prev lesson
         all_lessons = list(lesson.course.lessons.filter(is_published=True).order_by('order'))
         idx = next((i for i, l in enumerate(all_lessons) if l.id == lesson.id), None)

@@ -184,40 +184,94 @@ class Command(BaseCommand):
         for name, slug, icon in cats:
             WordCategory.objects.get_or_create(slug=slug, defaults={'name': name, 'icon': icon})
 
-        try:
-            common = WordCategory.objects.get(slug='umumiy-sozlar')
-        except WordCategory.DoesNotExist:
-            return
+        # Russian words per category: (word, pronunciation, translation_uz, example_sentence, part_of_speech, difficulty)
+        words_by_category = {
+            'umumiy-sozlar': [
+                ('привет', 'prʲɪˈvʲet', 'Salom', 'Привет! Как дела?', 'undov', 'easy'),
+                ('спасибо', 'spɐˈsʲibə', 'Rahmat', 'Большое спасибо!', 'undov', 'easy'),
+                ('пожалуйста', 'pɐˈʐalʊstə', 'Iltimos / Marhamat', 'Дайте, пожалуйста, книгу.', 'undov', 'easy'),
+                ('да', 'da', 'Ha', 'Да, я понимаю.', 'yukla', 'easy'),
+                ('нет', 'nʲet', "Yo'q", 'Нет, это неправильно.', 'yukla', 'easy'),
+                ('хорошо', 'xərɐˈʂo', 'Yaxshi / Xo\'p', 'Всё хорошо, спасибо.', 'sifat/yukla', 'easy'),
+                ('понимать', 'pənʲɪˈmatʲ', 'Tushunmoq', 'Я понимаю по-русски.', 'fe\'l', 'medium'),
+                ('говорить', 'ɡəvɐˈrʲitʲ', 'Gapirmoq / So\'zlamoq', 'Он говорит по-русски.', 'fe\'l', 'medium'),
+                ('учить', 'ʊˈtʲitʲ', "O'rganmoq", 'Я учу русский язык.', 'fe\'l', 'medium'),
+                ('язык', 'jɪˈzɨk', 'Til', 'Русский язык красивый.', 'ot', 'easy'),
+            ],
+            'tana-sogliq': [
+                ('голова', 'ɡɐˈɫəvə', 'Bosh', 'У меня болит голова.', 'ot', 'easy'),
+                ('рука', 'rʊˈka', "Qo'l", 'Дай мне руку.', 'ot', 'easy'),
+                ('нога', 'nɐˈɡa', 'Oyoq', 'У меня болит нога.', 'ot', 'easy'),
+                ('глаз', 'ɡɫas', "Ko'z", 'У него красивые глаза.', 'ot', 'easy'),
+                ('сердце', 'ˈsʲertsə', 'Yurak', 'Моё сердце бьётся быстро.', 'ot', 'medium'),
+                ('здоровье', 'zdɐˈrovʲjə', 'Salomatlik', 'Здоровье — самое важное.', 'ot', 'medium'),
+                ('больной', 'bɐlʲˈnoj', 'Kasal', 'Он больной сегодня.', 'sifat', 'easy'),
+                ('врач', 'vratɕ', 'Shifokor', 'Врач осмотрел пациента.', 'ot', 'easy'),
+                ('болеть', 'bɐˈlʲetʲ', "Og'rimoq", 'У меня болит голова.', "fe'l", 'medium'),
+                ('лекарство', 'lʲɪˈkarstvə', 'Dori', 'Прими это лекарство.', 'ot', 'medium'),
+            ],
+            'ovqat-ichimliklar': [
+                ('хлеб', 'xlʲep', 'Non', 'Купи хлеб в магазине.', 'ot', 'easy'),
+                ('вода', 'vɐˈda', 'Suv', 'Дай мне стакан воды.', 'ot', 'easy'),
+                ('молоко', 'məɫɐˈko', 'Sut', 'Я пью молоко утром.', 'ot', 'easy'),
+                ('чай', 'tɕaj', 'Choy', 'Хочешь чашку чая?', 'ot', 'easy'),
+                ('яблоко', 'ˈjabɫəkə', 'Olma', 'Это яблоко очень вкусное.', 'ot', 'easy'),
+                ('мясо', 'ˈmʲasə', "Go'sht", 'Она готовит мясо.', 'ot', 'medium'),
+                ('суп', 'sup', 'Sho\'rva', 'Суп очень горячий.', 'ot', 'easy'),
+                ('сахар', 'ˈsaxər', 'Shakar', 'Не добавляй много сахара.', 'ot', 'medium'),
+                ('завтрак', 'ˈzaftrək', 'Nonushta', 'Завтрак готов.', 'ot', 'medium'),
+                ('вкусный', 'ˈfkusnɨj', 'Mazali', 'Этот торт очень вкусный.', 'sifat', 'easy'),
+            ],
+            'hayvonlar': [
+                ('кошка', 'ˈkoʂkə', 'Mushuk', 'У меня есть кошка.', 'ot', 'easy'),
+                ('собака', 'sɐˈbakə', 'It', 'Собака бежит по улице.', 'ot', 'easy'),
+                ('лошадь', 'ˈɫoʂətʲ', 'Ot', 'Лошадь бежит быстро.', 'ot', 'medium'),
+                ('птица', 'ˈptʲitsə', 'Qush', 'Птица поёт красиво.', 'ot', 'easy'),
+                ('рыба', 'ˈrɨbə', 'Baliq', 'Рыба плавает в реке.', 'ot', 'easy'),
+                ('корова', 'kɐˈrovə', 'Sigir', 'Корова даёт молоко.', 'ot', 'easy'),
+                ('медведь', 'mʲɪdˈvʲetʲ', 'Ayiq', 'Медведь живёт в лесу.', 'ot', 'medium'),
+                ('волк', 'voɫk', "Bo'ri", 'Волк воет ночью.', 'ot', 'medium'),
+                ('заяц', 'ˈzajəts', 'Quyon', 'Заяц быстро бегает.', 'ot', 'medium'),
+                ('лев', 'lʲef', 'Sher', 'Лев — царь зверей.', 'ot', 'easy'),
+            ],
+            'ranglar-shakllar': [
+                ('красный', 'ˈkrasnɨj', 'Qizil', 'У неё красное платье.', 'sifat', 'easy'),
+                ('синий', 'ˈsʲinʲɪj', "Ko'k", 'Небо синее.', 'sifat', 'easy'),
+                ('жёлтый', 'ˈʐoɫtɨj', 'Sariq', 'Жёлтый цветок красивый.', 'sifat', 'easy'),
+                ('зелёный', 'zʲɪˈlʲonɨj', 'Yashil', 'Трава зелёная.', 'sifat', 'easy'),
+                ('чёрный', 'ˈtɕornɨj', 'Qora', 'Чёрный кот сидит на крыше.', 'sifat', 'easy'),
+                ('белый', 'ˈbʲeɫɨj', 'Oq', 'Снег белый.', 'sifat', 'easy'),
+                ('круг', 'kruk', 'Doira', 'Нарисуй круг.', 'ot', 'medium'),
+                ('квадрат', 'kvɐˈdrat', 'Kvadrat', 'Это квадрат, а не круг.', 'ot', 'medium'),
+                ('треугольник', 'trʲɪʊˈɡolʲnʲɪk', 'Uchburchak', 'Треугольник имеет три угла.', 'ot', 'hard'),
+                ('цвет', 'tsvʲet', 'Rang', 'Какой твой любимый цвет?', 'ot', 'easy'),
+            ],
+        }
 
-        # Russian words: (word, pronunciation, translation_uz, example_sentence, part_of_speech)
-        words = [
-            ('привет', 'prʲɪˈvʲet', 'Salom', 'Привет! Как дела?', 'undov'),
-            ('спасибо', 'spɐˈsʲibə', 'Rahmat', 'Большое спасибо!', 'undov'),
-            ('пожалуйста', 'pɐˈʐalʊstə', 'Iltimos / Marhamat', 'Дайте, пожалуйста, книгу.', 'undov'),
-            ('да', 'da', 'Ha', 'Да, я понимаю.', 'yukla'),
-            ('нет', 'nʲet', "Yo'q", 'Нет, это неправильно.', 'yukla'),
-            ('хорошо', 'xərɐˈʂo', 'Yaxshi / Xo\'p', 'Всё хорошо, спасибо.', 'sifat/yukla'),
-            ('понимать', 'pənʲɪˈmatʲ', 'Tushunmoq', 'Я понимаю по-русски.', 'fe\'l'),
-            ('говорить', 'ɡəvɐˈrʲitʲ', 'Gapirmoq / So\'zlamoq', 'Он говорит по-русски.', 'fe\'l'),
-            ('учить', 'ʊˈtʲitʲ', "O'rganmoq", 'Я учу русский язык.', 'fe\'l'),
-            ('язык', 'jɪˈzɨk', 'Til', 'Русский язык красивый.', 'ot'),
-        ]
+        total_created = 0
+        for slug, words in words_by_category.items():
+            try:
+                category = WordCategory.objects.get(slug=slug)
+            except WordCategory.DoesNotExist:
+                continue
 
-        for i, (word, pron, trans, example, pos) in enumerate(words):
-            Word.objects.get_or_create(
-                word=word,
-                defaults={
-                    'pronunciation': pron,
-                    'translation_uz': trans,
-                    'example_sentence': example,
-                    'part_of_speech': pos,
-                    'category': common,
-                    'difficulty': 'easy',
-                    'order': i,
-                }
-            )
+            for i, (word, pron, trans, example, pos, difficulty) in enumerate(words):
+                _, created = Word.objects.get_or_create(
+                    word=word,
+                    defaults={
+                        'pronunciation': pron,
+                        'translation_uz': trans,
+                        'example_sentence': example,
+                        'part_of_speech': pos,
+                        'category': category,
+                        'difficulty': difficulty,
+                        'order': i,
+                    }
+                )
+                if created:
+                    total_created += 1
 
-        self.stdout.write(f'  Created {len(words)} vocabulary words')
+        self.stdout.write(f'  Created {total_created} vocabulary words')
 
     def _create_grammar(self):
         from apps.grammar.models import GrammarTopic, GrammarExample, GrammarExercise

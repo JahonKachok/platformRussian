@@ -4,27 +4,98 @@
 {% block title %}{% trans 'Certificate' %} — {{ certificate.course.title }}{% endblock %}
 
 {% block content %}
-<div class="container" style="padding:40px 24px;max-width:800px">
+<style>
+  .cert-visual{background:#f9f4e6;border-radius:10px;padding:52px 40px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden;color:#1e2a44;box-shadow:0 12px 40px rgba(0,0,0,0.25)}
+  .cert-frame{position:absolute;inset:14px;border:1px solid #1e2a44;pointer-events:none}
+  .cert-frame::after{content:'';position:absolute;inset:5px;border:1.5px solid #c9a445}
+  .cert-corner{position:absolute;width:30px;height:30px;border-color:#b8912f;border-style:solid;border-width:0;pointer-events:none}
+  .cert-corner.tl{top:6px;left:6px;border-top-width:5px;border-left-width:5px}
+  .cert-corner.tr{top:6px;right:6px;border-top-width:5px;border-right-width:5px}
+  .cert-corner.bl{bottom:6px;left:6px;border-bottom-width:5px;border-left-width:5px}
+  .cert-corner.br{bottom:6px;right:6px;border-bottom-width:5px;border-right-width:5px}
+  .cert-content{position:relative;z-index:1}
+  .cert-brand{font-size:0.72rem;font-weight:700;letter-spacing:0.4em;color:#1e2a44;margin-bottom:18px;text-transform:uppercase}
+  .cert-title{font-size:2.6rem;font-weight:900;color:#b8912f;letter-spacing:0.14em;line-height:1.1;margin:0}
+  .cert-sub{font-size:0.85rem;letter-spacing:0.35em;color:#1e2a44;text-transform:uppercase;margin-top:8px}
+  .cert-emblem{margin:16px auto 14px;width:64px;height:44px}
+  .cert-presented{font-size:0.92rem;color:#1e2a44;margin-bottom:8px}
+  .cert-name{font-size:2.3rem;font-weight:800;color:#b8912f;letter-spacing:0.01em;margin-bottom:22px}
+  .cert-panel{background:#f3ebd6;border:1px solid #8a7434;max-width:560px;margin:0 auto 26px;padding:18px 24px}
+  .cert-panel-note{font-family:Georgia,'Times New Roman',serif;font-size:0.9rem;color:#1e2a44;margin-bottom:8px}
+  .cert-course{font-family:Georgia,'Times New Roman',serif;font-size:1.35rem;font-weight:700;color:#1e2a44;text-transform:uppercase;margin-bottom:8px}
+  .cert-panel-for{font-size:0.82rem;color:#6b6f7e}
+  .cert-bottom{display:flex;justify-content:center;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:14px}
+  .cert-col{min-width:150px}
+  .cert-col .val{font-size:0.95rem;font-weight:700;color:#1e2a44;padding-bottom:6px;border-bottom:1px solid #6b6f7e}
+  .cert-col .lbl{font-size:0.68rem;letter-spacing:0.15em;color:#6b6f7e;margin-top:6px;text-transform:uppercase}
+  .cert-seal{width:74px;height:74px;border-radius:50%;border:2px solid #b8912f;outline:3px dotted #b8912f;outline-offset:3px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#b8912f;background:transparent}
+  .cert-seal .lc{font-family:Georgia,serif;font-weight:700;font-size:1.15rem}
+  .cert-seal .ring{font-size:0.4rem;letter-spacing:0.08em;color:#8a7434}
+  .cert-id{font-size:0.72rem;color:#6b6f7e}
+  @media (max-width:600px){
+    .cert-visual{padding:36px 16px}
+    .cert-title{font-size:1.6rem}
+    .cert-name{font-size:1.5rem}
+    .cert-course{font-size:1rem}
+    .cert-bottom{gap:20px}
+  }
+</style>
+
+<div class="container" style="padding:40px 24px;max-width:860px">
   <!-- Certificate Visual -->
-  <div style="background:var(--gradient-hero);border-radius:24px;padding:48px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden">
-    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.08) 1px,transparent 1px);background-size:40px 40px;"></div>
-    <div style="position:absolute;top:0;left:0;right:0;bottom:0;border:2px solid rgba(99,102,241,0.3);border-radius:24px;margin:8px;pointer-events:none"></div>
+  <div class="cert-visual">
+    <div class="cert-frame"></div>
+    <span class="cert-corner tl"></span>
+    <span class="cert-corner tr"></span>
+    <span class="cert-corner bl"></span>
+    <span class="cert-corner br"></span>
 
-    <div style="position:relative;z-index:1">
-      <img src="{% static 'images/logo.png' %}" alt="LingvoCompetence" style="height:40px;width:auto;border-radius:8px;margin-bottom:12px">
-      <div style="font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:24px">{% trans 'Certificate of Completion' %}</div>
+    <div class="cert-content">
+      <div class="cert-brand">Lingvocompetence</div>
+      <h2 class="cert-title">СЕРТИФИКАТ</h2>
+      <div class="cert-sub">О завершении курса</div>
 
-      <div style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-bottom:8px">{% trans 'This certifies that' %}</div>
-      <div style="font-size:2.5rem;font-weight:900;color:white;margin-bottom:8px;letter-spacing:-0.02em">{{ certificate.user.get_full_name }}</div>
-      <div style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-bottom:8px">{% trans 'has successfully completed' %}</div>
-      <div style="font-size:1.5rem;font-weight:700;color:#a5b4fc;margin-bottom:24px">{{ certificate.course.title }}</div>
-      <div style="font-size:0.875rem;color:rgba(255,255,255,0.5)">{{ certificate.issued_at|date:"F j, Y" }}</div>
+      <svg class="cert-emblem" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="20" r="12" stroke="#b8912f" stroke-width="1.4"/>
+        <text x="32" y="24" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="10" fill="#b8912f">LC</text>
+        <path d="M14 14 Q10 26 20 36" stroke="#b8912f" stroke-width="1.2" fill="none"/>
+        <path d="M50 14 Q54 26 44 36" stroke="#b8912f" stroke-width="1.2" fill="none"/>
+        <ellipse cx="13" cy="17" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(-35 13 17)"/>
+        <ellipse cx="12" cy="24" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(-10 12 24)"/>
+        <ellipse cx="14" cy="31" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(15 14 31)"/>
+        <ellipse cx="18" cy="36" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(45 18 36)"/>
+        <ellipse cx="51" cy="17" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(35 51 17)"/>
+        <ellipse cx="52" cy="24" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(10 52 24)"/>
+        <ellipse cx="50" cy="31" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(-15 50 31)"/>
+        <ellipse cx="46" cy="36" rx="1.8" ry="4.5" fill="#b8912f" transform="rotate(-45 46 36)"/>
+      </svg>
 
-      <div style="margin-top:24px;display:flex;justify-content:center;gap:16px;font-size:0.8rem;color:rgba(255,255,255,0.4)">
-        <span>ID: {{ certificate.short_id }}</span>
-        <span>•</span>
-        <span>Level: {{ certificate.course.get_level_display }}</span>
+      <div class="cert-presented">Настоящий сертификат вручается</div>
+      <div class="cert-name">{{ certificate.user.get_full_name }}</div>
+
+      <div class="cert-panel">
+        <div class="cert-panel-note">Присуждается решением Академического совета</div>
+        <div class="cert-course">{{ certificate.course.title }}</div>
+        <div class="cert-panel-for">за успешное прохождение учебного курса</div>
       </div>
+
+      <div class="cert-bottom">
+        <div class="cert-col">
+          <div class="val">{{ certificate.issued_at|date:"d.m.Y" }}</div>
+          <div class="lbl">Дата выдачи</div>
+        </div>
+        <div class="cert-seal">
+          <span class="ring">LINGVOCOMPETENCE</span>
+          <span class="lc">LC</span>
+          <span class="ring">АКАДЕМИЧЕСКИЙ СОВЕТ</span>
+        </div>
+        <div class="cert-col">
+          <div class="val">LingvoCompetence</div>
+          <div class="lbl">lingvocompetence.uz</div>
+        </div>
+      </div>
+
+      <div class="cert-id">ID сертификата: {{ certificate.short_id }}</div>
     </div>
   </div>
 
@@ -42,7 +113,6 @@
         <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Certificate ID' %}</div><div style="font-family:monospace;font-size:0.875rem">{{ certificate.certificate_id }}</div></div>
         <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Issued on' %}</div><div style="font-size:0.875rem">{{ certificate.issued_at|date:"N j, Y" }}</div></div>
         <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Course' %}</div><div style="font-size:0.875rem">{{ certificate.course.title }}</div></div>
-        <div><div style="font-size:0.8rem;color:var(--text-muted)">{% trans 'Level' %}</div><div style="font-size:0.875rem">{{ certificate.course.get_level_display }}</div></div>
       </div>
     </div>
   </div>

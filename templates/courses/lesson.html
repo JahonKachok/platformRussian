@@ -59,6 +59,30 @@
       </div>
       {% endif %}
 
+      {% if lesson.lesson_type == 'quiz' and linked_quiz %}
+      <div class="card mb-6" style="border:2px solid var(--color-primary);background:rgba(99,102,241,0.05)">
+        <div class="card-body" style="text-align:center;padding:32px">
+          <div style="font-size:2.5rem;margin-bottom:12px">📝</div>
+          <h3 style="margin-bottom:16px">{{ linked_quiz.title }}</h3>
+          <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:1.25rem;font-weight:800;color:var(--color-primary)">{{ linked_quiz.questions.count }}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Questions' %}</div>
+            </div>
+            <div>
+              <div style="font-size:1.25rem;font-weight:800;color:#f59e0b">{{ linked_quiz.time_limit_minutes }}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Minutes' %}</div>
+            </div>
+            <div>
+              <div style="font-size:1.25rem;font-weight:800;color:#10b981">{{ linked_quiz.pass_score }}%</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">{% trans 'Pass score' %}</div>
+            </div>
+          </div>
+          <a href="{% url 'quiz:start' linked_quiz.pk %}" class="btn btn-primary btn-lg">🚀 {% trans 'Start Quiz' %}</a>
+        </div>
+      </div>
+      {% endif %}
+
       <!-- Navigation Buttons -->
       <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">
         {% if prev_lesson %}
