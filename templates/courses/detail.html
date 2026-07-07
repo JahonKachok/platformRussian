@@ -26,8 +26,24 @@
 
 <div class="container" style="padding:24px">
   <div style="display:grid;grid-template-columns:1fr 340px;gap:32px">
-    <!-- Left: Lessons -->
+    <!-- Left: About + Lessons -->
     <div>
+      {% if course.description %}
+      <div class="card mb-4" style="border-radius:16px">
+        <div class="card-body" style="padding:24px 28px">
+          <h2 style="margin-bottom:16px">ℹ️ {% trans 'About the course' %}</h2>
+          <div style="color:var(--text-secondary);font-size:0.95rem;line-height:1.75">
+            {{ course.description|linebreaks }}
+          </div>
+          <img src="{% static 'images/modules/'|add:course.slug|add:'.svg' %}"
+               alt="{{ course.title }}"
+               loading="lazy"
+               onerror="this.parentElement.removeChild(this)"
+               style="display:block;width:100%;max-width:720px;margin:20px auto 4px;border-radius:12px">
+        </div>
+      </div>
+      {% endif %}
+
       <h2 class="mb-4">📚 {% trans 'Course Content' %} <span class="badge badge-primary ml-2">{{ lesson_count }}</span></h2>
       <div style="display:flex;flex-direction:column;gap:8px">
         {% for lesson in lessons %}
