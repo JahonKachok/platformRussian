@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
 from apps.core.models import TimeStampedModel
 
@@ -51,6 +52,17 @@ class PortfolioItem(TimeStampedModel):
     file = models.FileField(_('File'), upload_to='portfolio/', null=True, blank=True)
     score = models.DecimalField(_('Score'), max_digits=5, decimal_places=2, null=True, blank=True)
     teacher_feedback = models.TextField(_('Teacher Feedback'), blank=True)
+    rating = models.PositiveSmallIntegerField(
+        _('Admin Rating'), null=True, blank=True,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text=_('Rating from 1 to 5 stars'),
+    )
+    rated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='rated_portfolio_items',
+        verbose_name=_('Rated By'),
+    )
+    rated_at = models.DateTimeField(_('Rated At'), null=True, blank=True)
     date = models.DateField(_('Date'), auto_now_add=True)
     order = models.PositiveSmallIntegerField(default=0)
 
@@ -65,3 +77,9 @@ class PortfolioItem(TimeStampedModel):
     @property
     def type_icon(self):
         return self.TYPE_ICONS.get(self.item_type, '📄')
+
+    @property
+    def stars_display(self):
+        if self.rating:
+            return '★' * self.rating + '☆' * (5 - self.rating)
+        return ''

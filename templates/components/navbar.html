@@ -133,6 +133,9 @@
           <a href="{% url 'reports:admin-analytics' %}" class="user-menu-item">
             <span class="icon">🛡️</span> {% trans 'Admin Analytics' %}
           </a>
+          <a href="{% url 'portfolio:admin-review' %}" class="user-menu-item">
+            <span class="icon">⭐</span> {% trans 'Portfolio Review' %}
+          </a>
           {% endif %}
           <hr style="margin:4px 0;border:none;border-top:1px solid var(--border-light)">
           <form method="post" action="{% url 'accounts:logout' %}">

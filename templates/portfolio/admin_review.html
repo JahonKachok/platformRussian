@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Portfolio Review' %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.review-stats { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+.review-stat { flex:1; min-width:130px; background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:14px; padding:16px 20px; text-align:center; }
+.review-stat .val { font-size:1.5rem; font-weight:900; color:var(--color-primary); }
+.review-stat .lbl { font-size:0.75rem; color:var(--text-muted); }
+.filter-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+.review-item { display:flex; gap:16px; padding:20px 0; border-bottom:1px solid var(--border-light); flex-wrap:wrap; }
+.review-item:last-child { border-bottom:none; }
+.stars { display:inline-flex; flex-direction:row-reverse; gap:2px; }
+.stars input { display:none; }
+.stars label { cursor:pointer; font-size:1.6rem; line-height:1; color:var(--border-light); transition:color 0.15s, transform 0.15s; user-select:none; }
+.stars label:hover { transform:scale(1.15); }
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label { color:#f59e0b; }
+.rated-badge { font-size:0.72rem; color:var(--text-muted); }
+.feedback-toggle summary { cursor:pointer; font-size:0.8rem; color:var(--color-primary); list-style:none; }
+.feedback-toggle summary::before { content:'💬 '; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 24px">
+
+  <div style="margin-bottom:28px" class="reveal">
+    <h1>⭐ {% trans 'Portfolio Review' %}</h1>
+    <p class="text-muted">{% trans 'Rate student portfolio works from 1 to 5 stars' %}</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="review-stats reveal delay-100">
+    <div class="review-stat"><div class="val">{{ total_count }}</div><div class="lbl">{% trans 'Total Items' %}</div></div>
+    <div class="review-stat"><div class="val">{{ unrated_count }}</div><div class="lbl">⏳ {% trans 'Awaiting Rating' %}</div></div>
+    <div class="review-stat"><div class="val">{{ rated_count }}</div><div class="lbl">✓ {% trans 'Rated' %}</div></div>
+    <div class="review-stat"><div class="val">{% if avg_rating %}{{ avg_rating|floatformat:1 }} ★{% else %}—{% endif %}</div><div class="lbl">{% trans 'Average Rating' %}</div></div>
+  </div>
+
+  <!-- Filters -->
+  <form method="get" class="filter-bar reveal delay-100">
+    <select name="status" class="form-control" style="width:auto" onchange="this.form.submit()">
+      <option value="">{% trans 'All statuses' %}</option>
+      <option value="unrated" {% if current_status == 'unrated' %}selected{% endif %}>⏳ {% trans 'Unrated' %}</option>
+      <option value="rated" {% if current_status == 'rated' %}selected{% endif %}>✓ {% trans 'Rated' %}</option>
+    </select>
+    <select name="type" class="form-control" style="width:auto" onchange="this.form.submit()">
+      <option value="">{% trans 'All types' %}</option>
+      {% for t, label in item_types %}
+      <option value="{{ t }}" {% if current_type == t %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer">
+      <input type="checkbox" name="files" value="1" {% if files_only %}checked{% endif %} onchange="this.form.submit()">
+      📎 {% trans 'With files only' %}
+    </label>
+  </form>
+
+  <!-- Items -->
+  <div class="card reveal delay-200">
+    <div class="card-body">
+      {% for item in items %}
+      <div class="review-item">
+        <div style="font-size:1.6rem;flex-shrink:0">{{ item.type_icon }}</div>
+        <div style="flex:1;min-width:220px">
+          <div style="font-weight:700">{{ item.title }}</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">
+            👤 {{ item.portfolio.user.get_full_name|default:item.portfolio.user.email }}
+            · <span class="badge badge-primary" style="font-size:0.68rem">{{ item.get_item_type_display }}</span>
+            · {{ item.created_at|date:"d M Y" }}
+          </div>
+          {% if item.description %}
+          <div style="font-size:0.82rem;color:var(--text-secondary);margin-top:4px">{{ item.description|truncatechars:120 }}</div>
+          {% endif %}
+          {% if item.file %}
+          <a href="{{ item.file.url }}" target="_blank" class="btn btn-sm btn-secondary" style="margin-top:8px">📎 {% trans 'View File' %}</a>
+          {% endif %}
+          {% if item.teacher_feedback %}
+          <div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-top:6px">"{{ item.teacher_feedback|truncatechars:100 }}"</div>
+          {% endif %}
+        </div>
+        <div style="flex-shrink:0;text-align:right;min-width:180px">
+          <form method="post" action="{% url 'portfolio:admin-rate' item.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="stars" title="{% trans 'Rate 1 to 5 stars' %}">
+              {% for s in star_range %}
+              <input type="radio" id="star-{{ item.pk }}-{{ s }}" name="rating" value="{{ s }}" {% if item.rating == s %}checked{% endif %}>
+              <label for="star-{{ item.pk }}-{{ s }}">★</label>
+              {% endfor %}
+            </div>
+            {% if item.rating %}
+            <div class="rated-badge">
+              {{ item.rating }}/5 · {{ item.rated_by.get_full_name|default:item.rated_by.email|default:"—" }}
+              {% if item.rated_at %}· {{ item.rated_at|date:"d M" }}{% endif %}
+            </div>
+            {% else %}
+            <div class="rated-badge">⏳ {% trans 'Not rated yet' %}</div>
+            {% endif %}
+            <details class="feedback-toggle" style="margin-top:8px;text-align:left">
+              <summary>{% trans 'Feedback' %}</summary>
+              <textarea name="teacher_feedback" class="form-control" rows="2" style="margin-top:6px;font-size:0.82rem" placeholder="{% trans 'Optional comment for the student' %}">{{ item.teacher_feedback }}</textarea>
+            </details>
+            <button type="submit" class="btn btn-sm btn-primary ripple-container" style="margin-top:8px">💾 {% trans 'Save Rating' %}</button>
+          </form>
+        </div>
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:60px;color:var(--text-muted)">
+        <div style="font-size:3rem;margin-bottom:12px">📭</div>
+        <p>{% trans 'No portfolio items found' %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if is_paginated %}
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:24px">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if files_only %}&files=1{% endif %}" class="btn btn-secondary btn-sm">← {% trans 'Prev' %}</a>{% endif %}
+    <span style="padding:8px 16px;background:var(--bg-secondary);border-radius:8px;font-size:0.875rem">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if files_only %}&files=1{% endif %}" class="btn btn-secondary btn-sm">{% trans 'Next' %} →</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

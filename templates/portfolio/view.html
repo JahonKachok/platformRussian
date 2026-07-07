@@ -130,6 +130,7 @@
         <h4 style="margin:0 0 4px;font-size:0.95rem">{{ item.title }}</h4>
         <span class="badge badge-primary" style="font-size:0.7rem">{{ item.get_item_type_display }}</span>
         {% if item.description %}<p style="font-size:0.8rem;color:var(--text-muted);margin:8px 0 0">{{ item.description|truncatechars:80 }}</p>{% endif %}
+        {% if item.rating %}<div style="margin-top:8px;font-size:1rem;color:#f59e0b;letter-spacing:2px" title="{% trans 'Admin rating' %}: {{ item.rating }}/5">{{ item.stars_display }}</div>{% endif %}
         {% if item.score %}<div style="margin-top:8px;font-size:0.85rem;font-weight:700;color:var(--color-accent)">Score: {{ item.score }}</div>{% endif %}
         {% if item.teacher_feedback %}<div style="margin-top:6px;font-size:0.78rem;color:var(--text-muted);font-style:italic">"{{ item.teacher_feedback|truncatechars:80 }}"</div>{% endif %}
         {% if item.file %}<a href="{{ item.file.url }}" class="btn btn-sm btn-secondary mt-2" target="_blank">📎 {% trans 'View File' %}</a>{% endif %}

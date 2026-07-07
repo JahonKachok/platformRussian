@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, UpdateView, View
+from django.views.generic import TemplateView, UpdateView, ListView, View
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib import messages
+from django.db.models import Avg, Count
 from django.utils.translation import gettext_lazy as _
 import io
 
@@ -79,6 +81,81 @@ class PortfolioItemDeleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         PortfolioItem.objects.filter(pk=pk, portfolio__user=request.user).delete()
         return redirect('portfolio:view')
+
+
+class AdminReviewAccessMixin:
+    """Restricts access to staff, teachers and admins."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('accounts:login')
+        if not (request.user.is_staff or getattr(request.user, 'role', '') in ('teacher', 'admin')):
+            messages.error(request, _('Access denied.'))
+            return redirect('courses:dashboard')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class AdminPortfolioReviewListView(AdminReviewAccessMixin, ListView):
+    model = PortfolioItem
+    template_name = 'portfolio/admin_review.html'
+    context_object_name = 'items'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = PortfolioItem.objects.select_related(
+            'portfolio__user', 'rated_by'
+        ).order_by('-created_at')
+        status = self.request.GET.get('status')
+        if status == 'unrated':
+            qs = qs.filter(rating__isnull=True)
+        elif status == 'rated':
+            qs = qs.filter(rating__isnull=False)
+        item_type = self.request.GET.get('type')
+        if item_type:
+            qs = qs.filter(item_type=item_type)
+        if self.request.GET.get('files') == '1':
+            qs = qs.exclude(file='').exclude(file__isnull=True)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        all_items = PortfolioItem.objects.all()
+        ctx['total_count'] = all_items.count()
+        ctx['unrated_count'] = all_items.filter(rating__isnull=True).count()
+        ctx['rated_count'] = all_items.filter(rating__isnull=False).count()
+        ctx['avg_rating'] = all_items.filter(rating__isnull=False).aggregate(v=Avg('rating'))['v']
+        ctx['item_types'] = PortfolioItem.TYPE_CHOICES
+        ctx['current_status'] = self.request.GET.get('status', '')
+        ctx['current_type'] = self.request.GET.get('type', '')
+        ctx['files_only'] = self.request.GET.get('files') == '1'
+        ctx['star_range'] = [5, 4, 3, 2, 1]
+        return ctx
+
+
+class AdminPortfolioRateView(AdminReviewAccessMixin, View):
+    def post(self, request, pk):
+        item = get_object_or_404(PortfolioItem, pk=pk)
+        next_url = request.POST.get('next', '')
+        if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            next_url = None
+
+        try:
+            rating = int(request.POST.get('rating', ''))
+        except (TypeError, ValueError):
+            rating = 0
+        if not 1 <= rating <= 5:
+            messages.error(request, _('Please select a rating from 1 to 5 stars.'))
+            return redirect(next_url or 'portfolio:admin-review')
+
+        item.rating = rating
+        item.rated_by = request.user
+        item.rated_at = timezone.now()
+        feedback = request.POST.get('teacher_feedback', '').strip()
+        if feedback:
+            item.teacher_feedback = feedback
+        item.save()
+        messages.success(request, _('Rating saved: %(stars)s') % {'stars': item.stars_display})
+        return redirect(next_url or 'portfolio:admin-review')
 
 
 class PortfolioPDFView(LoginRequiredMixin, View):
