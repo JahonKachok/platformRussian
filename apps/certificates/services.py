@@ -53,6 +53,22 @@ def _spaced(c, text, cx, y, font, size, char_space):
     c.drawText(t)
 
 
+def _wrap_lines(c, text, font, size, max_width):
+    """Greedy word-wrap: split text into lines that fit max_width."""
+    words = text.split()
+    lines, cur = [], ''
+    for w in words:
+        trial = f'{cur} {w}'.strip()
+        if not cur or c.stringWidth(trial, font, size) <= max_width:
+            cur = trial
+        else:
+            lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
+
 def _circular_text(c, cx, cy, r, text, font, size, start_deg, end_deg, inward=False):
     """Draw text along a circle arc, one character at a time."""
     if not text:
@@ -190,8 +206,21 @@ def generate_certificate_pdf(certificate):
     c.drawCentredString(width / 2, height - 296, name)
 
     # ---- Course panel ----
-    px, pw = 140, width - 280
-    py, ph = height - 412, 92
+    px, pw = 120, width - 240
+    title = certificate.course.title.upper()
+    max_tw = pw - 44
+    # Largest size that fits: one line preferred, two lines at 15pt and below
+    for title_size in range(20, 9, -1):
+        title_lines = _wrap_lines(c, title, 'CertSerif-Bold', title_size, max_tw)
+        if len(title_lines) <= (1 if title_size > 15 else 2):
+            break
+    else:
+        title_size = 10
+        title_lines = _wrap_lines(c, title, 'CertSerif-Bold', title_size, max_tw)[:3]
+
+    leading = title_size * 1.35
+    ph = 66 + leading * len(title_lines)
+    py = (height - 316) - ph
     c.setFillColor(CREAM_DARK)
     c.setStrokeColor(GOLD_DEEP)
     c.setLineWidth(1)
@@ -199,18 +228,17 @@ def generate_certificate_pdf(certificate):
 
     c.setFillColor(NAVY)
     c.setFont('CertSerif', 12)
-    c.drawCentredString(width / 2, py + ph - 26, 'Присуждается решением Академического совета')
+    c.drawCentredString(width / 2, py + ph - 24, 'Присуждается решением Академического совета')
 
-    title = certificate.course.title.upper()
-    title_size = 20
-    while c.stringWidth(title, 'CertSerif-Bold', title_size) > pw - 40 and title_size > 12:
-        title_size -= 1
     c.setFont('CertSerif-Bold', title_size)
-    c.drawCentredString(width / 2, py + ph - 56, title)
+    ty = py + ph - 46
+    for line in title_lines:
+        c.drawCentredString(width / 2, ty, line)
+        ty -= leading
 
     c.setFillColor(MUTED)
     c.setFont('CertSans', 11)
-    c.drawCentredString(width / 2, py + 14, 'за успешное прохождение учебного курса')
+    c.drawCentredString(width / 2, py + 13, 'за успешное прохождение учебного курса')
 
     # ---- Bottom row: date / seal / platform ----
     base_y = 108
