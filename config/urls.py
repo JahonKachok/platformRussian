@@ -5,6 +5,10 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 import apps.core.views as core_views
 
+admin.site.site_header = 'LingvoCompetence Admin'
+admin.site.site_title = 'LingvoCompetence Admin'
+admin.site.index_title = 'Kurslar va testlarni boshqarish'
+
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 ]

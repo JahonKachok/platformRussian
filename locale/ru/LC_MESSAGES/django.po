@@ -95,7 +95,7 @@ msgid "with LingvoCompetence"
 msgstr "с LingvoCompetence"
 
 msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
-msgstr "Интерактивные уроки, карточки слов, упражнения по грамматике и геймификация. Учитесь в своём темпе."
+msgstr "Изучайте научно-методические основы и закономерности русского языка вместе с LingvoCompetence."
 
 msgid "Students"
 msgstr "Студентов"
@@ -261,7 +261,7 @@ msgid "All Courses"
 msgstr "Все курсы"
 
 msgid "Learn Russian at Your Own Pace"
-msgstr "Изучайте русский язык в своём темпе"
+msgstr "Изучайте научно-методические основы и закономерности русского языка вместе с LingvoCompetence."
 
 msgid "Choose from our structured courses designed for every level."
 msgstr "Выберите один из наших структурированных курсов, разработанных для любого уровня."

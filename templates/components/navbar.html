@@ -136,6 +136,15 @@
           <a href="{% url 'portfolio:admin-review' %}" class="user-menu-item">
             <span class="icon">⭐</span> {% trans 'Portfolio Review' %}
           </a>
+          <a href="{% url 'admin:courses_course_add' %}" class="user-menu-item">
+            <span class="icon">📚</span> {% trans 'Add Course' %}
+          </a>
+          <a href="{% url 'admin:quiz_quiz_add' %}" class="user-menu-item">
+            <span class="icon">📝</span> {% trans 'Add Quiz' %}
+          </a>
+          <a href="{% url 'admin:index' %}" class="user-menu-item">
+            <span class="icon">⚙️</span> {% trans 'Admin Panel' %}
+          </a>
           {% endif %}
           <hr style="margin:4px 0;border:none;border-top:1px solid var(--border-light)">
           <form method="post" action="{% url 'accounts:logout' %}">

@@ -51,7 +51,7 @@ class PortfolioEditView(LoginRequiredMixin, TemplateView):
         return ctx
 
     def post(self, request):
-        portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
+        portfolio, _created = Portfolio.objects.get_or_create(user=request.user)
         portfolio.bio = request.POST.get('bio', '')
         portfolio.skills_summary = request.POST.get('skills_summary', '')
         portfolio.goals = request.POST.get('goals', '')
@@ -63,7 +63,7 @@ class PortfolioEditView(LoginRequiredMixin, TemplateView):
 
 class PortfolioItemAddView(LoginRequiredMixin, View):
     def post(self, request):
-        portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
+        portfolio, _created = Portfolio.objects.get_or_create(user=request.user)
         item = PortfolioItem(
             portfolio=portfolio,
             item_type=request.POST.get('item_type', 'writing'),
