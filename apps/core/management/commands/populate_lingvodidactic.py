@@ -191,25 +191,31 @@ class Command(BaseCommand):
                     'order': order,
                 }
             )
-            if not created:
-                continue
+            if created:
+                created_tests += 1
+            else:
+                # Some complexes (e.g. the linguodidactic diagnostic complex) grow
+                # block by block across runs — keep the test's own fields in sync.
+                test.description = test_data['description']
+                test.time_limit_minutes = test_data['time_limit']
+                test.save(update_fields=['description', 'time_limit_minutes'])
 
-            created_tests += 1
             for qi, qdata in enumerate(test_data['questions']):
                 options = qdata.get('options', [])
                 fields = {
-                    'test': test,
                     'text': qdata['text'],
                     'question_type': qdata['type'],
                     'correct_answer': qdata['correct'],
                     'explanation': qdata.get('explanation', ''),
                     'cefr_level': qdata.get('cefr', 'B1'),
                     'points': qdata.get('points', 1),
-                    'order': qi,
                 }
                 for letter, option in zip(option_letters, options):
                     fields['option_%s' % letter.lower()] = option
-                DiagnosticQuestion.objects.create(**fields)
-                created_questions += 1
+                question, q_created = DiagnosticQuestion.objects.update_or_create(
+                    test=test, order=qi, defaults=fields
+                )
+                if q_created:
+                    created_questions += 1
 
         return created_tests, created_questions

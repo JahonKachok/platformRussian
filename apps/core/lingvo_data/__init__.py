@@ -19,9 +19,12 @@ from .module07 import MODULE as MODULE_07
 from .module08 import MODULE as MODULE_08
 from .module09 import MODULE as MODULE_09
 from .module10 import MODULE as MODULE_10
-from .diagnostic import DIAGNOSTIC_TESTS
+from .diagnostic import DIAGNOSTIC_TESTS as _ENTRY_DIAGNOSTIC_TESTS
+from .diagnostic_complex import DIAGNOSTIC_COMPLEX
 
 MODULES = [
     MODULE_01, MODULE_02, MODULE_03, MODULE_04, MODULE_05,
     MODULE_06, MODULE_07, MODULE_08, MODULE_09, MODULE_10,
 ]
+
+DIAGNOSTIC_TESTS = _ENTRY_DIAGNOSTIC_TESTS + [DIAGNOSTIC_COMPLEX]

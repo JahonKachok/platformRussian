@@ -18,8 +18,8 @@
       <a href="{% url 'courses:course-list' %}" class="nav-link {% if 'course' in request.path %}active{% endif %}">
         📚 {% trans 'Courses' %}
       </a>
-      <a href="{% url 'vocabulary:flashcards' %}" class="nav-link {% if 'vocabulary' in request.path %}active{% endif %}">
-        💬 {% trans 'Vocabulary' %}
+      <a href="{% url 'diagnostic:index' %}" class="nav-link {% if 'diagnostic' in request.path %}active{% endif %}">
+        🔬 {% trans 'Diagnostic Assessment Complex' %}
       </a>
       <a href="{% url 'grammar:topics' %}" class="nav-link {% if 'grammar' in request.path %}active{% endif %}">
         📝 {% trans 'Grammar' %}

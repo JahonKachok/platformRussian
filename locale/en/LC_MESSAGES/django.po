@@ -12,6 +12,9 @@ msgstr "Home"
 msgid "Courses"
 msgstr "Courses"
 
+msgid "Diagnostic Assessment Complex"
+msgstr "Diagnostic Assessment Complex"
+
 msgid "Vocabulary"
 msgstr "Vocabulary"
 

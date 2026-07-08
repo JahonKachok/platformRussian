@@ -12,6 +12,9 @@ msgstr "Главная"
 msgid "Courses"
 msgstr "Курсы"
 
+msgid "Diagnostic Assessment Complex"
+msgstr "Диагностический комплекс оценки"
+
 msgid "Vocabulary"
 msgstr "Словарь"
 
@@ -86,13 +89,13 @@ msgid "Russian language platform for Uzbeks"
 msgstr "Платформа русского языка для узбеков"
 
 msgid "Learn Russian"
-msgstr "Учите русский"
+msgstr "Будущее педагогического образования начинается сегодня."
 
 msgid "Smarter & Faster"
-msgstr "Быстрее и эффективнее"
+msgstr "Учитесь, исследуйте и совершенствуйте"
 
 msgid "with LingvoCompetence"
-msgstr "с LingvoCompetence"
+msgstr "свои профессиональные компетенции вместе с"
 
 msgid "Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace."
 msgstr "Изучайте научно-методические основы и закономерности русского языка вместе с LingvoCompetence."

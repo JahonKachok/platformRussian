@@ -14,6 +14,9 @@ msgstr "Bosh sahifa"
 msgid "Courses"
 msgstr "Kurslar"
 
+msgid "Diagnostic Assessment Complex"
+msgstr "Diagnostik baholash kompleksi"
+
 msgid "Vocabulary"
 msgstr "So'z boyligi"
 

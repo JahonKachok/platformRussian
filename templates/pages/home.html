@@ -27,7 +27,8 @@
 }
 .hero-inner { position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:100px 0 80px; }
 .hero-badge { display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:var(--radius-full);font-size:0.8rem;font-weight:600;color:#a5b4fc;margin-bottom:24px;backdrop-filter:blur(10px); }
-.hero-title { font-size:clamp(2.5rem,5vw,4rem);font-weight:900;color:white;line-height:1.1;letter-spacing:-0.04em;margin-bottom:24px; }
+.hero-title { font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:800;color:white;line-height:1.35;letter-spacing:-0.01em;margin-bottom:24px; }
+.hero-brand { font-size:1.6em;font-weight:900;background:linear-gradient(135deg,#a5b4fc 0%,#c084fc 50%,#67e8f9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 .hero-title .highlight { background:linear-gradient(135deg,#a5b4fc 0%,#c084fc 50%,#67e8f9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 .hero-subtitle { font-size:1.125rem;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:40px;max-width:480px; }
 .hero-cta { display:flex;gap:16px;align-items:center;flex-wrap:wrap; }
@@ -142,17 +143,11 @@
   <div class="container">
     <div class="hero-inner">
       <div class="hero-content reveal-left">
-        <div class="hero-badge">
-          <span>🇷🇺</span> {% trans 'Russian language platform for Uzbeks' %}
-        </div>
         <h1 class="hero-title">
           {% trans 'Learn Russian' %}<br>
           <span class="highlight">{% trans 'Smarter & Faster' %}</span><br>
-          {% trans 'with LingvoCompetence' %}
+          {% trans 'with LingvoCompetence' %} <span class="hero-brand">LingvoCompetence</span>
         </h1>
-        <p class="hero-subtitle">
-          {% trans 'Interactive Russian lessons, vocabulary flashcards, grammar exercises and gamification. Learn at your own pace.' %}
-        </p>
         <div class="hero-cta">
           {% if request.user.is_authenticated %}
           <a href="{% url 'courses:dashboard' %}" class="hero-btn-primary">
